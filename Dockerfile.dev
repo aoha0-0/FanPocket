@@ -1,0 +1,41 @@
+FROM ruby:3.2.2
+
+# 環境変数の設定
+ENV LANG C.UTF-8
+ENV TZ Asia/Tokyo
+ENV RAILS_ENV=development
+
+# Node.jsリポジトリの追加と必要なパッケージのインストール
+RUN apt-get update -qq && apt-get install -y \
+  ca-certificates \
+  curl \
+  gnupg \
+  build-essential \
+  libpq-dev \
+  postgresql-client \
+  vim
+
+# Node.jsのインストール
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get install -y nodejs
+
+# Yarnのインストール
+RUN npm install -g yarn
+
+# 作業ディレクトリの設定
+WORKDIR /app
+
+# Gemfileを先にコピー（キャッシュ効率化）
+COPY Gemfile Gemfile.lock ./
+
+# bundle install
+RUN gem install bundler && bundle install
+
+# アプリケーションファイルのコピー
+COPY . .
+
+# ポート公開
+EXPOSE 3000
+
+# サーバー起動コマンド
+CMD ["rails", "server", "-b", "0.0.0.0"]
