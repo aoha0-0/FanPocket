@@ -1,0 +1,20 @@
+<% if resource.errors.any? %>
+  <div id="error_explanation" data-turbo-cache="false" class="space-y-2 mb-6">
+    <%# alert-soft と alert-error を組み合わせます %>
+    <div class="alert alert-soft alert-error rounded-2xl flex items-start p-4 border-none">
+      <span class="material-symbols-outlined text-[20px] mt-0.5">error</span>
+      <div class="flex flex-col text-left">
+        <h2 class="text-sm font-bold">
+          <%= I18n.t("errors.messages.not_saved",
+                     count: resource.errors.count,
+                     resource: resource.class.model_name.human.downcase) %>
+        </h2>
+        <ul class="text-xs mt-1 list-disc list-inside opacity-80">
+          <% resource.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -5,14 +5,23 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   </head>
 
   <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <% if notice %>
+      <div class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-xs">
+        <div class="alert alert-soft alert-success shadow-lg rounded-2xl">
+          <span class="material-symbols-outlined">check_circle</span>
+          <span class="text-sm font-bold"><%= notice %></span>
+        </div>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>
