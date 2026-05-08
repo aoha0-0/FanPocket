@@ -9,15 +9,18 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   </head>
 
   <body>
     <% if notice %>
-      <p class="notice bg-blue-50 text-blue-600 p-4 rounded-lg mb-4 text-center text-sm"><%= notice %></p>
-    <% end %>
-
-    <% if alert %>
-      <p class="alert bg-red-50 text-red-600 p-4 rounded-lg mb-4 text-center text-sm shadow-sm"><%= alert %></p>
+      <div class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-xs">
+        <div class="alert alert-soft alert-success shadow-lg rounded-2xl">
+          <span class="material-symbols-outlined">check_circle</span>
+          <span class="text-sm font-bold"><%= notice %></span>
+        </div>
+      </div>
     <% end %>
     <%= yield %>
   </body>

@@ -20,6 +20,14 @@
       <h2 class="font-bold text-3xl tracking-tight text-[#2D6489] opacity-90">FanPocket</h2>
     </header>
 
+    <div class="w-full mt-6 -mb-2">
+      <% if alert %>
+        <div class="alert alert-soft alert-error rounded-2xl p-4 shadow-sm mb-6 flex items-center space-x-3">
+          <span class="material-symbols-outlined text-[20px]">warning</span>
+          <span class="text-sm font-bold text-left"><%= alert %></span>
+        </div>
+      <% end %>
+
     <!-- Login Form Section -->
     <main class="w-full">
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-8" }) do |f| %>
