@@ -17,7 +17,7 @@
       <div class="relative w-44 h-44 flex items-center justify-center bg-white rounded-full shadow-md overflow-hidden border border-gray-100">
         <%= image_tag "logo.png", alt: "FanPocket Logo", class: "w-full h-full object-contain" %>
       </div>
-      <h2 class="font-bold text-3xl tracking-tight text-[#2D6489] opacity-90">FanPocket</h2>
+      <h2 class="font-bold text-3xl tracking-tight text-primary opacity-90">FanPocket</h2>
     </header>
 
     <div class="w-full mt-6 -mb-2">
@@ -36,11 +36,11 @@
           <div class="flex flex-col space-y-3">
             <%= f.label :email, "メールアドレス", class: "text-gray-500 text-[11px] font-bold px-6 tracking-widest uppercase opacity-60" %>
             <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-[#8BBEE8] group-focus-within:text-[#2D6489] transition-colors">
+              <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-[#8BBEE8] group-focus-within:text-primary transition-colors">
                 <span class="material-symbols-outlined text-[20px]">mail</span>
               </div>
               <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "example@mail.com", 
-                  class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-[#2D6489] focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300" %>
+                  class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300" %>
             </div>
           </div>
 
@@ -48,11 +48,11 @@
           <div class="flex flex-col space-y-3">
             <%= f.label :password, "パスワード", class: "text-gray-500 text-[11px] font-bold px-6 tracking-widest uppercase opacity-60" %>
             <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-[#8BBEE8] group-focus-within:text-[#2D6489] transition-colors">
+              <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-[#8BBEE8] group-focus-within:text-primary transition-colors">
                 <span class="material-symbols-outlined text-[20px]">lock</span>
               </div>
               <%= f.password_field :password, autocomplete: "new-password", placeholder: "••••••••", 
-                  class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-[#2D6489] focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300" %>
+                  class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300" %>
             </div>
           </div>
 
@@ -65,7 +65,7 @@
 
           <!-- Forgot Password -->
           <div class="flex justify-end px-6">
-            <%= link_to "パスワードを忘れた場合", new_password_path(resource_name), class: "text-[#2D6489] text-sm font-semibold hover:opacity-70 transition-opacity" %>
+            <%= link_to "パスワードを忘れた場合", new_password_path(resource_name), class: "text-primary text-sm font-semibold hover:opacity-70 transition-opacity" %>
           </div>
         </div>
 
@@ -83,7 +83,7 @@
     <footer class="flex flex-col items-center space-y-8 pt-4">
       <div class="flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 text-center">
         <span class="text-gray-500 text-sm">アカウントをお持ちでないですか？</span>
-        <%= link_to "新規登録はこちら", new_registration_path(resource_name), class: "text-[#2D6489] font-bold text-sm hover:underline decoration-2 underline-offset-4" %>
+        <%= link_to "新規登録はこちら", new_registration_path(resource_name), class: "text-primary font-bold text-sm hover:underline decoration-2 underline-offset-4" %>
       </div>
     </footer>
   </div>

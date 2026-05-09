@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  memo: MyText
+  url: MyString
+  deadline: 2026-05-08 11:16:47
+  status: false
+  user: one
+
+two:
+  title: MyString
+  memo: MyText
+  url: MyString
+  deadline: 2026-05-08 11:16:47
+  status: false
+  user: two
