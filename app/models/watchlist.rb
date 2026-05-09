@@ -1,7 +1,7 @@
 class Watchlist < ApplicationRecord
   belongs_to :user
 
-  validates :title, presence: true
+  validates :title, presence: true, length: { maximum: 50 }
   validate :start_at_or_end_at_must_be_present
 
   private
