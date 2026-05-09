@@ -1,0 +1,17 @@
+@theme {
+  --color-primary: #2D6489;
+  --color-accent-soft: #B6E0F3;
+  --color-on-surface: #313332;
+
+  --font-headline: "Manrope", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+@plugin "daisyui";
+
+/* 【ここが重要】もし上の @theme が効かない時のためのバックアップ */
+:root {
+  --color-primary: #2D6489 !important;
+}
+.text-primary { color: var(--color-primary) !important; }
+.bg-primary { background-color: var(--color-primary) !important; }
