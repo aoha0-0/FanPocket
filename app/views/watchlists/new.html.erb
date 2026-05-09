@@ -20,8 +20,8 @@
   <main class="flex-grow px-6 max-w-3xl mx-auto w-full pt-8">
     <!-- Screen Title Section -->
     <div class="mb-10">
-      <h2 class="font-headline font-extrabold text-3xl text-center text-primary tracking-tight">予定の追加</h2>
-      <p class="text-center text-primary text-sm mt-2">URLを保存して新しい活動を記録しましょう</p>
+      <h2 class="font-headline font-extrabold text-3xl text-center text-[#4f5052] tracking-tight">予定の追加</h2>
+      <p class="text-center text-[#4f5052] text-sm mt-2">URLを保存して新しい活動を記録しましょう</p>
     </div>
 
     <%= form_with model: @watchlist, class: "space-y-10" do |f| %>
@@ -41,11 +41,9 @@
         <%= f.label :url, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
           <span class="material-symbols-outlined text-lg">link</span>URL
         <% end %>
-        <div class="relative">
-          <%= f.url_field :url, class: "w-full bg-[#f8f9fb] border-none rounded-2xl px-5 py-4 text-on-surface focus:ring-2 focus:ring-accent-soft transition-all placeholder:text-outline/40", placeholder: "https://example.com/event-page" %>
-        </div>
+        <%= f.url_field :url, class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300", placeholder: "https://example.com/event-page" %>
         <%# 自動取得ボタンは将来的にJSで機能を実装する想定 %>
-        <button class="text-primary font-bold text-xs flex items-center gap-1.5 hover:opacity-80 transition-opacity ml-1 bg-accent-soft/40 px-3 py-2 rounded-full active:scale-95" type="button">
+        <button class="text-primary bg-[#B6E0F3]/50 font-bold text-xs flex items-center gap-1.5 hover:opacity-80 transition-opacity ml-1 bg-accent-soft/40 px-3 py-2 rounded-full active:scale-95" type="button">
           <span class="material-symbols-outlined text-sm">auto_fix</span>タイトルを自動取得する
         </button>
       </div>
@@ -55,7 +53,7 @@
         <%= f.label :title, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
           <span class="material-symbols-outlined text-lg">title</span>タイトル
         <% end %>
-        <%= f.text_field :title, class: "w-full bg-[#f8f9fb] border-none rounded-2xl px-5 py-4 text-on-surface focus:ring-2 focus:ring-accent-soft transition-all placeholder:text-outline/40", placeholder: "グッズ予約、ライブ名など" %>
+        <%= f.text_field :title, class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300", placeholder: "グッズ予約、ライブ名など" %>
       </div>
 
       <!-- Date Selection Grid -->
@@ -65,15 +63,15 @@
           <%= f.label :start_at, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
             <span class="material-symbols-outlined text-lg">calendar_today</span>開始日時
           <% end %>
-          <%= f.text_field :start_at, class: "datepicker w-full bg-[#f8f9fb] border-none rounded-2xl px-5 py-4 text-on-surface focus:ring-2 focus:ring-accent-soft transition-all", placeholder: "日時を選択..." %>
+          <%= f.text_field :start_at, data: { controller: "flatpickr" }, class: "datepicker w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300", placeholder: "年/月/日 --:--" %>
         </div>
 
         <!-- Deadline Date -->
         <div class="space-y-3">
-          <%= f.label :end_at, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+          <%= f.label :end_at,  class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
             <span class="material-symbols-outlined text-lg">timer</span>締切日時
           <% end %>
-          <%= f.text_field :end_at, class: "datepicker w-full bg-[#f8f9fb] border-none rounded-2xl px-5 py-4 text-on-surface focus:ring-2 focus:ring-accent-soft transition-all", placeholder: "日時を選択..." %>
+          <%= f.text_field :end_at, data: { controller: "flatpickr" }, class: "datepicker w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300", placeholder: "年/月/日 --:--" %>
         </div>
       </div>
 
@@ -82,7 +80,8 @@
         <%= f.label :memo, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
           <span class="material-symbols-outlined text-lg">description</span>メモ
         <% end %>
-        <%= f.text_area :memo, class: "w-full bg-[#f8f9fb] border-none rounded-2xl px-5 py-4 text-on-surface focus:ring-2 focus:ring-accent-soft transition-all placeholder:text-outline/40 min-h-[120px]", placeholder: "持ち物、連番相手の連絡先など...", rows: 4 %>
+        <%= f.text_area :memo, 
+      class: "w-full min-h-[120px] pl-12 pr-8 py-5 bg-[#f0f4f8] border-none rounded-[32px] shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-400/60 leading-relaxed", placeholder: "持ち物、連番相手の連絡先など..." %>
       </div>
 
       <div class="pt-6 pb-20"> 

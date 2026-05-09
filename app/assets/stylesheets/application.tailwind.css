@@ -1,3 +1,5 @@
+@import "https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css";
+
 @theme {
   --color-primary: #2D6489;
   --color-accent-soft: #B6E0F3;
