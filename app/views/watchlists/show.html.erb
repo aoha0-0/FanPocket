@@ -1,0 +1,161 @@
+<header class="bg-white/80 backdrop-blur-sm sticky top-0 z-40 transition-colors border-b border-white">
+  <div class="max-w-full mx-auto px-4 py-3">
+    <div class="flex items-center justify-between w-full">
+      <div class="flex items-center gap-3">
+        <%= link_to root_path, class: "material-symbols-outlined text-primary hover:opacity-70 transition-opacity" do %>
+          arrow_back
+        <% end %>
+        <h1 class="font-headline font-bold text-lg text-primary">一覧に戻る</h1>
+      </div>
+      <div class="flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-white shadow-sm">
+        <%= image_tag "logo.png", class: "w-6 h-6 object-contain", alt: "FanPocket Logo" %>
+        <span class="font-headline font-bold tracking-tight text-primary">FanPocket</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-6 mt-4 space-y-8">
+  <!-- Page Header -->
+  <div class="mb-10">
+    <h2 class="font-headline font-extrabold text-3xl text-center text-primary tracking-tight">予定の詳細</h2>
+  </div>
+
+  <!-- Title Section -->
+  <section class="bg-white p-8 rounded-3xl puffy-shadow relative overflow-hidden border-l-[12px] <%= ( @watchlist.end_at && @watchlist.end_at < Time.current ) ? 'border-gray-300' : 'border-[#B6E0F3]' %>">
+    <h2 class="font-headline font-extrabold text-3xl text-on-surface leading-tight tracking-tight relative z-10">
+      <%= @watchlist.title %>
+    </h2>
+    <div class="absolute pointer-events-none select-none z-0" style="bottom: 0; right: 0; width: 100%; height: 100%; overflow: hidden;">
+      <span class="material-symbols-outlined" style="font-size: 160px; line-height: 1; position: absolute; bottom: -25px; right: -20px; opacity: 0.05; font-variation-settings: 'wght' 100;">
+        stars
+      </span>
+    </div>
+  </section>
+
+  <div class="space-y-6"> <%# この space-y-6 がカードの間の溝を作ります %>
+
+  <!-- Status Card (ステータス専用枠) -->
+  <div class="bg-white p-6 rounded-3xl puffy-shadow relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-10 h-10 bg-tertiary-container/10 rounded-bl-3xl"></div>
+    
+    <div class="flex items-center gap-2 mb-4">
+      <span class="material-symbols-outlined text-primary/60 text-xl">
+        <%= (@watchlist.end_at && @watchlist.end_at < Time.current) ? 'check_circle' : 'hourglass_empty' %>
+      </span>
+      <span class="text-primary/60 text-xs font-bold uppercase tracking-widest font-headline">現在のステータス</span>
+    </div>
+
+    <%# 入力フォーム風のデザイン（影なし・補足なし） %>
+    <div class="w-full px-6 py-5 bg-[#f0f4f8] border-none rounded-[32px] flex items-center gap-4">
+      <% if @watchlist.end_at && @watchlist.end_at < Time.current %>
+        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-gray-500 text-xl">done_all</span>
+        </div>
+        <span class="text-gray-500 font-bold text-lg">対応済み</span>
+      <% else %>
+        <div class="relative flex shrink-0">
+          <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center">
+            <span class="material-symbols-outlined text-sky-500 text-xl animate-spin-slow" style="animation: spin 3s linear infinite;">autorenew</span>
+          </div>
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-20"></span>
+        </div>
+        <span class="text-sky-600 font-bold text-lg">未対応</span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    <!-- Start Date Card -->
+    <div class="bg-white p-8 rounded-3xl puffy-shadow relative overflow-hidden border-l-[12px] <%= ( @watchlist.end_at && @watchlist.end_at < Time.current ) ? 'border-gray-300' : 'border-[#B6E0F3]' %>">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-primary-dim text-xl">schedule</span>
+        <span class="text-on-surface font-semibold text-sm">
+          開始日時 <%= @watchlist.start_at&.strftime("%Y年%m月%d日 (#{%w(日 月 火 水 木 金 土)[@watchlist.start_at.wday]})") %>
+        </span>
+      </div>
+      <div class="relative z-10">
+        <p class="text-6xl font-headline font-extrabold text-on-primary-fixed">
+          <%= @watchlist.start_at&.strftime("%H:%M") %>
+        </p>
+      </div>
+      <div class="absolute pointer-events-none select-none z-0" style="bottom: 0; right: 0; width: 100%; height: 100%; overflow: hidden;">
+        <span class="material-symbols-outlined" style="font-size: 160px; line-height: 1; position: absolute; bottom: -25px; right: -20px; opacity: 0.05; font-variation-settings: 'wght' 100;">
+          calendar_today
+        </span>
+      </div>
+    </div>
+
+    <!-- Deadline Card (End At) -->
+    <% if @watchlist.end_at.present? %>
+      <div class="bg-white p-8 rounded-3xl puffy-shadow relative overflow-hidden border-l-[12px] <%= ( @watchlist.end_at && @watchlist.end_at < Time.current ) ? 'border-gray-300' : 'border-[#B6E0F3]' %>">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-primary-dim text-xl">alarm</span>
+          <span class="text-on-surface font-semibold text-sm">
+            締切日時 <%= @watchlist.end_at.strftime("%Y年%m月%d日 (#{%w(日 月 火 水 木 金 土)[@watchlist.end_at.wday]})") %>
+          </span>
+        </div>
+        <div class="relative z-10">
+          <p class="text-6xl font-headline font-extrabold text-on-primary-fixed">
+            <%= @watchlist.end_at.strftime("%H:%M") %>
+          </p>
+        </div>
+        <div class="absolute pointer-events-none select-none z-0" style="bottom: 0; right: 0; width: 100%; height: 100%; overflow: hidden;">
+          <span class="material-symbols-outlined" style="font-size: 160px; line-height: 1; position: absolute; bottom: -25px; right: -20px; opacity: 0.05; font-variation-settings: 'wght' 100;">
+            timer
+          </span>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Link Section Card -->
+    <% if @watchlist.url.present? %>
+      <div class="bg-white p-6 rounded-3xl puffy-shadow relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-10 h-10 bg-tertiary-container/10 rounded-bl-3xl"></div>
+        <div class="flex items-center gap-2 mb-4">
+          <span class="material-symbols-outlined text-primary/60 text-xl">link</span>
+          <span class="text-primary/60 text-xs font-bold uppercase tracking-widest font-headline">関連リンク</span>
+        </div>
+        <%# bg-grayから、ログインフォームと同じbg-whiteに変更し、枠線を太く(border-2)しました %>
+        <div class="w-full pl-6 pr-4 py-4 bg-[#f0f4f8]/80 border-none rounded-[32px] flex items-center justify-between gap-4">
+          <p class="text-gray-700 truncate font-medium text-sm">
+            <%= @watchlist.url %>
+          </p>
+          <%= link_to @watchlist.url, target: "_blank", rel: "noopener", class: "bg-[#B6E0F3] text-primary px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-all shadow-sm whitespace-nowrap active:scale-95 shrink-0" do %>
+            サイトを開く
+            <span class="material-symbols-outlined text-sm">open_in_new</span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Memo Section Card -->
+    <div class="bg-white p-6 rounded-3xl puffy-shadow relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-10 h-10 bg-tertiary-container/10 rounded-bl-3xl"></div>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="material-symbols-outlined text-primary/60 text-xl">description</span>
+        <span class="text-primary/60 text-xs font-bold uppercase tracking-widest font-headline">メモ・思い出</span>
+      </div>
+      <div class="w-full min-h-[140px] px-8 py-6 bg-[#f0f4f8]/80 border-none rounded-[32px]">
+        <p class="text-gray-700 leading-relaxed whitespace-pre-wrap font-medium text-sm md:text-base">
+          <%= @watchlist.memo.presence || "メモはまだありません。" %>
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer Actions -->
+<footer class="max-w-2xl mx-auto px-6 pb-32 mt-12 mb-10 flex flex-col gap-6">
+  <%= link_to "#", class: "w-full bg-[#B6E0F3] text-[#2d6489] font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] flex items-center justify-center gap-3", type: "submit" do %>
+    <span class="material-symbols-outlined font-bold">edit</span>
+    この予定を編集する
+  <% end %>
+
+  <%= button_to watchlist_path(@watchlist), method: :delete, form: { data: { turbo_confirm: "この予定を削除してもよろしいですか？" } }, class: "w-full py-2 font-semibold text-sm flex items-center justify-center gap-2 text-error hover:opacity-70 transition-colors font-headline" do %>
+    <span class="material-symbols-outlined text-lg">delete</span>
+    削除
+  <% end %>
+</footer>
+
+<%= render 'layouts/footer' %>
