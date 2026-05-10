@@ -2,6 +2,14 @@
 class WatchlistsController < ApplicationController
   before_action :authenticate_user! # Deviseを使っている場合、ログイン必須にする
 
+  def index
+    @watchlists = Watchlist.order(start_at: :asc, end_at: :asc)
+  end
+
+  def show
+    @watchlist = Watchlist.find(params[:id])
+  end
+
   def new
     @watchlist = current_user.watchlists.build
   end
