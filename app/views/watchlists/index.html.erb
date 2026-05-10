@@ -1,0 +1,49 @@
+<main class="max-w-screen-xl mx-auto px-6 mt-16 pb-40">
+  <%# 現在時刻を基準に未来と過去に分ける %>
+  <% future_watchlists = @watchlists.select { |w| w.end_at.nil? || w.end_at >= Time.current } %>
+  <% past_watchlists = @watchlists.select { |w| w.end_at.present? && w.end_at < Time.current } %>
+
+  <!-- これからの予定セクション -->
+  <!-- Date Header Section -->
+  <div class="mb-12 pt-4 text-center"> <%# pt-4 を追加してヘッダーとの距離を微調整 %>
+    <h2 class="font-headline font-extrabold text-3xl tracking-tight text-primary">これからの予定</h2>
+  </div>
+  <div class="mb-6">
+    <% if future_watchlists.any? %>
+      <div class="space-y-6">
+        <% future_watchlists.each do |watchlist| %>
+          <%= render 'watchlist_card', watchlist: watchlist, is_past: false %>
+        <% end %>
+      </div>
+    <% else %>
+      <%# 未来の予定がない時のメッセージ %>
+      <div class="flex flex-col items-center justify-center py-12 text-center bg-white/30 rounded-3xl border border-dashed border-[#4f5052]">
+        <span class="material-symbols-outlined text-4xl text-[#B6E0F3] mb-2">auto_awesome</span>
+        <p class="text-[#4f5052] font-headline font-bold">お気に入りの予定を、ポケットに入れて持ち歩こう。</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- 終わった予定（思い出）セクション -->
+  <% if past_watchlists.any? %>
+    <div class="mt-12 mb-6 px-2 ">
+    <div class="divider font-headline text-sm opacity-40 gap-1">
+      <span>これまでの足跡</span>
+      <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'opsz' 20, 'wght' 300;">
+        footprint
+      </span>
+    </div>
+        <% past_watchlists.each do |watchlist| %>
+          <%= render 'watchlist_card', watchlist: watchlist, is_past: true %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</main>
+
+<!-- Floating Action Button (新規作成へ) -->
+<%= link_to new_watchlist_path, class: "fixed bottom-24 right-6 z-50 w-14 h-14 rounded-2xl text-on-primary flex items-center justify-center transition-all duration-200 active:scale-90 shadow-2xl", style: "background-color: #B6E0F3;" do %>
+  <span class="material-symbols-outlined text-3xl text-[#2d6489]">add</span>
+<% end %>
+
+<%= render 'layouts/footer' %>

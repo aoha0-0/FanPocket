@@ -1,0 +1,25 @@
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-8 py-3 pb-safe z-50 rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.1)] transition-colors" style="background-color: white">
+  
+  <%# コレクション（一覧）へのリンク %>
+  <%= link_to watchlists_path, class: "flex flex-col items-center justify-center transition-all group" do %>
+    <%# アクティブ時は濃い青、非アクティブ時は少し透過させる %>
+    <span class="material-symbols-outlined text-3xl <%= action_name == 'index' ? 'text-[#2d6489]' : 'text-[#2d6489]/50' %>" 
+          style="<%= 'font-variation-settings: \'FILL\' 1;' if action_name == 'index' %>">
+      style
+    </span>
+    <span class="text-[10px] font-bold mt-0.5 <%= action_name == 'index' ? 'text-[#2d6489]' : 'text-[#2d6489]/50' %>">
+      コレクション
+    </span>
+  <% end %>
+
+  <%# 設定へのリンク（パスは必要に応じて変更してください） %>
+  <%= link_to "#", class: "flex flex-col items-center justify-center transition-all group" do %>
+    <span class="material-symbols-outlined text-3xl text-[#2d6489]/50 group-hover:text-[#2d6489]">
+      settings
+    </span>
+    <span class="text-[10px] font-bold mt-0.5 text-[#2d6489]/50 group-hover:text-[#2d6489]">
+      設定
+    </span>
+  <% end %>
+  
+</nav>
