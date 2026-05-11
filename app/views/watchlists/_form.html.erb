@@ -1,0 +1,64 @@
+<%# app/views/watchlists/_form.html.erb %>
+<%= form_with model: watchlist, class: "space-y-10", local: true do |f| %>
+  <!-- エラーメッセージ表示 -->
+  <% if watchlist.errors.any? %>
+    <div class="bg-error/10 border border-error/20 text-error p-4 rounded-2xl text-sm">
+      <ul class="list-disc list-inside">
+        <% watchlist.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- URL Input Section -->
+  <div class="space-y-3">
+    <%= f.label :url, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+      <span class="material-symbols-outlined text-lg">link</span>URL
+    <% end %>
+    <%= f.url_field :url, class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300", placeholder: "https://example.com/event-page" %>
+    <button class="text-primary bg-[#B6E0F3]/50 font-bold text-xs flex items-center gap-1.5 hover:opacity-80 transition-opacity ml-1 bg-accent-soft/40 px-3 py-2 rounded-full active:scale-95" type="button">
+      <span class="material-symbols-outlined text-sm">auto_fix</span>タイトルを自動取得する
+    </button>
+  </div>
+
+  <!-- Title Input Section -->
+  <div class="space-y-3">
+    <%= f.label :title, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+      <span class="material-symbols-outlined text-lg">title</span>タイトル
+    <% end %>
+    <%= f.text_field :title, class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300", placeholder: "グッズ予約、ライブ名など" %>
+  </div>
+
+  <!-- Date Selection Grid -->
+  <div class="grid grid-cols-1 gap-8">
+    <div class="space-y-3">
+      <%= f.label :start_at, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+        <span class="material-symbols-outlined text-lg">calendar_today</span>開始日時
+      <% end %>
+      <%= f.text_field :start_at, data: { controller: "flatpickr" }, class: "datepicker w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300", placeholder: "年/月/日 --:--" %>
+    </div>
+
+    <div class="space-y-3">
+      <%= f.label :end_at,  class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+        <span class="material-symbols-outlined text-lg">timer</span>締切日時
+      <% end %>
+      <%= f.text_field :end_at, data: { controller: "flatpickr" }, class: "datepicker w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300", placeholder: "年/月/日 --:--" %>
+    </div>
+  </div>
+
+  <!-- Memo Section -->
+  <div class="space-y-3">
+    <%= f.label :memo, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+      <span class="material-symbols-outlined text-lg">description</span>メモ
+    <% end %>
+    <%= f.text_area :memo, class: "w-full min-h-[120px] pl-12 pr-8 py-5 bg-[#f0f4f8] border-none rounded-[32px] shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-400/60 leading-relaxed", placeholder: "持ち物、連番相手の連絡先など..." %>
+  </div>
+
+  <div class="pt-6 pb-20"> 
+    <%= f.button class: "w-full bg-[#B6E0F3] text-[#2d6489] font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] flex items-center justify-center gap-3", type: "submit" do %>
+      <span class="material-symbols-outlined font-bold">save</span>
+      <%= watchlist.new_record? ? "保存する" : "更新する" %>
+    <% end %>
+  </div>
+<% end %>
