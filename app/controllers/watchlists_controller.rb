@@ -26,10 +26,11 @@ class WatchlistsController < ApplicationController
   end
 
   def update
-  if @watchlist.update(watchlist_params)
-    redirect_to watchlist_path(@watchlist), notice: "更新しました"
-  else
-    render :edit, status: :unprocessable_entity
+    if @watchlist.update(watchlist_params)
+      redirect_to watchlist_path(@watchlist), notice: "更新しました"
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 end
  
