@@ -33,9 +33,7 @@
     </div>
   </section>
 
-  <div class="space-y-6"> <%# この space-y-6 がカードの間の溝を作ります %>
-
-  <!-- Status Card (ステータス専用枠) -->
+  <div class="space-y-6">
   <div class="bg-white p-6 rounded-3xl puffy-shadow relative overflow-hidden">
     <div class="absolute top-0 right-0 w-10 h-10 bg-tertiary-container/10 rounded-bl-3xl"></div>
     
@@ -46,7 +44,6 @@
       <span class="text-primary/60 text-xs font-bold uppercase tracking-widest font-headline">現在のステータス</span>
     </div>
 
-    <%# 入力フォーム風のデザイン（影なし・補足なし） %>
     <div class="w-full px-6 py-5 bg-[#f0f4f8] border-none rounded-[32px] flex items-center gap-4">
       <% if @watchlist.end_at && @watchlist.end_at < Time.current %>
         <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
@@ -116,7 +113,7 @@
           <span class="material-symbols-outlined text-primary/60 text-xl">link</span>
           <span class="text-primary/60 text-xs font-bold uppercase tracking-widest font-headline">関連リンク</span>
         </div>
-        <%# bg-grayから、ログインフォームと同じbg-whiteに変更し、枠線を太く(border-2)しました %>
+        
         <div class="w-full pl-6 pr-4 py-4 bg-[#f0f4f8]/80 border-none rounded-[32px] flex items-center justify-between gap-4">
           <p class="text-gray-700 truncate font-medium text-sm">
             <%= @watchlist.url %>
@@ -147,7 +144,7 @@
 
 <!-- Footer Actions -->
 <footer class="max-w-2xl mx-auto px-6 pb-32 mt-12 mb-10 flex flex-col gap-6">
-  <%= link_to "#", class: "w-full bg-[#B6E0F3] text-[#2d6489] font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] flex items-center justify-center gap-3", type: "submit" do %>
+  <%= link_to edit_watchlist_path(@watchlist), class: "w-full bg-[#B6E0F3] text-[#2d6489] font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] flex items-center justify-center gap-3", type: "submit" do %>
     <span class="material-symbols-outlined font-bold">edit</span>
     この予定を編集する
   <% end %>

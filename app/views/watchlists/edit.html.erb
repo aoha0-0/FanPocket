@@ -1,0 +1,12 @@
+<main class="flex-grow px-6 max-w-3xl mx-auto w-full pt-8">
+  <div class="mb-10">
+    <h2 class="font-headline font-extrabold text-3xl text-center text-primary tracking-tight">予定の編集</h2>
+    <p class="text-center text-[#4f5052] text-sm mt-2">登録内容を修正して更新しましょう</p>
+  </div>
+
+  <%= render 'form', watchlist: @watchlist %>
+
+  <div class="text-center -mt-12 mb-20">
+    <%= link_to '戻る', watchlist_path(@watchlist), class: "text-gray-400 text-sm hover:underline" %>
+  </div>
+</main>

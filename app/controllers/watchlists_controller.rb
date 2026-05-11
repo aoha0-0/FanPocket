@@ -1,13 +1,12 @@
-# app/controllers/watchlists_controller.rb
 class WatchlistsController < ApplicationController
-  before_action :authenticate_user! # Deviseを使っている場合、ログイン必須にする
+  before_action :authenticate_user!
+  before_action :set_watchlist, only: [:show, :edit, :update]
 
   def index
-    @watchlists = Watchlist.order(start_at: :asc, end_at: :asc)
+    @watchlists =current_user.watchlists.order(start_at: :asc, end_at: :asc)
   end
 
   def show
-    @watchlist = Watchlist.find(params[:id])
   end
 
   def new
@@ -19,12 +18,29 @@ class WatchlistsController < ApplicationController
     if @watchlist.save
       redirect_to watchlists_path, notice: "新しい予定を登録しました"
     else
-      # 保存に失敗（バリデーションエラー）した時、new画面を再表示する
       render :new, status: :unprocessable_entity
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @watchlist.update(watchlist_params)
+      redirect_to watchlist_path(@watchlist), notice: "更新しました"
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+ 
   private
+
+  def set_watchlist
+    @watchlist = current_user.watchlists.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    # 他人のIDを指定して探せなかった場合、一覧へ戻す
+    redirect_to watchlists_path, alert: "指定されたページは見つかりません"
+  end
 
   def watchlist_params
     params.require(:watchlist).permit(:title, :memo, :url, :start_at, :end_at, :is_done, :image)
