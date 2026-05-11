@@ -1,7 +1,6 @@
 class WatchlistsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_watchlist, only: [:show, :edit, :update]
-  before_action :ensure_correct_user, only: [:edit, :update]
 
   def index
     @watchlists =current_user.watchlists.order(start_at: :asc, end_at: :asc)
