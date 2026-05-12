@@ -32,6 +32,12 @@ class WatchlistsController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
+
+  def destroy
+    watchlist = current_user.watchlists.find(params[:id])
+    watchlist.destroy!
+    redirect_to watchlists_path, notice: 'これからの予定から削除しました', status: :see_other
+end
  
   private
 

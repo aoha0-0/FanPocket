@@ -11,5 +11,5 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   # config/routes.rb
-  resources :watchlists, only: [:index, :show, :new, :create, :edit, :update]
+  resources :watchlists, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 end
