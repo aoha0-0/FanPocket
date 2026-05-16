@@ -73,6 +73,23 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  # Action Mailerの設定（Resend用）
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  
+  # Render本番環境のURLを設定（自身のRender URLに変更してください）
+  config.action_mailer.default_url_options = { host: 'fanpocket.onrender.com' }
+
+  # SMTP経由でResendから送信する設定
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.resend.com',
+    port:                 587,
+    user_name:            'resend', 
+    password:             ENV['RESEND_API_KEY'],
+    authentication:       'plain',
+    enable_starttls_auto: true
+  }
+  
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
