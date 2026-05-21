@@ -37,7 +37,19 @@ class WatchlistsController < ApplicationController
     watchlist = current_user.watchlists.find(params[:id])
     watchlist.destroy!
     redirect_to watchlists_path, notice: 'これからの予定から削除しました', status: :see_other
-end
+  end
+
+  def test_mail
+   # 即席でメールを送信するコマンド
+    ActionMailer::Base.mail(
+      from: "info@fanpocket.fun", 
+      to: "aquarium.swing@gmail.com", 
+      subject: "本番環境からの疎通テスト", 
+      body: "Resendと独自ドメインの紐付けテストです。これが届いていれば成功です！"
+    ).deliver_now
+
+    render plain: "テストメールを送信しました！Gmailを確認してください。"
+  end
  
   private
 
