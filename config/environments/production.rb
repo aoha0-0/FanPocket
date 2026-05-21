@@ -74,7 +74,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   # Action Mailerの設定（Resend用）
-  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.delivery_method = :resend
   config.action_mailer.perform_deliveries = true
   
   # Render本番環境のURLを設定（自身のRender URLに変更してください）
