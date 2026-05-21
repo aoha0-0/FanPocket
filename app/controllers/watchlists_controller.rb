@@ -42,7 +42,7 @@ class WatchlistsController < ApplicationController
   def test_mail
    # 即席でメールを送信するコマンド
     ActionMailer::Base.mail(
-      from: "info@fanpocket.net", 
+      from: "info@fanpocket.fun", 
       to: "aquarium.swing@gmail.com", 
       subject: "本番環境からの疎通テスト", 
       body: "Resendと独自ドメインの紐付けテストです。これが届いていれば成功です！"
