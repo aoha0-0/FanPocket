@@ -75,6 +75,7 @@ Rails.application.configure do
 
   # Action Mailerの設定（Resend用）
   config.action_mailer.delivery_method = :resend
+  Resend.api_key = ENV['RESEND_API_KEY']
   config.action_mailer.perform_deliveries = true
   
   # Render本番環境のURLを設定（自身のRender URLに変更してください）
