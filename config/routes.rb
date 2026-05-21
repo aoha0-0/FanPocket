@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  get 'test_mail', to: 'top_pages#test_mail'
+  get 'test_mail', to: 'watchlists#test_mail'
 
   # config/routes.rb
   resources :watchlists, only: [:index, :show, :new, :create, :edit, :update, :destroy]
