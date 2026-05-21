@@ -9,7 +9,7 @@ class StaticPagesController < ApplicationController
   # 即席でメールを送信するコマンド
   ActionMailer::Base.mail(
     from: "info@fanpocket.net", 
-    to: "あなたの実際のGmailアドレス@gmail.com", # ←ご自身のGmailに書き換えてください
+    to: "aquarium.swing@gmail.com", 
     subject: "本番環境からの疎通テスト", 
     body: "Resendと独自ドメインの紐付けテストです。これが届いていれば成功です！"
   ).deliver_now
