@@ -74,12 +74,16 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   # Action Mailerの設定（Resend用）
-  config.action_mailer.delivery_method = :resend
-  Resend.api_key = ENV['RESEND_API_KEY']
+  #config.action_mailer.delivery_method = :resend
+  config.action_mailer.delivery_method = :letter_opener_web
+  #Resend.api_key = ENV['RESEND_API_KEY']
   config.action_mailer.perform_deliveries = true
   
   # Render本番環境のURLを設定（自身のRender URLに変更してください）
-  config.action_mailer.default_url_options = { host: 'fanpocket.onrender.com' }
+  #config.action_mailer.default_url_options = { host: 'fanpocket.onrender.com' }
+  
+  # 開発環境（ローカル）用のURLを設定
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
   # SMTP経由でResendから送信する設定
   config.action_mailer.smtp_settings = {
