@@ -55,6 +55,13 @@
     <%= f.text_area :memo, class: "w-full min-h-[120px] pl-12 pr-8 py-5 bg-[#f0f4f8] border-none rounded-[32px] shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-400/60 leading-relaxed", placeholder: "持ち物、連番相手の連絡先など..." %>
   </div>
 
+  <div class="form-control mb-4 pb-4">
+    <label class="label cursor-pointer justify-start gap-3">
+      <%= f.check_box :is_done, class: "toggle toggle-primary" %>
+      <span class="label-text font-bold text-primary">完了にする</span>
+    </label>
+  </div>
+
   <div class="pt-6 pb-20"> 
     <%= f.button class: "w-full bg-[#B6E0F3] text-[#2d6489] font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] flex items-center justify-center gap-3", type: "submit" do %>
       <span class="material-symbols-outlined font-bold">save</span>

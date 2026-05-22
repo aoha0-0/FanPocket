@@ -33,23 +33,35 @@
     </div>
   </section>
 
-  <div class="space-y-6">
+<div class="space-y-6">
   <div class="bg-white p-6 rounded-3xl puffy-shadow relative overflow-hidden">
     <div class="absolute top-0 right-0 w-10 h-10 bg-tertiary-container/10 rounded-bl-3xl"></div>
     
     <div class="flex items-center gap-2 mb-4">
       <span class="material-symbols-outlined text-primary/60 text-xl">
-        <%= (@watchlist.end_at && @watchlist.end_at < Time.current) ? 'check_circle' : 'hourglass_empty' %>
+        <%# 最優先で完了か、それ以外（受付終了・未対応）かでアイコンを切り替え %>
+        <%= @watchlist.is_done? ? 'check_circle' : 'hourglass_empty' %>
       </span>
       <span class="text-primary/60 text-xs font-bold uppercase tracking-widest font-headline">現在のステータス</span>
     </div>
 
     <div class="w-full px-6 py-5 bg-[#f0f4f8] border-none rounded-[32px] flex items-center gap-4">
-      <% if @watchlist.end_at && @watchlist.end_at < Time.current %>
-        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center shrink-0">
-          <span class="material-symbols-outlined text-gray-500 text-xl">done_all</span>
+      
+      <%# 1. ユーザーが「完了」チェックを入れた場合 %>
+      <% if @watchlist.is_done? %>
+        <div class="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-teal-500 text-xl">done_all</span>
         </div>
         <span class="text-gray-500 font-bold text-lg">対応済み</span>
+
+      <% # 2. チェックはないが、終了日時を過ぎている場合（受付終了） %>
+      <% elsif @watchlist.end_at && @watchlist.end_at < Time.current %>
+        <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-amber-600 text-xl">event_busy</span>
+        </div>
+        <span class="text-amber-700 font-bold text-lg">受付終了</span>
+
+      <% # 3. まだどちらでもない場合（未対応） %>
       <% else %>
         <div class="relative flex shrink-0">
           <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center">
@@ -59,6 +71,7 @@
         </div>
         <span class="text-sky-600 font-bold text-lg">未対応</span>
       <% end %>
+
     </div>
   </div>
 
