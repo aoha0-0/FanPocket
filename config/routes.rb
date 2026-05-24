@@ -12,6 +12,11 @@ Rails.application.routes.draw do
 
   get 'test_mail', to: 'watchlists#test_mail'
 
+  # 開発環境のみ letter_opener_web の画面を確認できるようにマウントする
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
+
   # config/routes.rb
   resources :watchlists, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 end
