@@ -1,0 +1,17 @@
+name: Wake up Render Service
+
+on:
+  schedule:
+    # 21:55 (UTC) = 日本時間 6:55 (7:00の通知用)
+    # 10:55 (UTC) = 日本時間 19:55 (20:00の通知用)
+    - cron: '55 10,21 * * *'
+  workflow_dispatch: # 手動で実行するためのボタンをGitHub上に表示させます
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send a ping request to Render
+        run: |
+          curl -s "${{ secrets.RENDER_APP_URL }}" > /dev/null
+          echo "Ping sent to Render app successfully."
