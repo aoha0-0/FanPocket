@@ -17,8 +17,18 @@ class NotificationTestsController < ApplicationController
     Watchlist.where("title LIKE ?", "【対象%】").destroy_all
 
     # テスト用ユーザーの準備
-    user_a = User.find_or_create_by!(email: 'your_email+userA@example.com') { |u| u.password = 'password123' }
-    user_b = User.find_or_create_by!(email: 'your_email+userB@example.com') { |u| u.password = 'password123' }
+    # ユーザーA, BがすでにDBにいれば取得、いなければ新しく作成する（!を外して安全に処理）
+    user_a = User.find_by(email: 'your_email+userA@example.com')
+    unless user_a
+      user_a = User.new(email: 'your_email+userA@example.com', password: 'password123')
+      user_a.save(validate: false) # テスト用なので他のバリデーションをスキップして強制保存
+    end
+
+    user_b = User.find_by(email: 'your_email+userB@example.com')
+    unless user_b
+      user_b = User.new(email: 'your_email+userB@example.com', password: 'password123')
+      user_b.save(validate: false) # テスト用なので強制保存
+    end
 
     results << "\n=== 2. Creating Data & Running Extraction ==="
 
