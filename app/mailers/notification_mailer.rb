@@ -31,4 +31,12 @@ class NotificationMailer < ApplicationMailer
     @content = content
     mail(to: user_email, subject: "【本日締切】お忘れではありませんか？：#{@title}")
   end
+
+  def start_reminder_email(user_email, title, content)
+    @title = title
+    @content = content
+
+    mail(to: @user_email,subject: "【FanPocket】本日開始です：#{title}"
+    )
+  end
 end
