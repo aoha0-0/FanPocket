@@ -32,11 +32,11 @@ class NotificationMailer < ApplicationMailer
     mail(to: user_email, subject: "【本日締切】お忘れではありませんか？：#{@title}")
   end
 
-  def start_reminder_email(user_email, title, content)
-    @title = title
-    @content = content
+  def start_notice(user_email, title, content) # メソッド名をファイル名に合わせる
+  @title = title
+  @content = content
 
-    mail(to: @user_email,subject: "【FanPocket】本日開始です：#{title}"
-    )
-  end
+  mail(to: user_email,subject: "【FanPocket】今日開始です：#{@title}"
+  )
+end
 end
