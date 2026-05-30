@@ -28,6 +28,14 @@ class Watchlist < ApplicationRecord
     where(is_done: false, end_at: start_of_day..end_of_day)
   }
 
+  # 今日が開始日かつ未完了のデータを取得
+  scope :starting_today, -> {
+    where(
+      start_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day,
+      is_done: false
+    )
+  }
+
   private
 
   def start_at_or_end_at_must_be_present
