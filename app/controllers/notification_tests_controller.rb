@@ -14,8 +14,7 @@ class NotificationTestsController < ApplicationController
 
     # --- Step 2: テストデータ作成 ---
     results << "\n=== 2. Create Test Data ==="
-    # ご自身の実際のメールアドレスを指定するとテストメールを受け取れます
-    my_email = "あなたの実際のメールアドレス@example.com"
+    my_email = "aoha@example.com"
     user = User.find_by(email: my_email)
 
     if user.nil?
