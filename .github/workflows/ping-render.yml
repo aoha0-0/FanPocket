@@ -31,7 +31,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.2.2' 
-          bundle-cache: true
+          bundler-cache: true
 
       - name: Install gems
         run: bundle install
@@ -44,6 +44,7 @@ jobs:
         env:
           RAILS_ENV: production
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       # 5. 【夜20時通知】3日前・前日タスクの実行
       # ※夜のCron（'55 10 * * *'）で起動した時、または手動実行の時に動く
@@ -55,3 +56,4 @@ jobs:
         env:
           RAILS_ENV: production
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
