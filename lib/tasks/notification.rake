@@ -1,16 +1,17 @@
 namespace :notification do
   desc "締切3日前の未対応タスクがあるユーザーに通知を送る"
   task send_3days_prior: :environment do
-    targets = Watchlist.alert_three_days_prior
+    targets = Watchlist.alert_three_days_prior.includes(:user)
 
     puts "--- 3日前通知バッチ処理 開始 (対象: #{targets.count}件) ---"
 
-    targets.each do |watchlist|
+    targets.find_each do |watchlist|
       user = watchlist.user
+      next unless user
       
       user_email = user.email
       title      = watchlist.title
-      content    = "「#{watchlist.title}」の締め切りまであと3日です。大切な予定を見逃さないようにご確認ください。" 
+      content    = "「気になっている#{watchlist.title}」の締め切りまであと3日です。忘れないうちにチェックしてみませんか？" 
 
       NotificationMailer.three_days_ago_notice(user_email, title, content).deliver_now
       
@@ -26,15 +27,15 @@ namespace :notification do
 
     puts "--- 前日通知バッチ処理 開始 (対象: #{targets.count}件) ---"
 
-    targets.each do |watchlist|
+    targets.find_each do |watchlist|
       user = watchlist.user
       next unless user 
 
       user_email = user.email
       title      = watchlist.title
-      content    = "「#{watchlist.title}」の締め切りが明日に迫っています。大切な予定を見逃さないようにご確認ください。"
+      content    = "「気になっている#{watchlist.title}」の締め切りは明日です。大切な予定を見逃さないようにご確認ください。"
 
-      NotificationMailer.three_days_ago_notice(user_email, title, content).deliver_now
+      NotificationMailer.day_before_notice(user_email, title, content).deliver_now
       
       puts "前日通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"
     end
@@ -51,15 +52,15 @@ namespace :notification do
 
     puts "--- 当日締切通知バッチ処理 開始 (対象: #{deadline_targets.count}件) ---"
 
-    deadline_targets.each do |watchlist|
+    deadline_targets.find_each do |watchlist|
       user = watchlist.user
       next unless user
 
       user_email = user.email
       title      = watchlist.title
-      content    = "「#{watchlist.title}」の締め切りは本日です。大切な予定を見逃さないようにご確認ください。"
+      content    = "「気になっている#{watchlist.title}」の締め切りは本日です。大切な予定を見逃さないようにご確認ください。"
 
-      NotificationMailer.three_days_ago_notice(user_email, title, content).deliver_now
+      NotificationMailer.today_notice(user_email, title, content).deliver_now
       
       puts "当日締切通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"
     end
@@ -80,7 +81,7 @@ namespace :notification do
 
       user_email = user.email
       title      = watchlist.title
-      content    = "「#{watchlist.title}」が本日より開始されます！初動を逃さないよう、詳細をご確認ください✨"
+      content    = "「気になっている#{watchlist.title}」の開始は本日です。詳細をチェックしてみませんか？"
 
       NotificationMailer.start_notice(user_email, title, content).deliver_now
       
