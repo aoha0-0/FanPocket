@@ -2,16 +2,51 @@ name: Wake up Render Service
 
 on:
   schedule:
+    # ── 朝7時通知の準備 ──
     # 21:55 (UTC) = 日本時間 6:55 (7:00の通知用)
-    # 10:55 (UTC) = 日本時間 19:55 (20:00の通知用)
-    - cron: '55 10,21 * * *'
-  workflow_dispatch: # 手動で実行するためのボタンをGitHub上に表示させます
+    - cron: '55 21 * * *'
 
+    # ── 夜20時通知（前日・3日前）の準備 ──
+    # 10:55 (UTC) = 日本時間 19:55 (20:00の通知用)
+    - cron: '55 10 * * *'
+    
+  workflow_dispatch: # 手動実行用ボタン
+  
 jobs:
-  ping:
+  ping_and_notify:
     runs-on: ubuntu-latest
     steps:
+      # 1. まず眠っているRenderのサーバーを起こす（コールドスタート対策）
       - name: Send a ping request to Render
         run: |
           curl -s "${{ secrets.RENDER_APP_URL }}" > /dev/null
           echo "Ping sent to Render app successfully."
+
+      # 2. リポジトリのコードをチェックアウト（Rakeを実行するために必要）
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 3. Ruby環境のセットアップ
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2.2' 
+          bundle-cache: true
+
+      # 4. 【朝7時通知】当日・開始日タスクの実行
+      # ※朝のCron（'55 21 * * *'）で起動した時、または手動実行の時に動く
+      - name: Run Same Day Notifications (7:00 JST)
+        if: github.event.schedule == '55 21 * * *' || github.event_name == 'workflow_dispatch'
+        run: bundle exec rake notification:send_same_day
+        env:
+          RAILS_ENV: production
+          
+      # 5. 【夜20時通知】3日前・前日タスクの実行
+      # ※夜のCron（'55 10 * * *'）で起動した時、または手動実行の時に動く
+      - name: Run Night Notifications (20:00 JST)
+        if: github.event.schedule == '55 10 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          bundle exec rake notification:send_3days_prior
+          bundle exec rake notification:send_day_before
+        env:
+          RAILS_ENV: production
