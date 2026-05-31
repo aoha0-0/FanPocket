@@ -32,6 +32,9 @@ jobs:
         with:
           ruby-version: '3.2.2' 
           bundle-cache: true
+          
+      - name: Install gems
+        run: bundle install
 
       # 4. 【朝7時通知】当日・開始日タスクの実行
       # ※朝のCron（'55 21 * * *'）で起動した時、または手動実行の時に動く
