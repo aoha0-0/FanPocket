@@ -1,17 +1,14 @@
 name: Wake up Render Service
 
 on:
-  schedule:
-    # ── 朝7時通知の準備 ──
-    # 21:55 (UTC) = 日本時間 6:55 (7:00の通知用)
-    - cron: '55 21 * * *'
+  # 🌟 手動実行および外部（GAS）からの入力を受け付ける設定
+  workflow_dispatch:
+    inputs:
+      notification_type:
+        description: 'Notification Type (morning or night)'
+        required: true
+        default: 'morning'
 
-    # ── 夜20時通知（前日・3日前）の準備 ──
-    # 10:55 (UTC) = 日本時間 19:55 (20:00の通知用)
-    - cron: '55 10 * * *'
-    
-  workflow_dispatch: # 手動実行用ボタン
-  
 jobs:
   ping_and_notify:
     runs-on: ubuntu-latest
