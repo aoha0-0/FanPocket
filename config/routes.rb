@@ -17,6 +17,6 @@ Rails.application.routes.draw do
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
 
-  # config/routes.rb
   resources :watchlists, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+  resource :settings, only: [:show]
 end
