@@ -1,0 +1,90 @@
+<header class="bg-white/80 backdrop-blur-sm sticky top-0 z-40 transition-colors border-b border-white">
+  <div class="max-w-full mx-auto px-4 py-3">
+    <div class="flex items-center justify-between w-full">
+      <div class="flex items-center gap-3">
+        <%= link_to root_path, class: "material-symbols-outlined text-primary hover:opacity-70 transition-opacity" do %>
+          arrow_back
+        <% end %>
+        <h1 class="font-headline font-bold text-lg text-primary">これからの予定</h1>
+      </div>
+      <div class="flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-white shadow-sm">
+        <%= image_tag "logo.png", class: "w-6 h-6 object-contain", alt: "FanPocket Logo" %>
+        <span class="font-headline font-bold tracking-tight text-primary">FanPocket</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="px-6 mt-6 space-y-6 max-w-2xl mx-auto pb-28">
+  <div class="mb-4">
+    <h2 class="font-headline font-extrabold text-2xl text-center text-primary">設定</h2>
+    <p class="text-center text-[#4f5052] text-sm mt-1">アプリの使い心地を調整しましょう</p>
+  </div>
+
+  <section>
+    <div class="flex items-center gap-2 mb-3 px-1">
+      <span class="material-symbols-outlined text-primary text-xl">account_circle</span>
+      <h3 class="font-bold text-sm text-on-surface-variant">アカウント</h3>
+    </div>
+    <div class="bg-white rounded-xl p-1 shadow-sm overflow-hidden border border-base-200">
+      <button class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left" disabled>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary/50 text-xl">mail</span>
+          <span class="text-primary font-medium">メールアドレス</span>
+        </div>
+        <div class="flex items-center gap-2 text-on-surface-variant">
+          <span class="text-sm"><%= current_user.email %></span>
+          <span class="material-symbols-outlined text-lg">chevron_right</span>
+        </div>
+      </button>
+      <div class="h-px mx-4 bg-gray-100"></div>
+      <button class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left" disabled>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary/50 text-xl">lock</span>
+          <span class="text-primary font-medium">パスワードの変更</span>
+        </div>
+        <div class="flex items-center gap-2 text-on-surface-variant">
+          <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <section>
+    <div class="flex items-center gap-2 mb-3 px-1">
+      <span class="material-symbols-outlined text-primary text-xl">more_horiz</span>
+      <h3 class="font-bold text-sm text-on-surface-variant">その他</h3>
+    </div>
+    <div class="bg-white rounded-xl p-1 shadow-sm overflow-hidden border border-base-200">
+      <button class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left" disabled>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary/50 text-xl">menu_book</span>
+          <span class="text-primary font-medium">使いかたガイド</span>
+        </div>
+        <span class="material-symbols-outlined text-on-surface-variant text-lg">open_in_new</span>
+      </button>
+      <div class="h-px mx-4 bg-gray-100"></div>
+      <button class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left" disabled>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary/50 text-xl">shield_lock</span>
+          <span class="text-primary font-medium">プライバシーポリシー</span>
+        </div>
+        <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
+      </button>
+      <div class="h-px mx-4 bg-gray-100"></div>
+      
+      <%= button_to destroy_user_session_path, 
+                    method: :delete, 
+                    data: { turbo: false }, 
+                    class: "w-full flex items-center justify-between p-4 hover:bg-red-50/30 transition-colors text-left" do %>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-error text-xl">logout</span>
+          <span class="text-error font-semibold">ログアウト</span>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+</main>
+
+<%= render 'layouts/footer' %>
