@@ -38,7 +38,7 @@ FanPocketは、公式X（旧Twitter）やWebサイトで溢れるチケット先
 
 | ログイン画面 | マイページ (スケジュール管理) |
 | :---: | :---: |
-| <img src="https://i.gyazo.com/c3f210d841ba633a899996db75830b50.png" width="100%" alt="ログイン画面"> | <img src="https://i.gyazo.com/c708ea49a27b33fd40b2ba30ac14b7f5.png" width="100%" alt="マイページ画面"> |
+| <img src="https://i.gyazo.com/c3f210d841ba633a899996db75830b50.png" width="100%" alt="ログイン画面"> | <img src="https://i.gyazo.com/7f6bb7be03639c62c3235efc1377c8ed.png" width="100%" alt="マイページ画面"> |
 | *Tailwind CSS × DaisyUIによる、どのジャンルでも使いやすいクリーンなUI* | *視覚的ノイズを削ぎ落とし、開始・締切のタイミングがひと目でわかるレイアウト* |
 
 ---
