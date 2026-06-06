@@ -9,6 +9,7 @@ export default class extends Controller {
       locale: Japanese,
       enableTime: true,
       dateFormat: "Y-m-d H:i",
+      minuteIncrement: 1,
     })
   }
 }

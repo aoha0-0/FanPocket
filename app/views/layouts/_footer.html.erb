@@ -5,10 +5,10 @@
     <%# アクティブ時は濃い青、非アクティブ時は少し透過させる %>
     <span class="material-symbols-outlined text-3xl <%= action_name == 'index' ? 'text-[#2d6489]' : 'text-[#2d6489]/50' %>" 
           style="<%= 'font-variation-settings: \'FILL\' 1;' if action_name == 'index' %>">
-      style
+    lists
     </span>
     <span class="text-[10px] font-bold mt-0.5 <%= action_name == 'index' ? 'text-[#2d6489]' : 'text-[#2d6489]/50' %>">
-      コレクション
+      これからの予定
     </span>
   <% end %>
 

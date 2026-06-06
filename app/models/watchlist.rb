@@ -3,6 +3,11 @@ class Watchlist < ApplicationRecord
 
   validates :title, presence: true, length: { maximum: 255 }
   validate :start_at_or_end_at_must_be_present
+
+  VALID_URL_REGEX = /\Ahttps?:\/\/[\S]+\z/
+  validates :url, allow_blank: true, format: { with: VALID_URL_REGEX }
+
+  validate :end_at_must_be_future
   
   #3日前通知用
   scope :alert_three_days_prior, -> {
@@ -38,9 +43,23 @@ class Watchlist < ApplicationRecord
 
   private
 
+  # 開始時間または締切時間のどちらかは必須
   def start_at_or_end_at_must_be_present
     if start_at.blank? && end_at.blank?
-      errors.add(:base, "開始時間または締切時間のどちらかは入力してください")
+      errors.add(:base, "開始日時または締切日時のどちらかは入力してください")
+    end
+  end
+
+  # 両方入力されている場合のみ、日時の矛盾（開始日 < 締切日）をチェック
+  def end_at_must_be_after_start_at
+    if start_at.present? && end_at.present? && end_at <= start_at
+      errors.add(:end_at, :must_be_after_start_at)
+    end
+  end
+
+  def end_at_must_be_future
+    if end_at.present? && end_at < Time.current
+    errors.add(:end_at, "は未来の日時を選択してください")
     end
   end
 end

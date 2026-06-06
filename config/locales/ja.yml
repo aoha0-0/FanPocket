@@ -1,0 +1,22 @@
+ja:
+  activerecord:
+    models:
+      watchlist: "予定"
+    attributes:
+      watchlist:
+        title: "タイトル"
+        url: "URL"
+        start_at: "開始日時"
+        end_at: "締切日時"
+    errors:
+      models:
+        watchlist:
+          base:
+            start_at_or_end_at_blank: "開始日時または締切日時のどちらかは入力してください"
+          attributes:
+            title:
+              blank: "を入力してください"
+            url:
+              invalid: "は有効な形式（http/https〜）で入力してください"
+            end_at:
+              must_be_after_start_at: "は開始日時より後の日時を選択してください"
