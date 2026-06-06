@@ -46,7 +46,7 @@ class Watchlist < ApplicationRecord
   # 開始時間または締切時間のどちらかは必須
   def start_at_or_end_at_must_be_present
     if start_at.blank? && end_at.blank?
-      errors.add(:base, :start_at_or_end_at_blank)
+      errors.add(:base, "開始日時または締切日時のどちらかは入力してください")
     end
   end
 

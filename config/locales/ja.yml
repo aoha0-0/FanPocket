@@ -11,9 +11,8 @@ ja:
     errors:
       models:
         watchlist:
-          attributes:
-            base:
-              start_at_or_end_at_blank: "開始日時または締切日時のどちらかは入力してください"
+          base:
+            start_at_or_end_at_blank: "開始日時または締切日時のどちらかは入力してください"
           attributes:
             title:
               blank: "を入力してください"
