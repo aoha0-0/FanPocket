@@ -5,7 +5,7 @@
         <%= watchlist.start_at&.strftime("%Y.%m.%d %H:%M") %>
       </p>
       <h3 class="font-headline font-bold text-lg text-on-surface leading-tight">
-        <%= watchlist.title %>
+        <%= truncate(watchlist.title, length: 30, separator: ' ') %>
       </h3>
     </div>
     
