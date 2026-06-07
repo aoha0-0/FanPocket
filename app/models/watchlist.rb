@@ -7,6 +7,7 @@ class Watchlist < ApplicationRecord
   VALID_URL_REGEX = /\Ahttps?:\/\/[\S]+\z/
   validates :url, allow_blank: true, format: { with: VALID_URL_REGEX }
 
+  validate :start_at_must_be_future
   validate :end_at_must_be_future
   
   #3日前通知用
@@ -57,9 +58,15 @@ class Watchlist < ApplicationRecord
     end
   end
 
+  def start_at_must_be_future
+    if start_at.present? && start_at < Time.current
+      errors.add(:start_at, "は未来の日時を選択してください")
+    end
+  end
+
   def end_at_must_be_future
     if end_at.present? && end_at < Time.current
-    errors.add(:end_at, "は未来の日時を選択してください")
+      errors.add(:end_at, "は未来の日時を選択してください")
     end
   end
 end
