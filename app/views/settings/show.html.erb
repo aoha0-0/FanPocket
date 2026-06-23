@@ -56,23 +56,40 @@
       <h3 class="font-bold text-sm text-on-surface-variant">その他</h3>
     </div>
     <div class="bg-white rounded-xl p-1 shadow-sm overflow-hidden border border-base-200">
-      <button class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left" disabled>
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary/50 text-xl">menu_book</span>
-          <span class="text-primary font-medium">使いかたガイド</span>
-        </div>
-        <span class="material-symbols-outlined text-on-surface-variant text-lg">open_in_new</span>
-      </button>
-      <div class="h-px mx-4 bg-gray-100"></div>
-      <button class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left" disabled>
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary/50 text-xl">shield_lock</span>
-          <span class="text-primary font-medium">プライバシーポリシー</span>
-        </div>
-        <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
-      </button>
-      <div class="h-px mx-4 bg-gray-100"></div>
-      
+      <%# 1. 使いかたガイド %>
+      <div class="border-b border-gray-100 mx-4">
+        <button class="w-full flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left" disabled>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary/50 text-xl">menu_book</span>
+            <span class="text-primary font-medium">使いかたガイド</span>
+          </div>
+          <span class="material-symbols-outlined text-on-surface-variant text-lg">open_in_new</span>
+        </button>
+      </div>
+
+      <%# 2. 利用規約（blockを追加し、外側をborderを持つdivで包む） %>
+      <div class="border-b border-gray-100 mx-4">
+        <%= link_to terms_path, class: "block w-full flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left" do %>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary/50 text-xl">description</span>
+            <span class="text-primary font-medium">利用規約</span>
+          </div>
+          <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
+        <% end %>
+      </div>
+
+      <%# 3. プライバシーポリシー（blockを追加し、外側をborderを持つdivで包む） %>
+      <div class="border-b border-gray-100 mx-4">
+        <%= link_to privacy_path, class: "block w-full flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left" do %>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary/50 text-xl">shield_lock</span>
+            <span class="text-primary font-medium">プライバシーポリシー</span>
+          </div>
+          <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
+        <% end %>
+      </div>
+  
+      <%# 4. ログアウト（一番下なので線は不要） %>
       <%= button_to destroy_user_session_path, 
                     method: :delete, 
                     data: { turbo: false }, 

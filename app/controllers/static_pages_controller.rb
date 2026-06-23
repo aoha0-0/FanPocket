@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class StaticPagesController < ApplicationController
-  # topアクションのみ、ログインなしでもアクセス可能にする
-  skip_before_action :authenticate_user!, only: [:top]
+  skip_before_action :authenticate_user!, only: %i[terms privacy]
 
-  def top; end
+  def terms; end
+
+  def privacy; end
 end
