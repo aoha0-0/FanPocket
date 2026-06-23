@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 # app/controllers/users/sessions_controller.rb
-class Users::SessionsController < Devise::SessionsController
-  def new
-    # Deviseが設定する「ログインしてください」の文言と一致する場合のみ、初回アラートを消去
-    if flash[:alert] == I18n.t('devise.failure.unauthenticated')
-      flash.delete(:alert)
+module Users
+  class SessionsController < Devise::SessionsController
+    def new
+      # Deviseが設定する「ログインしてください」の文言と一致する場合のみ、初回アラートを消去
+      flash.delete(:alert) if flash[:alert] == I18n.t('devise.failure.unauthenticated')
+      super
     end
-    super
   end
 end
