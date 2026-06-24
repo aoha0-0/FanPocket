@@ -2,7 +2,7 @@
 // Run that command whenever you add a new controller or create them with
 // ./bin/rails generate stimulus controllerName
 
-import { application } from "./application"
+import { application } from "controllers/application"
 
 // Importmap環境でコントローラーを正しく自動ロードする記述
 import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
