@@ -30,52 +30,62 @@
   </div>
 
   <!-- Title Input Section -->
-  <div class="space-y-3">
-    <%= f.label :title, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
-      <span class="material-symbols-outlined text-lg">title</span>タイトル
-    <% end %>
-    <%= f.text_field :title, class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:title].any?}", placeholder: "グッズ予約、ライブ名など" %>
-    
-    <%# 個別エラーメッセージ %>
-    <% if watchlist.errors[:title].any? %>
-      <p class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
-        <span class="material-symbols-outlined text-sm">info</span>
-        <%= watchlist.errors.full_messages_for(:title).first %>
-      </p>
-    <% end %>
-  </div>
+  <div data-controller="watchlist-form">
 
-  <!-- Date Selection Grid -->
-  <div class="grid grid-cols-1 gap-8">
-    <div class="space-y-3">
-      <%= f.label :start_at, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
-        <span class="material-symbols-outlined text-lg">calendar_today</span>開始日時
-      <% end %>
-      <%= f.text_field :start_at, data: { controller: "flatpickr" }, class: "datepicker w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:start_at].any?}", placeholder: "年/月/日 --:--" %>
-
-      <% if watchlist.errors[:start_at].any? %>
-        <p class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
-          <span class="material-symbols-outlined text-sm">info</span>
-          <%= watchlist.errors.full_messages_for(:start_at).first %>
-        </p>
-      <% end %>
-    </div>
+  <%= form_with(model: watchlist) do |f| %>
 
     <div class="space-y-3">
-      <%= f.label :end_at,  class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
-        <span class="material-symbols-outlined text-lg">timer</span>締切日時
-      <% end %>
-      <%= f.text_field :end_at, data: { controller: "flatpickr" }, class: "datepicker w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:end_at].any?}", placeholder: "年/月/日 --:--" %>
+      <%= f.label :title, "タイトル", class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" %>
       
-      <%# 個別エラーメッセージ（日時の矛盾など） %>
-      <% if watchlist.errors[:end_at].any? %>
-        <p class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
+      <%= f.text_field :title, 
+            data: { 
+              watchlist_form_target: "titleInput",
+              action: "input->watchlist-form#checkTitle"
+            }, 
+            class: "w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:title].any?}", placeholder: "タイトルを入力" %>
+
+      <% if watchlist.errors[:title].any? %>
+        <p data-watchlist-form-target="titleErrorMessage" class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
           <span class="material-symbols-outlined text-sm">info</span>
-          <%= watchlist.errors.full_messages_for(:end_at).first %>
+          <%= watchlist.errors.full_messages_for(:title).first %>
         </p>
       <% end %>
     </div>
-  </div>
+
+
+    <div class="grid grid-cols-1 gap-8 mt-8">
+      
+      <div class="space-y-3">
+        <%= f.label :start_at, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+          <span class="material-symbols-outlined text-lg">calendar_today</span>開始日時
+        <% end %>
+        <%= f.text_field :start_at, data: { controller: "flatpickr", watchlist_form_target: "startAtInput" }, class: "datepicker w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:start_at].any?}", placeholder: "年/月/日 --:--" %>
+
+        <% if watchlist.errors[:start_at].any? %>
+          <p data-watchlist-form-target="startErrorMessage" class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">info</span>
+            <%= watchlist.errors.full_messages_for(:start_at).first %>
+          </p>
+        <% end %>
+      </div>
+
+      <div class="space-y-3">
+        <%= f.label :end_at,  class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+          <span class="material-symbols-outlined text-lg">timer</span>締切日時
+        <% end %>
+        <%= f.text_field :end_at, data: { controller: "flatpickr", watchlist_form_target: "endAtInput" }, class: "datepicker w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:end_at].any?}", placeholder: "年/月/日 --:--" %>
+        
+        <% if watchlist.errors[:end_at].any? %>
+          <p data-watchlist-form-target="errorMessage" class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">info</span>
+            <%= watchlist.errors.full_messages_for(:end_at).first %>
+          </p>
+        <% end %>
+      </div>
+
+    </div>
+
+    <% end %>
 
   <!-- Memo Section -->
   <div class="space-y-3">

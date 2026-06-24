@@ -74,7 +74,7 @@ class Watchlist < ApplicationRecord
     return true if start_at.present? && end_at.blank?
 
     # パターンB: 締切があって、時間が 00:00:00（日付のみ入力）のとき
-    return true if end_at.present? && end_at == end_at.beginning_of_day
+    true if end_at.present? && end_at == end_at.beginning_of_day
   end
 
   def set_end_at_to_end_of_day
