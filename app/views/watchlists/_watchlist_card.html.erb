@@ -4,8 +4,8 @@
       <p class="font-label text-xs text-on-surface-variant/70 mb-1">
         <%= watchlist.start_at&.strftime("%Y.%m.%d %H:%M") %>
       </p>
-      <h3 class="font-headline font-bold text-lg text-on-surface leading-tight">
-        <%= truncate(watchlist.title, length: 30, separator: ' ') %>
+      <h3 class="font-headline font-bold text-lg text-on-surface leading-tight line-clamp-2 break-all">
+        <%= watchlist.title %>
       </h3>
     </div>
     
