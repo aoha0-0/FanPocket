@@ -4,14 +4,6 @@
 
 import { application } from "./application"
 
-import FlashController from "./flash_controller"
-application.register("flash", FlashController)
-
-import FlatpickrController from "./flatpickr_controller"
-application.register("flatpickr", FlatpickrController)
-
-import HelloController from "./hello_controller"
-application.register("hello", HelloController)
-
-import WatchlistFormController from "./watchlist_form_controller"
-application.register("watchlist-form", WatchlistFormController)
+// Importmap環境でコントローラーを正しく自動ロードする記述
+import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
+eagerLoadControllersFrom("controllers", application)
