@@ -3,13 +3,15 @@
 class Watchlist < ApplicationRecord
   belongs_to :user
 
+  before_validation :set_end_at_to_end_of_day, if: :end_at_time_blank?
+
   validates :title, presence: true, length: { maximum: 255 }
   validate :start_at_or_end_at_must_be_present
 
   VALID_URL_REGEX = %r{\Ahttps?://\S+\z}
   validates :url, allow_blank: true, format: { with: VALID_URL_REGEX }
 
-  validate :start_at_must_be_future
+  validate :start_at_must_be_future, on: :create
   validate :end_at_must_be_future
 
   # 「これからの予定」を取得するスコープ
@@ -66,6 +68,24 @@ class Watchlist < ApplicationRecord
   }
 
   private
+
+  def end_at_time_blank?
+    # パターンA: 開始日時があって、締切が完全に空のとき
+    return true if start_at.present? && end_at.blank?
+
+    # パターンB: 締切があって、時間が 00:00:00（日付のみ入力）のとき
+    return true if end_at.present? && end_at == end_at.beginning_of_day
+  end
+
+  def set_end_at_to_end_of_day
+    if end_at.blank? && start_at.present?
+      # 締切が空なら、開始日時の日の 23:59:59 をセット
+      self.end_at = start_at.end_of_day
+    elsif end_at.present?
+      # 締切が入力されているなら、その締切日の 23:59:59 に上書き
+      self.end_at = end_at.end_of_day
+    end
+  end
 
   # 開始時間または締切時間のどちらかは必須
   def start_at_or_end_at_must_be_present
