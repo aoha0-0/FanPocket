@@ -7,4 +7,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :watchlists, dependent: :destroy
+
+  def send_password_change_notification
+    Devise::Mailer.password_change(self).deliver_now
+  end
 end
