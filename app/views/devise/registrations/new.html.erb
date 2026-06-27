@@ -31,27 +31,48 @@
           </div>
 
           <div class="flex flex-col space-y-3">
-            <%= f.label :password, "パスワード", class: "text-gray-500 text-[11px] font-bold px-6 tracking-widest uppercase opacity-60" %>
-            <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-[#8BBEE8] group-focus-within:text-primary transition-colors">
-                <span class="material-symbols-outlined text-[20px]">lock</span>
-              </div>
-              <%= f.password_field :password, autocomplete: "new-password", placeholder: "••••••••", 
-                  class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300" %>
-            </div>
-            <% if @minimum_password_length %>
-              <p class="px-6 text-[10px] text-gray-400 font-medium tracking-wide">* <%= @minimum_password_length %> 文字以上入力してください</p>
-            <% end %>
-          </div>
 
-          <div class="flex flex-col space-y-3">
-            <%= f.label :password_confirmation, "パスワード（確認）", class: "text-gray-500 text-[11px] font-bold px-6 tracking-widest uppercase opacity-60" %>
-            <div class="relative group">
-              <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-[#8BBEE8] group-focus-within:text-primary transition-colors">
-                <span class="material-symbols-outlined text-[20px]">verified_user</span>
-              </div>
-              <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "••••••••", 
-                class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300" %>
+          <%= f.label :password, "パスワード", class: "text-gray-500 text-[11px] font-bold px-6 tracking-widest uppercase opacity-60" %>
+  
+          <div class="relative group" data-controller="password-toggle">
+            <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-[#8BBEE8] group-focus-within:text-primary transition-colors">
+              <span class="material-symbols-outlined text-[20px]">lock</span>
+            </div>
+    
+            <%= f.password_field :password, autocomplete: "new-password", placeholder: "••••••••", 
+                class: "w-full h-14 pl-14 pr-14 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300",
+                data: { password_toggle_target: "input" } %>
+
+            <%# 切り替えボタンを配置 %>
+            <button type="button" 
+                    class="absolute inset-y-0 right-0 pr-6 flex items-center text-[#8BBEE8] hover:text-primary transition-colors duration-200 focus:outline-none"
+                    data-action="click->password-toggle#toggle"
+                    data-password-toggle-target="icon">
+            </button>
+          </div>
+          <% if @minimum_password_length %>
+            <p class="px-6 text-[10px] text-gray-400 font-medium tracking-wide">* <%= @minimum_password_length %> 文字以上入力してください</p>
+          <% end %>
+        </div>
+
+        <div class="flex flex-col space-y-3">
+          <%= f.label :password_confirmation, "パスワード（確認）", class: "text-gray-500 text-[11px] font-bold px-6 tracking-widest uppercase opacity-60" %>
+  
+          <div class="relative group" data-controller="password-toggle">
+            <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-[#8BBEE8] group-focus-within:text-primary transition-colors">
+              <span class="material-symbols-outlined text-[20px]">verified_user</span>
+            </div>
+    
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", placeholder: "••••••••", 
+              class: "w-full h-14 pl-14 pr-14 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300",
+              data: { password_toggle_target: "input" } %>
+
+            <%# 切り替えボタンを配置 %>
+            <button type="button" 
+                    class="absolute inset-y-0 right-0 pr-6 flex items-center text-[#8BBEE8] hover:text-primary transition-colors duration-200 focus:outline-none"
+                    data-action="click->password-toggle#toggle"
+                    data-password-toggle-target="icon">
+            </button>
           </div>
         </div>
 
