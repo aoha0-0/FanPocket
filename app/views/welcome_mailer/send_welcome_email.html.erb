@@ -1,0 +1,33 @@
+<div style="font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; color: #333333; max-width: 600px; margin: 0 auto; padding: 24px; background-color: #fdfdfd; border: 1px solid #eef0f2; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+  
+  <h2 style="font-size: 18px; font-weight: 600; line-height: 1.5; color: #004A77; margin-bottom: 20px; border-bottom: 1px solid #edf2f7; padding-bottom: 12px;">
+    FanPocketへのご登録ありがとうございます！
+  </h2>
+  
+  <div style="font-size: 14px; line-height: 1.7; color: #4a5568; margin-bottom: 32px;">
+    <p>こんにちは、<%= @user.email %> さん</p>
+    <p>FanPocket へのご登録、本当にありがとうございます！</p>
+    <p>このメールが今あなたのもとに無事に届いていれば、アプリからの通知の準備はバッチリです。<br />配信基盤は正常に動作していますので、どうぞご安心くださいね。</p>
+    <p>これから FanPocket が、あなたにとって心地よくて安心できる「大切な場所」になりますように。</p>
+  </div>
+
+  <div style="text-align: center; margin-bottom: 32px;">
+    <%= link_to root_url, style: "display: inline-block; text-decoration: none;" do %>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #edf2f7; border-radius: 9999px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin: 0 auto;">
+        <tr>
+          <td style="padding: 10px 24px; text-align: center; vertical-align: middle;">
+            <%= image_tag asset_url('logo.png'), style: "width: 24px; height: 24px; margin-right: 8px; vertical-align: middle; display: inline-block; object-fit: contain;", alt: "FanPocket Logo" %>
+  
+            <span style="font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 15px; font-weight: bold; color: #004A77; vertical-align: middle; inline-block; line-height: 24px;">
+              FanPocket をひらく
+            </span>
+          </td>
+        </tr>
+      </table>
+    <% end %>
+  </div>
+  <div style="border-top: 1px solid #edf2f7; padding-top: 20px; font-size: 12px; color: #a0aec0; text-align: left; line-height: 1.6;">
+    <p>※このメールは送信専用アドレスから配信されています。ご返信いただけませんのでご了承ください。</p>
+    <p style="margin-top: 16px; font-weight: 500; text-align: center;">&copy; FanPocket</p>
+  </div>
+</div>
