@@ -11,7 +11,7 @@
       </p>
     </header>
 
-    <main class="w-full relative bg-white/80 backdrop-blur-sm p-8 rounded-[2rem] shadow-[0_8px_32px_rgba(49,51,50,0.06)] border border-surface-container/30">
+    <main class="w-full relative space-y-8">
       <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "space-y-8" }) do |f| %>
         <%= render "devise/shared/error_messages", resource: resource %>
 
