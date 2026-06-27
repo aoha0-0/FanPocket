@@ -44,12 +44,25 @@
           <!-- Password Input -->
           <div class="flex flex-col space-y-3">
             <%= f.label :password, "パスワード", class: "text-gray-500 text-[11px] font-bold px-6 tracking-widest uppercase opacity-60" %>
-            <div class="relative group">
+            
+            <%# Stimulusコントローラーの指定（相対配置 relative） %>
+            <div class="relative group" data-controller="password-toggle">
               <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-[#8BBEE8] group-focus-within:text-primary transition-colors">
                 <span class="material-symbols-outlined text-[20px]">lock</span>
               </div>
-              <%= f.password_field :password, autocomplete: "new-password", placeholder: "••••••••", 
-                  class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300" %>
+              
+              <%# pr-8 から pr-14 に変更し、文字が右端のアイコンと被らないように調整 %>
+              <%= f.password_field :password, autocomplete: "current-password", placeholder: "••••••••", 
+                  class: "w-full h-14 pl-14 pr-14 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300",
+                  data: { password_toggle_target: "input" } %>
+              
+              <%# 切り替えボタン（右端に絶対配置） %>
+              <button type="button" 
+                      class="absolute inset-y-0 right-0 pr-6 flex items-center text-[#8BBEE8] hover:text-primary transition-colors duration-200 focus:outline-none"
+                      data-action="click->password-toggle#toggle"
+                      data-password-toggle-target="icon">
+                <%# StimulusからSVGアイコンが動的に挿入されます %>
+              </button>
             </div>
           </div>
 
@@ -80,12 +93,12 @@
     <footer class="flex flex-col items-center space-y-4 pt-4 pb-8">
       <div class="flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 text-center">
         <span class="text-gray-500 text-sm">アカウントをお持ちでないですか？</span>
-        <%= link_to "新規登録はこちら", new_registration_path(resource_name), class: "text-primary font-bold text-sm hover:underline decoration-2 underline-offset-4" %>
+        <%= link_to "新規登録はこちら", new_registration_path(resource_name), class: "text-primary text-sm font-semibold hover:opacity-70 transition-opacity" %>
       </div>
       <%# classを1つに統合し、横並びや間隔を調整しやすいように調整 %>
       <div class="flex gap-4">
-        <%= link_to '利用規約', terms_path, class: "link link-hover text-primary font-bold text-sm hover:underline decoration-2 underline-offset-4" %>
-        <%= link_to 'プライバシーポリシー', privacy_path, class: "link link-hover text-primary font-bold text-sm hover:underline decoration-2 underline-offset-4" %>
+        <%= link_to '利用規約', terms_path, class: "text-primary text-sm font-semibold hover:opacity-70 transition-opacity" %>
+        <%= link_to 'プライバシーポリシー', privacy_path, class: "text-primary text-sm font-semibold hover:opacity-70 transition-opacity" %>
       </div>
     </footer>
   </div>
