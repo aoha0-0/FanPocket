@@ -1,0 +1,41 @@
+<div style="font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif; color: #333333; max-width: 600px; margin: 0 auto; padding: 24px; background-color: #fdfdfd; border: 1px solid #eef0f2; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+  
+  <h2 style="font-size: 18px; font-weight: 600; line-height: 1.5; color: #004A77; margin-bottom: 20px; border-bottom: 1px solid #edf2f7; padding-bottom: 12px;">
+    FanPocketへようこそ！
+  </h2>
+  
+  <div style="font-size: 14px; line-height: 1.7; color: #4a5568; margin-bottom: 32px;">
+    <p><%= @user.email %> 様</p>
+    <p>このたびは FanPocket にご登録いただき、ありがとうございます。</p>
+    <p>FanPocket は、大切な予定を見逃さないよう、あなたの推し活をそっとサポートするアプリです。</p>
+    <p>チケットの申込みやグッズの販売、イベントの開始日など、気になる予定を登録すると、タイミングに合わせてお知らせします。</p>
+    <p>まずはアプリにログインして、あなただけの「大切な予定」を FanPocket にしまってみてください。</p>
+  </div>
+
+  <!-- ボタン部分 -->
+  <div style="text-align: center; margin-bottom: 32px;">
+    <%= link_to root_url, style: "display: inline-block; text-decoration: none;" do %>
+      <table align="center" border="0" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border: 1px solid #edf2f7; border-radius: 9999px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin: 0 auto;">
+        <tr>
+          <td style="padding: 10px 24px; text-align: center; vertical-align: middle;">
+            <%= image_tag asset_url('logo.png'), style: "width: 24px; height: 24px; margin-right: 8px; vertical-align: middle; display: inline-block; object-fit: contain;", alt: "FanPocket Logo" %>
+            <span style="font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 15px; font-weight: bold; color: #004A77; vertical-align: middle; display: inline-block; line-height: 24px;">
+              FanPocket にログインする
+            </span>
+          </td>
+        </tr>
+      </table>
+    <% end %>
+  </div>
+
+  <div style="font-size: 14px; line-height: 1.7; color: #4a5568; margin-bottom: 32px;">
+    <p>あなたの推し活を支える、小さなポケットとしてお役に立てたら嬉しいです💐</p>
+    <p>これからの推し活が、もっと安心して楽しめるものになりますように🍀</p>
+  </div>
+  
+  <!-- フッター部分 -->
+  <div style="border-top: 1px solid #edf2f7; padding-top: 20px; font-size: 13px; color: #718096; text-align: left; line-height: 1.6;">
+    <p style="font-size: 12px; color: #a0aec0;">※本メールは送信専用です。ご返信いただいてもお答えできませんので、あらかじめご了承ください。</p>
+    <p style="margin-top: 16px; font-weight: 500; text-align: center; color: #a0aec0;">&copy; FanPocket</p>
+  </div>
+</div>
