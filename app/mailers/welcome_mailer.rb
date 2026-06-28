@@ -3,6 +3,8 @@ class WelcomeMailer < ApplicationMailer
 
   def send_welcome_email(user)
     @user = user
+    # メールの添付データとしてロゴ画像を登録（インライン配置用）
+    attachments.inline['logo.png'] = File.read(Rails.root.join('app/assets/images/logo.png'))
 
     mail(
       to: @user.email,
