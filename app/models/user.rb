@@ -8,7 +8,11 @@ class User < ApplicationRecord
 
   has_many :watchlists, dependent: :destroy
 
-  def send_password_change_notification
-    Devise::Mailer.password_change(self).deliver_now
+  after_create_commit :send_welcome_email
+
+  private
+
+  def send_welcome_email
+    WelcomeMailer.send_welcome_email(self).deliver_later
   end
 end
