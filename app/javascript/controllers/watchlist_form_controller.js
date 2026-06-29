@@ -2,7 +2,8 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = [ 
-    "titleInput", "titleErrorMessage", 
+    "titleInput", "titleErrorMessage",
+    "urlInput", "fetchButton", "noticeMessage", 
     "startAtInput", "startErrorMessage", 
     "endAtInput", "errorMessage" 
   ]
@@ -67,6 +68,58 @@ export default class extends Controller {
     }
   }
 
+  // タイトルを自動取得するメイン処理
+  async fetchTitle() {
+    const url = this.urlInputTarget.value.trim()
+
+    if (!url) {
+      this.showNotice("URLを入力してください", "text-error")
+      return
+    }
+
+    this.setLoading(true)
+
+    try {
+      const response = await fetch(`/url_parsers/fetch_title?url=${encodeURIComponent(url)}`)
+      const data = await response.json()
+
+      if (response.ok && data.title) {
+        this.titleInputTarget.value = data.title
+        this.showNotice("タイトルを取得しました！", "text-success text-primary")
+        
+        if (typeof this.checkTitle === "function") {
+          this.checkTitle()
+        }
+      } else {
+        this.showNotice(data.error || "タイトルが取得できませんでした", "text-neutral-500 font-normal")
+      }
+    } catch (error) {
+      console.error(error)
+      this.showNotice("タイトルが取得できませんでした", "text-neutral-500 font-normal")
+    } finally {
+      this.setLoading(false)
+    }
+  }
+
+  // 状態通知メッセージを表示するヘルパーメソッド
+  showNotice(message, colorClass) {
+    this.noticeMessageTarget.textContent = message
+    this.noticeMessageTarget.className = `text-xs font-semibold pl-4 flex items-center gap-1 ${colorClass}`
+  }
+
+  // ボタンのローディング状態を切り替えるヘルパーメソッド
+  setLoading(isLoading) {
+    if (isLoading) {
+      this.fetchButtonTarget.disabled = true
+      this.fetchButtonTarget.classList.add("opacity-60", "cursor-not-allowed")
+      this.fetchButtonTarget.querySelector("[data-watchlist-form-target='buttonText']").textContent = "取得中..."
+    } else {
+      this.fetchButtonTarget.disabled = false
+      this.fetchButtonTarget.classList.remove("opacity-60", "cursor-not-allowed")
+      this.fetchButtonTarget.querySelector("[data-watchlist-form-target='buttonText']").textContent = "タイトルを自動取得する"
+    }
+  }
+
   // 開始日時のチェック
   checkStartDate() {
     if (!this.hasStartAtInputTarget || !this.hasStartErrorMessageTarget) return
@@ -100,4 +153,4 @@ export default class extends Controller {
       this.errorMessageTarget.classList.remove("hidden")
     }
   }
-}
+} 
