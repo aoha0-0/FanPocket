@@ -24,4 +24,10 @@ Rails.application.routes.draw do
 
   resources :watchlists, only: [:index, :show, :new, :create, :edit, :update, :destroy]
   resource :settings, only: [:show]
+  
+  resources :url_parsers, only: [] do
+  collection do
+    get :fetch_title
+  end
+end
 end
