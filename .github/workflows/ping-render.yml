@@ -43,6 +43,7 @@ jobs:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
 
       # 5. 【夜20時通知】3日前・前日タスクの実行
       # ※夜のCron（'55 10 * * *'）で起動した時、または手動実行の時に動く
@@ -56,3 +57,4 @@ jobs:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
