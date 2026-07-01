@@ -9,6 +9,13 @@ on:
         required: true
         default: 'morning'
 
+env:
+  RAILS_ENV: production
+  RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+  REDIS_URL: ${{ secrets.REDIS_URL }}
+
 jobs:
   ping_and_notify:
     runs-on: ubuntu-latest
@@ -34,27 +41,15 @@ jobs:
         run: bundle install
 
       # 4. 【朝7時通知】当日・開始日タスクの実行
-      # ※朝のCron（'55 21 * * *'）で起動した時、または手動実行の時に動く
+      # 💡 inputs.notification_type に修正（最新の仕様に準拠）
       - name: Run Same Day Notifications (7:00 JST)
-        if: github.event.inputs.notification_type == 'morning'
-        env: 
-          RAILS_ENV: production
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          REDIS_URL: ${{ secrets.REDIS_URL }}
+        if: inputs.notification_type == 'morning'
         run: bundle exec rake notification:send_same_day
 
       # 5. 【夜20時通知】3日前・前日タスクの実行
-      # ※夜のCron（'55 10 * * *'）で起動した時、または手動実行の時に動く
+      # 💡 inputs.notification_type に修正（最新の仕様に準拠）
       - name: Run Night Notifications (20:00 JST)
-        if: github.event.inputs.notification_type == 'night'
-        env: 
-          RAILS_ENV: production
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          REDIS_URL: ${{ secrets.REDIS_URL }}
+        if: inputs.notification_type == 'night'
         run: |
           bundle exec rake notification:send_3days_prior
           bundle exec rake notification:send_day_before
