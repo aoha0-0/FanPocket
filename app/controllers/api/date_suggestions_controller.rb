@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "open-uri"
 
 module Api
   class DateSuggestionsController < ApplicationController
@@ -11,15 +12,22 @@ module Api
 
       render json: { suggestions: suggestions }
     rescue StandardError => e
-      logger.error "MetaInspector Error: #{e.message}"
+      logger.error "DateSuggestions Error: #{e.message}"
       render json: { suggestions: [], error: 'ページの解析に失敗しました' }, status: :unprocessable_entity
     end
 
     private
 
     def fetch_target_text(url)
-      page = MetaInspector.new(url, connection_options: { request: { timeout: 5 } })
-      "#{page.title} #{page.description} #{page.text}"
+      html = URI.open(url).read
+      doc = Nokogiri::HTML(html)
+
+      doc.css("script, style").remove
+
+      title = doc.title
+      body = doc.at("body")&.text.to_s.squish
+
+      "#{title} #{body}"
     end
   end
 end
