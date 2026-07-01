@@ -5,7 +5,8 @@ export default class extends Controller {
     "titleInput", "titleErrorMessage",
     "urlInput", "fetchButton", "noticeMessage", 
     "startAtInput", "startErrorMessage", 
-    "endAtInput", "errorMessage" 
+    "endAtInput", "errorMessage",
+    "suggestionsContainer" 
   ]
 
   // 画面が表示された時、およびTurboで画面が書き換わった時に毎回確実に動く魔法
@@ -18,8 +19,8 @@ export default class extends Controller {
   connect() {
     // 画面が開いた瞬間、すでに文字が入っていればチェックを1回走らせる
     this.checkAll()
-    
-    // Flatpickrの準備を待って、確実にイベントを仕込む
+
+   // Flatpickrの準備を待って、確実にイベントを仕込む
     this.bindFlatpickr()
   }
 
@@ -71,7 +72,6 @@ export default class extends Controller {
   // タイトルを自動取得するメイン処理
   async fetchTitle() {
     const url = this.urlInputTarget.value.trim()
-
     if (!url) {
       this.showNotice("URLを入力してください", "text-error")
       return
@@ -86,10 +86,14 @@ export default class extends Controller {
       if (response.ok && data.title) {
         this.titleInputTarget.value = data.title
         this.showNotice("タイトルを取得しました！", "text-success text-primary")
-        
+      
         if (typeof this.checkTitle === "function") {
           this.checkTitle()
         }
+
+        // ✨ タイトル取得成功時、日時候補も一緒に裏で取得
+        this.fetchDateSuggestions(url)
+
       } else {
         this.showNotice(data.error || "タイトルが取得できませんでした", "text-neutral-500 font-normal")
       }
@@ -101,7 +105,66 @@ export default class extends Controller {
     }
   }
 
-  // 状態通知メッセージを表示するヘルパーメソッド
+  // ✨ 日時候補の取得
+  async fetchDateSuggestions(url) {
+    try {
+      const response = await fetch(`/api/date_suggestions?url=${encodeURIComponent(url)}`)
+      const data = await response.json()
+
+      if (response.ok && data.suggestions && data.suggestions.length > 0) {
+        this.renderDateSuggestions(data.suggestions)
+      }
+    } catch (error) {
+      console.error("日時候補の取得に失敗しました:", error)
+    }
+  }
+
+  // ✨ ボタンを画面に生成
+  renderDateSuggestions(suggestions) {
+    if (!this.hasSuggestionsContainerTarget) return
+
+    this.suggestionsContainerTarget.innerHTML = "" // 一旦クリア
+
+    suggestions.forEach(suggestion => {
+      const button = document.createElement("button")
+      button.type = "button"
+      // DaisyUIの小さめで控えめなボタンデザイン
+      button.className = "btn btn-xs btn-outline btn-primary mr-2 mb-2 normal-case font-normal"
+      button.textContent = suggestion.label
+
+      // ボタンをクリックしたら、対応する入力欄に値をセット
+      button.addEventListener("click", () => {
+        this.insertDateTime(suggestion.label, suggestion.value)
+      })
+
+      this.suggestionsContainerTarget.appendChild(button)
+    })
+  }
+
+  // ✨ おもてなし入力ロジック
+  insertDateTime(label, value) {
+    let targetInput = null
+
+    // ラベルに「開始」が含まれていれば開始入力欄へ、それ以外（締切や候補）なら締切入力欄を優先
+    if (label.includes("開始") && this.hasStartAtInputTarget) {
+      targetInput = this.startAtInputTarget
+    } else if (this.hasEndAtInputTarget) {
+      targetInput = this.endAtInputTarget
+    }
+
+    if (!targetInput) return
+
+    // Flatpickrインスタンスがあればそこからセット、なければ直接valueにセット
+    if (targetInput._flatpickr) {
+      targetInput._flatpickr.setDate(value, true) // trueで変化イベントを発火させてバリデーションを通す
+    } else {
+      targetInput.value = value
+      // 直接セットした場合は手動でバリデーションを発火
+      this.checkStartDate()
+      this.checkDate()
+    }
+  }
+
   showNotice(message, colorClass) {
     this.noticeMessageTarget.textContent = message
     this.noticeMessageTarget.className = `text-xs font-semibold pl-4 flex items-center gap-1 ${colorClass}`
@@ -153,4 +216,4 @@ export default class extends Controller {
       this.errorMessageTarget.classList.remove("hidden")
     }
   }
-} 
+}
