@@ -123,55 +123,54 @@ export default class extends Controller {
 
   // ✨ ボタンを画面に生成
   renderDateSuggestions(suggestions) {
+    if (!this.hasSuggestionsContainerTarget) return
+
     this.suggestionsContainerTarget.innerHTML = ""
+
+    const startSuggestions = suggestions.filter(suggestion => suggestion.label.includes("開始"))
+    const endSuggestions = suggestions.filter(suggestion => suggestion.label.includes("締切"))
+    const otherSuggestions = suggestions.filter(suggestion => suggestion.label.includes("候補"))
+
+    this.renderSuggestionGroup("受付開始", startSuggestions)
+    this.renderSuggestionGroup("受付締切", endSuggestions)
+    this.renderSuggestionGroup("候補日", otherSuggestions)
+  }
+  
+  renderSuggestionGroup(title, suggestions) {
+    if (suggestions.length === 0) return
+
+    const group = document.createElement("div")
+    group.className = "w-full mt-2"
+
+    const heading = document.createElement("p")
+    heading.textContent = title
+    heading.className = "text-xs font-semibold text-neutral-500 mb-1"
+
+    const buttonWrapper = document.createElement("div")
+    buttonWrapper.className = "flex flex-wrap gap-2"
 
     suggestions.forEach((suggestion) => {
       const button = document.createElement("button")
       button.type = "button"
-      button.textContent = suggestion.label
-      button.className ="btn btn-xs btn-outline btn-primary mr-2 mb-2 normal-case font-normal"
-
-      this.suggestionsContainerTarget.appendChild(button)
+      button.textContent = suggestion.label.replace(/^開始: /, "").replace(/^締切: /, "").replace(/^候補: /, "")
+      button.className = "btn btn-xs btn-outline btn-primary normal-case font-normal"
 
       button.addEventListener("click", () => {
         if (suggestion.label.includes("候補")) {
-          // 前回表示した選択肢を削除
-          this.element.querySelectorAll(".date-choice-buttons").forEach(element => element.remove())
-          
-          const choiceContainer = document.createElement("div")
-          choiceContainer.className = "date-choice-buttons flex gap-2 mt-2"
-          
-          const startButton = document.createElement("button")
-          startButton.type = "button"
-          startButton.textContent = "開始日時へ"
-          startButton.className ="btn btn-xs btn-outline btn-primary mr-2 mb-2 normal-case font-normal"
-
-          choiceContainer.appendChild(startButton)
-          
-          startButton.addEventListener("click", () => {
-            this.insertDateTime("開始", suggestion.value)
-          })
-          
-          const endButton = document.createElement("button")
-          endButton.type = "button"
-          endButton.textContent = "締切日時へ"
-          endButton.className ="btn btn-xs btn-outline btn-primary mr-2 mb-2 normal-case font-normal"
-
-          choiceContainer.appendChild(endButton)
-          
-          endButton.addEventListener("click", () => {
-            this.insertDateTime("締切", suggestion.value)
-          })
-
-          button.insertAdjacentElement("afterend", choiceContainer)
+          console.log("候補日が押されました")
         } else {
           this.insertDateTime(suggestion.label, suggestion.value)
         }
       })
+
+      buttonWrapper.appendChild(button)
     })
+
+    group.appendChild(heading)
+    group.appendChild(buttonWrapper)
+    this.suggestionsContainerTarget.appendChild(group)
   }
-  
-  
+
   // ✨ おもてなし入力ロジック
   insertDateTime(label, value) {
     let targetInput = null
