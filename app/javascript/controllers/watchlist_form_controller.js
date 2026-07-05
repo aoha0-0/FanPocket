@@ -134,7 +134,27 @@ export default class extends Controller {
       this.suggestionsContainerTarget.appendChild(button)
 
       button.addEventListener("click", () => {
-        this.insertDateTime(suggestion.label, suggestion.value)
+        if (suggestion.label.includes("候補")) {
+          // 前回表示した選択肢を削除
+          this.element.querySelectorAll(".date-choice-buttons").forEach(element => element.remove())
+          
+          const choiceContainer = document.createElement("div")
+          choiceContainer.className = "date-choice-buttons flex gap-2 mt-2"
+          
+          const startButton = document.createElement("button")
+          startButton.type = "button"
+          startButton.textContent = "開始日時へ"
+          startButton.className ="btn btn-xs btn-outline btn-primary mr-2 mb-2 normal-case font-normal"
+
+          choiceContainer.appendChild(startButton)
+          button.insertAdjacentElement("afterend", choiceContainer)
+          startButton.addEventListener("click", () => {
+            this.insertDateTime("開始", suggestion.value)
+          })
+          
+        } else {
+          this.insertDateTime(suggestion.label, suggestion.value)
+        }
       })
     })
     
