@@ -147,17 +147,28 @@ export default class extends Controller {
           startButton.className ="btn btn-xs btn-outline btn-primary mr-2 mb-2 normal-case font-normal"
 
           choiceContainer.appendChild(startButton)
-          button.insertAdjacentElement("afterend", choiceContainer)
+          
           startButton.addEventListener("click", () => {
             this.insertDateTime("開始", suggestion.value)
           })
           
+          const endButton = document.createElement("button")
+          endButton.type = "button"
+          endButton.textContent = "締切日時へ"
+          endButton.className ="btn btn-xs btn-outline btn-primary mr-2 mb-2 normal-case font-normal"
+
+          choiceContainer.appendChild(endButton)
+          
+          endButton.addEventListener("click", () => {
+            this.insertDateTime("締切", suggestion.value)
+          })
+
+          button.insertAdjacentElement("afterend", choiceContainer)
         } else {
           this.insertDateTime(suggestion.label, suggestion.value)
         }
       })
     })
-    
   }
   
   
