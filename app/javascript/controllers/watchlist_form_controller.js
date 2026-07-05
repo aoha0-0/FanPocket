@@ -150,57 +150,68 @@ export default class extends Controller {
     buttonWrapper.className = "flex flex-wrap gap-2"
 
     suggestions.forEach((suggestion) => {
-    if (suggestion.label.includes("候補")) {
-      const candidateGroup = document.createElement("div")
-      candidateGroup.className = "flex flex-col items-start gap-1"
+      if (suggestion.label.includes("候補")) {
+        const candidateGroup = document.createElement("div")
+        candidateGroup.className = "flex flex-col items-start gap-1"
 
-      const button = document.createElement("button")
-      button.type = "button"
-      button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
-      button.className = "btn btn-xs btn-outline btn-primary normal-case font-normal"
+        const button = document.createElement("button")
+        button.type = "button"
+        button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
+        button.className = "candidate-button btn btn-xs btn-outline btn-primary normal-case font-normal"
 
-      button.addEventListener("click", () => {
+        button.addEventListener("click", () => {
+          this.element.querySelectorAll(".candidate-button").forEach((candidateButton) => {
+            candidateButton.textContent = candidateButton.textContent.replace("▴", "▾")
+          })
+
+        button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▴`
+
         this.element.querySelectorAll(".date-choice-buttons").forEach(element => element.remove())
 
         const choiceContainer = document.createElement("div")
-        choiceContainer.className = "date-choice-buttons flex flex-col items-center gap-2 mt-2"
+        choiceContainer.className = "date-choice-buttons relative flex flex-col items-center gap-2 mt-2 p-3 rounded-xl bg-white border border-primary/20 shadow-sm"
+
+        const arrow = document.createElement("div")
+        arrow.className = "absolute -top-2 left-5 w-3 h-3 rotate-45 bg-white border-l border-t border-primary/20"
 
         const message = document.createElement("p")
         message.textContent = "どちらに入力しますか？"
-        message.className = "text-xs text-gray-500 "
+        message.className = "text-xs text-gray-500"
 
         const startButton = document.createElement("button")
         startButton.type = "button"
         startButton.textContent = "開始日時へ"
         startButton.className = "btn btn-xs btn-outline btn-secondary normal-case font-normal"
 
+        startButton.addEventListener("click", () => {
+          this.insertDateTime("開始", suggestion.value)
+        })
+
         const endButton = document.createElement("button")
         endButton.type = "button"
         endButton.textContent = "締切日時へ"
         endButton.className = "btn btn-xs btn-outline btn-accent normal-case font-normal"
 
-        const buttonRow = document.createElement("div")
-        buttonRow.className = "flex gap-2"
-
-        startButton.addEventListener("click", () => {
-          this.insertDateTime("開始", suggestion.value)
-        })
-
         endButton.addEventListener("click", () => {
           this.insertDateTime("締切", suggestion.value)
         })
 
+        const buttonRow = document.createElement("div")
+        buttonRow.className = "flex gap-2"
+
         buttonRow.appendChild(startButton)
         buttonRow.appendChild(endButton)
 
+        choiceContainer.appendChild(arrow)
         choiceContainer.appendChild(message)
         choiceContainer.appendChild(buttonRow)
+
         candidateGroup.appendChild(choiceContainer)
       })
 
       candidateGroup.appendChild(button)
       buttonWrapper.appendChild(candidateGroup)
-      
+
       return
     }
 
