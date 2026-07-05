@@ -1,5 +1,7 @@
 # frozen_string_literal: true
-require "open-uri"
+
+require 'net/http'
+require 'uri'
 
 module Api
   class DateSuggestionsController < ApplicationController
@@ -19,13 +21,16 @@ module Api
     private
 
     def fetch_target_text(url)
-      html = URI.open(url).read
-      doc = Nokogiri::HTML(html)
+      uri = URI.parse(url)
 
-      doc.css("script, style").remove
+      response = Net::HTTP.get_response(uri)
+      raise 'ページの取得に失敗しました' unless response.is_a?(Net::HTTPSuccess)
+
+      doc = Nokogiri::HTML(response.body)
+      doc.css('script, style').remove
 
       title = doc.title
-      body = doc.at("body")&.text.to_s.squish
+      body = doc.at('body')&.text.to_s.squish
 
       "#{title} #{body}"
     end
