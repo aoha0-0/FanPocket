@@ -1,25 +1,23 @@
+# frozen_string_literal: true
+
 class UrlParsersController < ApplicationController
   def fetch_title
     url = params[:url]
+    return render json: { error: 'URLが入力されていません' }, status: :bad_request if url.blank?
 
-    if url.blank?
-      return render json: { error: 'URLが入力されていません' }, status: :bad_request
-    end
+    title = extract_title(url)
+    return render json: { title: title } if title.present?
 
-    begin
-      # タイムアウトを5秒に設定して安全に解析
-      page = MetaInspector.new(url, connection_timeout: 5, read_timeout: 5, retries: 1)
-      title = page.best_title
+    render json: { error: 'タイトルが取得できませんでした' }, status: :unprocessable_entity
+  rescue MetaInspector::Error, StandardError => e
+    logger.error "URL解析エラー: #{e.message}"
+    render json: { error: 'タイトルが取得できませんでした' }, status: :unprocessable_entity
+  end
 
-      if title.present?
-        render json: { title: title }
-      else
-        render json: { error: 'タイトルが取得できませんでした' }, status: :unprocessable_entity
-      end
+  private
 
-    rescue MetaInspector::Error, StandardError => e
-      logger.error "URL解析エラー: #{e.message}"
-      render json: { error: 'タイトルが取得できませんでした' }, status: :unprocessable_entity
-    end
+  def extract_title(url)
+    page = MetaInspector.new(url, connection_timeout: 5, read_timeout: 5, retries: 1)
+    page.best_title
   end
 end

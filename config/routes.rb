@@ -26,8 +26,12 @@ Rails.application.routes.draw do
   resource :settings, only: [:show]
   
   resources :url_parsers, only: [] do
-  collection do
-    get :fetch_title
+    collection do
+      get :fetch_title
+    end
   end
-end
+  
+  namespace :api do
+    resources :date_suggestions, only: [:index]
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WelcomeMailer < ApplicationMailer
   default from: 'no-reply@fanpocket.fun'
 
