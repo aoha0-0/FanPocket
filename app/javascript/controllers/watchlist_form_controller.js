@@ -131,8 +131,8 @@ export default class extends Controller {
     const endSuggestions = suggestions.filter(suggestion => suggestion.label.includes("締切"))
     const otherSuggestions = suggestions.filter(suggestion => suggestion.label.includes("候補"))
 
-    this.renderSuggestionGroup("受付開始", startSuggestions)
-    this.renderSuggestionGroup("受付締切", endSuggestions)
+    this.renderSuggestionGroup("開始日時", startSuggestions)
+    this.renderSuggestionGroup("締切日時", endSuggestions)
     this.renderSuggestionGroup("候補日", otherSuggestions)
   }
   
@@ -144,7 +144,7 @@ export default class extends Controller {
 
     const heading = document.createElement("p")
     heading.textContent = title
-    heading.className = "text-xs font-semibold text-neutral-500 mb-1"
+    heading.className = "text-xs font-medium text-primary/60 mb-1.5"
 
     const buttonWrapper = document.createElement("div")
     buttonWrapper.className = "flex flex-wrap gap-2"
@@ -157,7 +157,7 @@ export default class extends Controller {
         const button = document.createElement("button")
         button.type = "button"
         button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
-        button.className = "candidate-button btn btn-xs btn-outline btn-primary normal-case font-normal"
+        button.className = "candidate-button btn btn-xs btn-soft btn-info normal-case font-normal"
 
         button.addEventListener("click", () => {
           this.element.querySelectorAll(".candidate-button").forEach((candidateButton) => {
@@ -180,8 +180,8 @@ export default class extends Controller {
 
         const startButton = document.createElement("button")
         startButton.type = "button"
-        startButton.textContent = "開始日時へ"
-        startButton.className = "btn btn-xs btn-outline btn-secondary normal-case font-normal"
+        startButton.textContent = "開始日時にする"
+        startButton.className = "btn btn-xs btn-soft btn-accent normal-case font-normal"
 
         startButton.addEventListener("click", () => {
           this.insertDateTime("開始", suggestion.value)
@@ -189,8 +189,8 @@ export default class extends Controller {
 
         const endButton = document.createElement("button")
         endButton.type = "button"
-        endButton.textContent = "締切日時へ"
-        endButton.className = "btn btn-xs btn-outline btn-accent normal-case font-normal"
+        endButton.textContent = "締切日時にする"
+        endButton.className = "btn btn-xs btn-soft btn-secondary normal-case font-normal"
 
         endButton.addEventListener("click", () => {
           this.insertDateTime("締切", suggestion.value)
@@ -218,7 +218,12 @@ export default class extends Controller {
     const button = document.createElement("button")
     button.type = "button"
     button.textContent = suggestion.label.replace(/^開始: /, "").replace(/^締切: /, "")
-    button.className = "btn btn-xs btn-outline btn-primary normal-case font-normal"
+    
+    if (title === "開始日時") {
+      button.className = "btn btn-xs btn-soft btn-accent normal-case font-normal"
+    } else if (title === "締切日時") {
+      button.className = "btn btn-xs btn-soft btn-secondary normal-case font-normal"
+    }
 
     button.addEventListener("click", () => {
       this.insertDateTime(suggestion.label, suggestion.value)
