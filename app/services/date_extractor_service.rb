@@ -27,7 +27,9 @@ class DateExtractorService
     # 2. 単発日時の抽出
     extract_single_dates(temporary_text, results)
 
-    results.uniq { |r| r[:value] }
+    results
+      .uniq { |r| r[:value] }
+      .sort_by { |r| r[:value] || '' }
   end
 
   private
