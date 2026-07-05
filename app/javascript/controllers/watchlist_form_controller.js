@@ -150,18 +150,68 @@ export default class extends Controller {
     buttonWrapper.className = "flex flex-wrap gap-2"
 
     suggestions.forEach((suggestion) => {
+    if (suggestion.label.includes("候補")) {
+      const candidateGroup = document.createElement("div")
+      candidateGroup.className = "flex flex-col items-start gap-1"
+
       const button = document.createElement("button")
       button.type = "button"
-      button.textContent = suggestion.label.replace(/^開始: /, "").replace(/^締切: /, "").replace(/^候補: /, "")
+      button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
       button.className = "btn btn-xs btn-outline btn-primary normal-case font-normal"
 
       button.addEventListener("click", () => {
-        if (suggestion.label.includes("候補")) {
-          console.log("候補日が押されました")
-        } else {
-          this.insertDateTime(suggestion.label, suggestion.value)
-        }
+        this.element.querySelectorAll(".date-choice-buttons").forEach(element => element.remove())
+
+        const choiceContainer = document.createElement("div")
+        choiceContainer.className = "date-choice-buttons flex flex-col items-center gap-2 mt-2"
+
+        const message = document.createElement("p")
+        message.textContent = "どちらに入力しますか？"
+        message.className = "text-xs text-gray-500 "
+
+        const startButton = document.createElement("button")
+        startButton.type = "button"
+        startButton.textContent = "開始日時へ"
+        startButton.className = "btn btn-xs btn-outline btn-secondary normal-case font-normal"
+
+        const endButton = document.createElement("button")
+        endButton.type = "button"
+        endButton.textContent = "締切日時へ"
+        endButton.className = "btn btn-xs btn-outline btn-accent normal-case font-normal"
+
+        const buttonRow = document.createElement("div")
+        buttonRow.className = "flex gap-2"
+
+        startButton.addEventListener("click", () => {
+          this.insertDateTime("開始", suggestion.value)
+        })
+
+        endButton.addEventListener("click", () => {
+          this.insertDateTime("締切", suggestion.value)
+        })
+
+        buttonRow.appendChild(startButton)
+        buttonRow.appendChild(endButton)
+
+        choiceContainer.appendChild(message)
+        choiceContainer.appendChild(buttonRow)
+        candidateGroup.appendChild(choiceContainer)
       })
+
+      candidateGroup.appendChild(button)
+      buttonWrapper.appendChild(candidateGroup)
+      
+      return
+    }
+
+    const button = document.createElement("button")
+    button.type = "button"
+    button.textContent = suggestion.label.replace(/^開始: /, "").replace(/^締切: /, "")
+    button.className = "btn btn-xs btn-outline btn-primary normal-case font-normal"
+
+    button.addEventListener("click", () => {
+      this.insertDateTime(suggestion.label, suggestion.value)
+    })
 
       buttonWrapper.appendChild(button)
     })
