@@ -111,36 +111,36 @@ export default class extends Controller {
       const response = await fetch(`/api/date_suggestions?url=${encodeURIComponent(url)}`)
       const data = await response.json()
 
-      if (response.ok && data.suggestions && data.suggestions.length > 0) {
+      console.log(data)
+
+      if (response.ok && data.suggestions.length > 0) {
         this.renderDateSuggestions(data.suggestions)
       }
     } catch (error) {
-      console.error("日時候補の取得に失敗しました:", error)
+      console.error(error)
     }
   }
 
   // ✨ ボタンを画面に生成
   renderDateSuggestions(suggestions) {
-    if (!this.hasSuggestionsContainerTarget) return
+    this.suggestionsContainerTarget.innerHTML = ""
 
-    this.suggestionsContainerTarget.innerHTML = "" // 一旦クリア
-
-    suggestions.forEach(suggestion => {
+    suggestions.forEach((suggestion) => {
       const button = document.createElement("button")
       button.type = "button"
-      // DaisyUIの小さめで控えめなボタンデザイン
-      button.className = "btn btn-xs btn-outline btn-primary mr-2 mb-2 normal-case font-normal"
       button.textContent = suggestion.label
+      button.className ="btn btn-xs btn-outline btn-primary mr-2 mb-2 normal-case font-normal"
 
-      // ボタンをクリックしたら、対応する入力欄に値をセット
+      this.suggestionsContainerTarget.appendChild(button)
+
       button.addEventListener("click", () => {
         this.insertDateTime(suggestion.label, suggestion.value)
       })
-
-      this.suggestionsContainerTarget.appendChild(button)
     })
+    
   }
-
+  
+  
   // ✨ おもてなし入力ロジック
   insertDateTime(label, value) {
     let targetInput = null
