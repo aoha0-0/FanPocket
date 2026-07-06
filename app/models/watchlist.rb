@@ -91,10 +91,9 @@ class Watchlist < ApplicationRecord
   def start_at_or_end_at_must_be_present
     return unless start_at.blank? && end_at.blank?
 
-    errors.add(:base, '開始日時または締切日時のどちらかは入力してください')
+    errors.add(:base, :start_at_or_end_at_blank)
   end
 
-  # 両方入力されている場合のみ、日時の矛盾（開始日 < 締切日）をチェック
   def end_at_must_be_after_start_at
     return unless start_at.present? && end_at.present? && end_at <= start_at
 
@@ -104,6 +103,6 @@ class Watchlist < ApplicationRecord
   def end_at_must_be_future
     return unless end_at.present? && end_at < Time.current
 
-    errors.add(:end_at, 'は未来の日時を選択してください')
+    errors.add(:end_at, :must_be_future)
   end
 end
