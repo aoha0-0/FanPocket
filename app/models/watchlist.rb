@@ -11,8 +11,8 @@ class Watchlist < ApplicationRecord
   VALID_URL_REGEX = %r{\Ahttps?://\S+\z}
   validates :url, allow_blank: true, format: { with: VALID_URL_REGEX }
 
-  validate :start_at_must_be_future, on: :create
-  validate :end_at_must_be_future
+  validate :end_at_must_be_future, on: :create
+  validate :end_at_must_be_after_start_at
 
   # 「これからの予定」を取得するスコープ
   scope :upcoming, lambda {
@@ -99,12 +99,6 @@ class Watchlist < ApplicationRecord
     return unless start_at.present? && end_at.present? && end_at <= start_at
 
     errors.add(:end_at, :must_be_after_start_at)
-  end
-
-  def start_at_must_be_future
-    return unless start_at.present? && start_at < Time.current
-
-    errors.add(:start_at, 'は未来の日時を選択してください')
   end
 
   def end_at_must_be_future
