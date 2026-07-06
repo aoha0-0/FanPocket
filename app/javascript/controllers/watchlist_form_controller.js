@@ -4,15 +4,13 @@ export default class extends Controller {
   static targets = [ 
     "titleInput", "titleErrorMessage",
     "urlInput", "fetchButton", "noticeMessage", 
-    "startAtInput", "startErrorMessage", 
-    "endAtInput", "errorMessage",
+    "startAtInput", "endAtInput", "endAtRealtimeError",
     "suggestionsContainer" 
   ]
 
   // 画面が表示された時、およびTurboで画面が書き換わった時に毎回確実に動く魔法
   initialize() {
     this.checkTitle = this.checkTitle.bind(this)
-    this.checkStartDate = this.checkStartDate.bind(this)
     this.checkDate = this.checkDate.bind(this)
   }
 
@@ -281,35 +279,48 @@ export default class extends Controller {
 
   // 開始日時のチェック
   checkStartDate() {
-    if (!this.hasStartAtInputTarget || !this.hasStartErrorMessageTarget) return
-    const inputDateValue = this.startAtInputTarget.value
-    if (!inputDateValue) return
-
-    const normalizedString = inputDateValue.replace(/\//g, '-')
-    const inputDate = new Date(normalizedString)
-    const now = new Date()
-
-    if (inputDate >= now) {
-      this.startErrorMessageTarget.classList.add("hidden")
-    } else {
-      this.startErrorMessageTarget.classList.remove("hidden")
-    }
+    this.checkDate()
   }
 
-  // 締切日時のチェック
+  // 締切日時のチェック 
   checkDate() {
-    if (!this.hasEndAtInputTarget || !this.hasErrorMessageTarget) return
-    const inputDateValue = this.endAtInputTarget.value
-    if (!inputDateValue) return
+    if (!this.hasEndAtInputTarget || !this.hasEndAtRealtimeErrorTarget) return
 
-    const normalizedString = inputDateValue.replace(/\//g, '-')
-    const inputDate = new Date(normalizedString)
+    const endAtValue = this.endAtInputTarget.value
+    if (!endAtValue) {
+      this.endAtRealtimeErrorTarget.classList.add("hidden")
+      return
+    }
+
+    const endAt = new Date(endAtValue.replace(/\//g, "-"))
     const now = new Date()
 
-    if (inputDate >= now) {
-      this.errorMessageTarget.classList.add("hidden")
+    let errorMessage = ""
+
+    if (endAt < now) {
+      errorMessage = "締切日時は未来の日時を選択してください"
+    }
+
+    if (this.hasStartAtInputTarget) {
+      const startAtValue = this.startAtInputTarget.value
+
+      if (startAtValue) {
+        const startAt = new Date(startAtValue.replace(/\//g, "-"))
+
+        if (endAt <= startAt) {
+          errorMessage = "締切日時は開始日時より後の日時を選択してください"
+        }
+      }
+    }
+
+    if (errorMessage) {
+      this.endAtRealtimeErrorTarget.innerHTML = `
+        <span class="material-symbols-outlined text-sm">info</span>
+        ${errorMessage}
+      `
+      this.endAtRealtimeErrorTarget.classList.remove("hidden")
     } else {
-      this.errorMessageTarget.classList.remove("hidden")
+      this.endAtRealtimeErrorTarget.classList.add("hidden")
     }
   }
 }
