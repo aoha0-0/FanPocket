@@ -11,12 +11,13 @@ ja:
     errors:
       models:
         watchlist:
-          base:
-            start_at_or_end_at_blank: "開始日時または締切日時のどちらかは入力してください"
           attributes:
+            base:
+              start_at_or_end_at_blank: "開始日時または締切日時のどちらかは入力してください"
             title:
               blank: "を入力してください"
             url:
               invalid: "は有効な形式（http/https〜）で入力してください"
             end_at:
               must_be_after_start_at: "は開始日時より後の日時を選択してください"
+              must_be_future: "は未来の日時を選択してください"
