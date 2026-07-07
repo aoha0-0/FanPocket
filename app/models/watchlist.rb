@@ -14,6 +14,15 @@ class Watchlist < ApplicationRecord
   validate :end_at_must_be_future, on: :create
   validate :end_at_must_be_after_start_at
 
+  enum :reception_type, {
+    not_set: 0,     # 指定なし
+    lottery: 1,     # 抽選受付
+    first_come: 2,  # 先着受付
+    made_to_order: 3,  # 受注販売
+    general: 4      # 一般販売
+  },  default: :not_set
+  validates :reception_detail, length: { maximum: 20 }, allow_blank: true
+
   # 「これからの予定」を取得するスコープ
   scope :upcoming, lambda {
     target_date_sql = <<~SQL
