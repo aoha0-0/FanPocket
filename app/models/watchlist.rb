@@ -23,6 +23,12 @@ class Watchlist < ApplicationRecord
   },  default: :not_set
   validates :reception_detail, length: { maximum: 20 }, allow_blank: true
 
+  def reception_type_label
+    I18n.t(
+      "enums.watchlist.reception_type.#{reception_type}"
+   )
+  end
+  
   # 「これからの予定」を取得するスコープ
   scope :upcoming, lambda {
     target_date_sql = <<~SQL
