@@ -30,17 +30,17 @@ class Watchlist < ApplicationRecord
   end
 
   def reception_label_text
-    [
-      reception_detail.presence&.then { |detail| "【#{detail}】" },
-      reception_type != "not_set" ? "【#{reception_type_label}】" : nil
-    ].compact.join
+    if reception_detail.present? && reception_type != "not_set"
+      "【#{reception_detail}#{reception_type_label}】"
+    elsif reception_detail.present?
+      "【#{reception_detail}】"
+    elsif reception_type != "not_set"
+      "【#{reception_type_label}】"
+    end
   end
-  
-  def notification_content(watchlist, message)
-    [
-      reception_label_text(watchlist).presence,
-      message
-    ].compact.join("\n")
+
+  def display_title
+   "#{reception_label_text}#{title}"
   end
   
   # 「これからの予定」を取得するスコープ
