@@ -14,7 +14,10 @@ namespace :notification do
       begin
         user_email = user.email
         title      = watchlist.title
-        content    = "気になっている「#{watchlist.title}」の締め切りまであと3日です。忘れないうちにチェックしてみませんか？"
+        content    = [
+           watchlist.reception_label_text.presence,
+            "気になっている「#{watchlist.title}」の締め切りまであと3日です。忘れないうちにチェックしてみませんか？"
+            ].compact.join("\n")
 
         NotificationMailer.three_days_ago_notice(user_email, title, content).deliver_now
         puts "通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"
@@ -42,7 +45,10 @@ namespace :notification do
       begin
         user_email = user.email
         title      = watchlist.title
-        content    = "気になっている「#{watchlist.title}」の締め切りは明日です。大切な予定を見逃さないようにご確認ください。"
+        content    = [
+          watchlist.reception_label_text.presence,
+          "気になっている「#{watchlist.title}」の締め切りは明日です。大切な予定を見逃さないようにご確認ください。"
+          ].compact.join("\n")
 
         NotificationMailer.day_before_notice(user_email, title, content).deliver_now
         puts "前日通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"
@@ -73,7 +79,10 @@ namespace :notification do
       begin
         user_email = user.email
         title      = watchlist.title
-        content    = "気になっている「#{watchlist.title}」の締め切りは本日です。大切な予定を見逃さないようにご確認ください。"
+        content    = [
+          watchlist.reception_label_text.presence,
+          "気になっている「#{watchlist.title}」の締め切りは本日です。大切な予定を見逃さないようにご確認ください。"
+          ].compact.join("\n")
 
         NotificationMailer.today_notice(user_email, title, content).deliver_now
         puts "当日締切通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"
@@ -101,7 +110,10 @@ namespace :notification do
       begin
         user_email = user.email
         title      = watchlist.title
-        content    = "気になっている「#{watchlist.title}」の開始は本日です。詳細をチェックしてみませんか？"
+        content    = [
+          watchlist.reception_label_text.presence,
+          "気になっている「#{watchlist.title}」の開始は本日です。詳細をチェックしてみませんか？"
+          ].compact.join("\n")
 
         NotificationMailer.start_notice(user_email, title, content).deliver_now
         puts "当日開始通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"

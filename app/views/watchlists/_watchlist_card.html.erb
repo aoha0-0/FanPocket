@@ -3,17 +3,19 @@
     <div class="flex-1 pr-4 <%= 'opacity-60' if is_past || watchlist.is_done? %>">
       <p class="font-label text-xs text-on-surface-variant/70 mb-2">
         <%= watchlist.start_at&.strftime("%Y.%m.%d %H:%M") %>
+        
+         <% if watchlist.reception_detail.present? %>
+          <span class="bg-[#B6E0F3]/50 text-[#2d6489] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+            <%= watchlist.reception_detail %>
+          </span>
+        <% end %>
+        
         <% if watchlist.reception_type != "not_set" %>
           <span class="bg-[#B6E0F3]/50 text-[#2d6489] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
             <%= watchlist.reception_type_label %>
           </span>
         <% end %>
 
-        <% if watchlist.reception_detail.present? %>
-          <span class="bg-[#B6E0F3]/50 text-[#2d6489] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-            <%= watchlist.reception_detail %>
-          </span>
-        <% end %>
       </p>
       <h3 class="font-headline font-bold text-lg text-on-surface leading-tight line-clamp-2 break-all">
         <%= watchlist.title %>

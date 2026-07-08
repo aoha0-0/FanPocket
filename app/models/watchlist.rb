@@ -28,6 +28,20 @@ class Watchlist < ApplicationRecord
       "enums.watchlist.reception_type.#{reception_type}"
    )
   end
+
+  def reception_label_text
+    [
+      reception_detail.presence&.then { |detail| "【#{detail}】" },
+      reception_type != "not_set" ? "【#{reception_type_label}】" : nil
+    ].compact.join
+  end
+  
+  def notification_content(watchlist, message)
+    [
+      reception_label_text(watchlist).presence,
+      message
+    ].compact.join("\n")
+  end
   
   # 「これからの予定」を取得するスコープ
   scope :upcoming, lambda {
