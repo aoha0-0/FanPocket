@@ -23,6 +23,19 @@
 
   <!-- Title Section -->
   <section class="bg-white p-8 rounded-3xl puffy-shadow relative overflow-hidden border-l-[12px] <%= ( @watchlist.end_at && @watchlist.end_at < Time.current ) ? 'border-gray-300' : 'border-[#B6E0F3]' %>">
+    <p class="font-label text-xs text-on-surface-variant/70 mb-3 flex flex-wrap gap-2">
+      <% if @watchlist.reception_type != "not_set" %>
+          <span class="bg-[#B6E0F3]/50 text-[#2d6489] text-sm font-bold px-3 py-1 rounded-full tracking-wider">
+            <%= @watchlist.reception_type_label %>
+          </span>
+        <% end %>
+
+        <% if @watchlist.reception_detail.present? %>
+          <span class="bg-[#B6E0F3]/50 text-[#2d6489] text-sm font-bold px-3 py-1 rounded-full tracking-wider">
+            <%= @watchlist.reception_detail %>
+          </span>
+        <% end %>
+      </p>
     <h2 class="font-headline font-extrabold text-3xl text-on-surface leading-tight tracking-tight relative z-10 break-words whitespace-normal">
       <%= @watchlist.title %>
     </h2>
