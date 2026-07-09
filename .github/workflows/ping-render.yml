@@ -40,6 +40,9 @@ jobs:
       - name: Install gems
         run: bundle install
 
+      - name: Run database migrations
+        run: bundle exec rails db:migrate
+
       # 4. 【朝7時通知】当日・開始日タスクの実行
       # 💡 inputs.notification_type に修正（最新の仕様に準拠）
       - name: Run Same Day Notifications (7:00 JST)

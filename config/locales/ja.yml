@@ -21,3 +21,11 @@ ja:
             end_at:
               must_be_after_start_at: "は開始日時より後の日時を選択してください"
               must_be_future: "は未来の日時を選択してください"
+  enums:
+    watchlist:
+      reception_type:
+        not_set: "指定なし"
+        lottery: "抽選"
+        first_come: "先着"
+        made_to_order: "受注販売"
+        general: "一般販売"

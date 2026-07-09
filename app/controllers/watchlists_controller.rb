@@ -65,6 +65,15 @@ class WatchlistsController < ApplicationController
   end
 
   def watchlist_params
-    params.require(:watchlist).permit(:title, :memo, :url, :start_at, :end_at, :is_done)
+    params.require(:watchlist).permit(
+      :title,
+      :memo,
+      :url,
+      :start_at,
+      :end_at,
+      :is_done,
+      :reception_type,
+      :reception_detail
+    )
   end
 end
