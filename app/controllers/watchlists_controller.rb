@@ -69,11 +69,11 @@ class WatchlistsController < ApplicationController
       :title,
       :memo,
       :url,
-      :start_at, 
-      :end_at, 
-      :is_done, 
-      :reception_type, 
+      :start_at,
+      :end_at,
+      :is_done,
+      :reception_type,
       :reception_detail
-      )
+    )
   end
 end

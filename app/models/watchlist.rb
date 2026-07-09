@@ -18,31 +18,31 @@ class Watchlist < ApplicationRecord
     not_set: 0,     # 指定なし
     lottery: 1,     # 抽選受付
     first_come: 2,  # 先着受付
-    made_to_order: 3,  # 受注販売
-    general: 4      # 一般販売
-  },  default: :not_set
+    made_to_order: 3, # 受注販売
+    general: 4 # 一般販売
+  }, default: :not_set
   validates :reception_detail, length: { maximum: 20 }, allow_blank: true
 
   def reception_type_label
     I18n.t(
       "enums.watchlist.reception_type.#{reception_type}"
-   )
+    )
   end
 
   def reception_label_text
-    if reception_detail.present? && reception_type != "not_set"
+    if reception_detail.present? && reception_type != 'not_set'
       "【#{reception_detail}#{reception_type_label}】"
     elsif reception_detail.present?
       "【#{reception_detail}】"
-    elsif reception_type != "not_set"
+    elsif reception_type != 'not_set'
       "【#{reception_type_label}】"
     end
   end
 
   def display_title
-   "#{reception_label_text}#{title}"
+    "#{reception_label_text}#{title}"
   end
-  
+
   # 「これからの予定」を取得するスコープ
   scope :upcoming, lambda {
     target_date_sql = <<~SQL

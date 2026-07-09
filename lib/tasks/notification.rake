@@ -102,7 +102,7 @@ namespace :notification do
         user_email = user.email
         title      = watchlist.title
         content    = "気になっている「#{watchlist.display_title}」の開始は本日です。詳細をチェックしてみませんか？"
-        
+
         NotificationMailer.start_notice(user_email, title, content).deliver_now
         puts "当日開始通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"
 
