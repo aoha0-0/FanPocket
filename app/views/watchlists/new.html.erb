@@ -2,11 +2,24 @@
   <!-- TopAppBar -->
   <%= render "layouts/header",
            back_path: watchlists_path %>
+  <%= render "layouts/sidebar" %>
+
+  <div class="hidden md:block w-full max-w-3xl mx-auto px-4 sm:px-6 pt-4">
+    <%= link_to watchlists_path,
+                class: "inline-flex items-center gap-1
+                        text-base font-bold text-primary
+                        hover:opacity-70 transition-opacity" do %>
+      <span class="material-symbols-outlined text-xl">
+        arrow_back
+      </span>
+      <span>これからの予定へ</span>
+    <% end %>
+  </div>
 
   <main class="flex-grow px-6 max-w-3xl mx-auto w-full pt-8">
     <div class="mb-10">
-      <h2 class="font-headline font-extrabold text-3xl text-center text-primary tracking-tight">予定の追加</h2>
-      <p class="text-center text-[#4f5052] text-sm mt-2">URLを保存して新しい活動を記録しましょう</p>
+      <h2 class="font-headline font-extrabold text-4xl text-center text-primary tracking-tight">予定の追加</h2>
+      <p class="text-center text-[#4f5052] text-base mt-2">URLを保存して新しい活動を記録しましょう</p>
     </div>
 
     <%= render 'form', watchlist: @watchlist %>

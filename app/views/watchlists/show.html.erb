@@ -1,5 +1,18 @@
 <%= render "layouts/header",
            back_path: watchlists_path %>
+<%= render "layouts/sidebar" %>
+
+<div class="hidden md:block w-full max-w-3xl mx-auto px-4 sm:px-6 pt-4">
+  <%= link_to watchlists_path,
+              class: "inline-flex items-center gap-1
+                      text-sm font-bold text-primary
+                      hover:opacity-70 transition-opacity" do %>
+    <span class="material-symbols-outlined text-xl">
+      arrow_back
+    </span>
+    <span>これからの予定へ</span>
+  <% end %>
+</div>
 
 <main class="max-w-2xl mx-auto px-6 mt-4 space-y-8">
   <!-- Page Header -->
