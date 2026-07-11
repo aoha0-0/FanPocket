@@ -11,87 +11,90 @@
     </p>
   </div>
 
-  <section>
-    <div class="flex items-center gap-2 mb-3 px-1">
-      <span class="material-symbols-outlined text-primary text-xl">account_circle</span>
-      <h3 class="font-bold text-sm text-on-surface-variant">アカウント</h3>
-    </div>
-    <div class="bg-white rounded-xl p-1 shadow-sm overflow-hidden border border-base-200">
-      <button class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left" disabled>
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary/50 text-xl">mail</span>
-          <span class="text-primary font-medium">メールアドレス</span>
-        </div>
-        <div class="flex items-center gap-2 text-on-surface-variant">
-          <span class="text-sm"><%= current_user.email %></span>
-          <span class="material-symbols-outlined text-lg">chevron_right</span>
-        </div>
-      </button>
-      <div class="h-px mx-4 bg-gray-100"></div>
-      <button class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors text-left" disabled>
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary/50 text-xl">lock</span>
-          <span class="text-primary font-medium">パスワードの変更</span>
-        </div>
-        <div class="flex items-center gap-2 text-on-surface-variant">
-          <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
-        </div>
-      </button>
-    </div>
-  </section>
-
-  <section>
-    <div class="flex items-center gap-2 mb-3 px-1">
-      <span class="material-symbols-outlined text-primary text-xl">more_horiz</span>
-      <h3 class="font-bold text-sm text-on-surface-variant">その他</h3>
-    </div>
-    <div class="bg-white rounded-xl p-1 shadow-sm overflow-hidden border border-base-200">
-      <%# 1. 使いかたガイド %>
-      <div class="border-b border-gray-100 mx-4">
-        <button class="w-full flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left" disabled>
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary/50 text-xl">menu_book</span>
-            <span class="text-primary font-medium">使いかたガイド</span>
+  <div class="space-y-8">
+    <section>
+      <div class="flex items-center gap-2 mb-3 px-1">
+        <span class="material-symbols-outlined text-primary text-xl">account_circle</span>
+        <h3 class="font-bold text-sm text-on-surface-variant">アカウント</h3>
+      </div>
+      <div class="bg-white rounded-xl p-1 shadow-sm overflow-hidden border border-base-200">
+        <button class="w-full min-h-11 flex items-center justify-between p-4 hover:bg-gray-50 active:bg-gray-50 transition-colors text-left" disabled>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="material-symbols-outlined text-primary/50 text-xl">mail</span>
+            <span class="text-primary font-medium">メールアドレス</span>
           </div>
-          <span class="material-symbols-outlined text-on-surface-variant text-lg">open_in_new</span>
+          <div class="flex items-center justify-end gap-2 min-w-0 ml-4">
+            <span class="text-sm truncate max-w-32 sm:max-w-64">
+              <%= current_user.email %>
+            </span>
+            <span class="material-symbols-outlined text-lg shrink-0">chevron_right</span>
+          </div>
+        </button>
+        <div class="h-px mx-4 bg-gray-100"></div>
+        <button class="w-full min-h-11 flex items-center justify-between p-4 hover:bg-gray-50 active:bg-gray-50 transition-colors text-left" disabled>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary/50 text-xl">lock</span>
+            <span class="text-primary font-medium">パスワードの変更</span>
+          </div>
+          <div class="flex items-center gap-2 text-on-surface-variant">
+            <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
+          </div>
         </button>
       </div>
+    </section>
 
-      <%# 2. 利用規約（blockを追加し、外側をborderを持つdivで包む） %>
-      <div class="border-b border-gray-100 mx-4">
-        <%= link_to terms_path, class: "block w-full flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left" do %>
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary/50 text-xl">description</span>
-            <span class="text-primary font-medium">利用規約</span>
-          </div>
-          <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
-        <% end %>
+    <section>
+      <div class="flex items-center gap-2 mb-3 px-1">
+        <span class="material-symbols-outlined text-primary text-xl">more_horiz</span>
+        <h3 class="font-bold text-sm text-on-surface-variant">その他</h3>
       </div>
-
-      <%# 3. プライバシーポリシー（blockを追加し、外側をborderを持つdivで包む） %>
-      <div class="border-b border-gray-100 mx-4">
-        <%= link_to privacy_path, class: "block w-full flex items-center justify-between py-4 hover:bg-gray-50 transition-colors text-left" do %>
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary/50 text-xl">shield_lock</span>
-            <span class="text-primary font-medium">プライバシーポリシー</span>
-          </div>
-          <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
-        <% end %>
-      </div>
-  
-      <%# 4. ログアウト（一番下なので線は不要） %>
-      <%= button_to destroy_user_session_path, 
-                    method: :delete, 
-                    data: { turbo: false }, 
-                    class: "w-full flex items-center justify-between p-4 hover:bg-red-50/30 transition-colors text-left" do %>
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-error text-xl">logout</span>
-          <span class="text-error font-semibold">ログアウト</span>
+      <div class="bg-white rounded-xl p-1 shadow-sm overflow-hidden border border-base-200">
+        <%# 1. 使いかたガイド %>
+        <div class="border-b border-gray-100 mx-4">
+          <button class="w-full min-h-11 flex items-center justify-between py-4 hover:bg-gray-50 active:bg-gray-50 transition-colors text-left" disabled>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary/50 text-xl">menu_book</span>
+              <span class="text-primary font-medium">使いかたガイド</span>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant text-lg">open_in_new</span>
+          </button>
         </div>
-      <% end %>
-    </div>
-  </section>
 
+        <%# 2. 利用規約（blockを追加し、外側をborderを持つdivで包む） %>
+        <div class="border-b border-gray-100 mx-4">
+          <%= link_to terms_path, class: "block w-full min-h-11 flex items-center justify-between py-4 hover:bg-gray-50 active:bg-gray-50 transition-colors text-left" do %>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary/50 text-xl">description</span>
+              <span class="text-primary font-medium">利用規約</span>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
+          <% end %>
+        </div>
+
+        <%# 3. プライバシーポリシー（blockを追加し、外側をborderを持つdivで包む） %>
+        <div class="border-b border-gray-100 mx-4">
+          <%= link_to privacy_path, class: "block w-full min-h-11 flex items-center justify-between py-4 hover:bg-gray-50 active:bg-gray-50 transition-colors text-left" do %>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary/50 text-xl">shield_lock</span>
+              <span class="text-primary font-medium">プライバシーポリシー</span>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
+          <% end %>
+        </div>
+  
+        <%# 4. ログアウト（一番下なので線は不要） %>
+        <%= button_to destroy_user_session_path, 
+                      method: :delete, 
+                      data: { turbo: false }, 
+                      class: "w-full min-h-11 flex items-center justify-between p-4 hover:bg-red-50/30 active:bg-red-50/30 transition-colors text-left" do %>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-error text-xl">logout</span>
+            <span class="text-error font-semibold">ログアウト</span>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  </div>
 </main>
 
 <%= render 'layouts/footer' %>
