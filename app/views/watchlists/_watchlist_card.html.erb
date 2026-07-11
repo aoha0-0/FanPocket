@@ -1,64 +1,138 @@
-<%= link_to watchlist_path(watchlist), class: "block transition-transform duration-200 active:scale-[0.98]" do %>
-  <div class="relative group bg-white rounded-xl p-5 sticky-note-shadow flex items-center justify-between border-l-8 <%= is_past ? 'border-gray-300' : 'border-[#B6E0F3]' %>">
-    <div class="flex-1 pr-4 <%= 'opacity-60' if is_past || watchlist.is_done? %>">
-      <p class="font-label text-xs text-on-surface-variant/70 mb-2">
-        <%= watchlist.start_at&.strftime("%Y.%m.%d %H:%M") %>
-        
-         <% if watchlist.reception_detail.present? %>
-          <span class="bg-[#B6E0F3]/50 text-[#2d6489] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-            <%= watchlist.reception_detail %>
-          </span>
-        <% end %>
-        
-        <% if watchlist.reception_type != "not_set" %>
-          <span class="bg-[#B6E0F3]/50 text-[#2d6489] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-            <%= watchlist.reception_type_label %>
-          </span>
-        <% end %>
+<%= link_to watchlist_path(watchlist),
+            class: "block rounded-xl transition-transform duration-200
+                    active:scale-[0.98]
+                    focus-visible:outline
+                    focus-visible:outline-2
+                    focus-visible:outline-offset-2
+                    focus-visible:outline-[#2d6489]" do %>
 
-      </p>
-      <h3 class="font-headline font-bold text-lg text-on-surface leading-tight line-clamp-2 break-all">
-        <%= watchlist.title %>
-      </h3>
+  <article class="relative group
+                  min-h-28
+                  bg-white rounded-xl
+                  px-4 py-4 sm:p-5
+                  sticky-note-shadow
+                  border-l-6 sm:border-l-8
+                  <%= is_past ? 'border-gray-300' : 'border-[#B6E0F3]' %>">
+
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <%# 左側：日時・種別・タイトル %>
+      <div class="min-w-0 flex-1 pr-8 <%= 'opacity-60' if is_past || watchlist.is_done? %>">
+        <div class="flex flex-wrap items-center gap-1.5 mb-2">
+          <% if watchlist.start_at.present? %>
+            <time class="font-label text-xs text-on-surface-variant/70">
+              <%= watchlist.start_at.strftime("%Y.%m.%d %H:%M") %>
+            </time>
+          <% end %>
+
+          <% if watchlist.reception_detail.present? %>
+            <span class="inline-flex items-center
+                         min-h-6
+                         bg-[#B6E0F3]/50 text-[#2d6489]
+                         text-[10px] font-bold
+                         px-2.5 py-1
+                         rounded-full
+                         leading-none">
+              <%= watchlist.reception_detail %>
+            </span>
+          <% end %>
+
+          <% if watchlist.reception_type != "not_set" %>
+            <span class="inline-flex items-center
+                         min-h-6
+                         bg-[#B6E0F3]/50 text-[#2d6489]
+                         text-[10px] font-bold
+                         px-2.5 py-1
+                         rounded-full
+                         leading-none">
+              <%= watchlist.reception_type_label %>
+            </span>
+          <% end %>
+        </div>
+
+        <h3 class="font-headline font-bold
+                   text-base sm:text-lg
+                   text-on-surface
+                   leading-snug
+                   line-clamp-2
+                   break-words">
+          <%= watchlist.title %>
+        </h3>
+      </div>
+
+      <%# 右側：ステータス %>
+      <div class="flex items-center justify-between gap-3
+                  sm:flex-col sm:items-end sm:justify-center
+                  sm:min-h-12
+                  <%= 'opacity-60' if is_past || watchlist.is_done? %>">
+
+        <div>
+          <% if watchlist.is_done? %>
+            <span class="inline-flex items-center min-h-7
+                         text-[10px] font-bold
+                         px-3 py-1
+                         text-gray-400 italic">
+              対応済み
+            </span>
+
+          <% elsif !is_past %>
+            <% if watchlist.start_at.present? && watchlist.start_at > Time.current %>
+              <% days_to_start = (watchlist.start_at.to_date - Date.current).to_i %>
+
+              <span class="inline-flex items-center min-h-7
+                           bg-[#B6E0F3]/50 text-[#2d6489]
+                           text-[10px] font-bold
+                           px-3 py-1
+                           rounded-full
+                           leading-none
+                           whitespace-nowrap">
+                <%= days_to_start <= 0 ? "本日開始！" : "開始まであと#{days_to_start}日" %>
+              </span>
+
+            <% elsif watchlist.end_at.present? && watchlist.end_at >= Time.current %>
+              <% days_left = (watchlist.end_at.to_date - Date.current).to_i %>
+
+              <span class="inline-flex items-center min-h-7
+                           bg-[#B6E0F3]/50 text-[#2d6489]
+                           text-[10px] font-bold
+                           px-3 py-1
+                           rounded-full
+                           leading-none
+                           whitespace-nowrap">
+                <%= days_left <= 0 ? "締切当日！" : "締切まであと#{days_left}日" %>
+              </span>
+            <% end %>
+
+          <% elsif watchlist.end_at.present? && watchlist.end_at < Time.current %>
+            <span class="inline-flex items-center min-h-7
+                         text-[10px] font-bold
+                         px-3 py-1
+                         text-gray-400 italic">
+              受付終了
+            </span>
+
+          <% elsif is_past %>
+            <span class="inline-flex items-center min-h-7
+                         text-[10px] font-bold
+                         px-3 py-1
+                         text-gray-400 italic">
+              思い出
+            </span>
+          <% end %>
+        </div>
+
+        <% if is_past ||
+              watchlist.is_done? ||
+              (watchlist.end_at.present? && watchlist.end_at < Time.current) %>
+          <span class="material-symbols-outlined text-gray-300" aria-hidden="true">
+            inventory_2
+          </span>
+        <% else %>
+          <span class="material-symbols-outlined absolute top-4 right-4 text-lg text-[#B6E0F3]"
+                        aria-hidden="true">
+            push_pin
+          </span>
+        <% end %>
+      </div>
     </div>
-    
-    <div class="flex flex-col items-end justify-center min-h-[48px] gap-2 <%= 'opacity-60' if is_past || watchlist.is_done? %>">
-      <% if watchlist.is_done? %>
-        <%# 1. 対応済みの場合 %>
-        <span class="text-[10px] font-bold px-3 py-1 text-gray-400 italic mb-1">対応済み</span>
-
-      <% elsif !is_past %>
-        <%# 2. これからの予定（開始前、または締切前） %>
-        <% if watchlist.start_at.present? && watchlist.start_at > Time.current %>
-          <% days_to_start = (watchlist.start_at.to_date - Date.today).to_i %>
-          <span class="bg-[#B6E0F3]/50 text-[#2d6489] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-            <%= days_to_start <= 0 ? "本日開始！" : "開始まであと#{days_to_start}日" %>
-          </span>
-        <% elsif watchlist.end_at.present? && watchlist.end_at >= Time.current %>
-          <% days_left = (watchlist.end_at.to_date - Date.today).to_i %>
-          <span class="bg-[#B6E0F3]/50 text-[#2d6489] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-            <%= days_left <= 0 ? "締切当日！" : "締切まであと#{days_left}日" %>
-          </span>
-        <% end %>
-
-      <% elsif watchlist.end_at.present? && watchlist.end_at < Time.current %>
-        <%# 3. 未完了のまま期限が過ぎた場合（受付終了） %>
-        <span class="text-[10px] font-bold px-3 py-1 text-gray-400 italic mb-1">受付終了</span>
-      <% elsif is_past %>
-        <%# 4. それ以外の過去の予定（思い出） %>
-        <span class="text-[10px] font-bold px-3 py-1 text-gray-400 italic mb-1">思い出</span>
-      <% end %>
-
-      <%# 📌 アイコンの出し分けと位置調整を完全に分離 %>
-      <% if is_past || watchlist.is_done? || (watchlist.end_at.present? && watchlist.end_at < Time.current) %>
-        <%# 【過去・完了・受付終了】は一括して「箱アイコン」をバッジの下に表示 %>
-        <span class="material-symbols-outlined text-gray-300">inventory_2</span>
-      <% else %>
-        <%# 【現在・未来の未完了タスク】のみ、右上ピンを配置 %>
-        <span class="material-symbols-outlined absolute top-4 right-4 text-xs text-[#B6E0F3]">
-          push_pin
-        </span>
-      <% end %>
-    </div>
-  </div>
+  </article>
 <% end %>

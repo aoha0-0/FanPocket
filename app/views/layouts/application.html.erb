@@ -2,21 +2,42 @@
 <html data-theme="night">
   <head>
     <title>App</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
 
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   </head>
-    <div class="fixed z-0 blur-[100px] rounded-full bg-[#e0f2fe] opacity-50 w-[500px] h-[500px] -top-20 -right-20 pointer-events-none"></div>
-    <div class="fixed z-0 blur-[100px] rounded-full bg-[#e0f2fe] opacity-40 w-[400px] h-[400px] -bottom-20 -left-20 pointer-events-none"></div>
-  <body>
+
+  <body class="relative min-h-screen overflow-x-hidden">
+    <%# 背景装飾 %>
+    <div
+      class="fixed z-0 blur-[100px] rounded-full bg-[#e0f2fe] opacity-50
+             w-72 h-72 md:w-[500px] md:h-[500px]
+             -top-20 -right-20 pointer-events-none"
+      aria-hidden="true">
+    </div>
+
+    <div
+      class="fixed z-0 blur-[100px] rounded-full bg-[#e0f2fe] opacity-40
+             w-64 h-64 md:w-[400px] md:h-[400px]
+             -bottom-20 -left-20 pointer-events-none"
+      aria-hidden="true">
+    </div>
+
     <% if notice %>
-      <div data-controller="flash" data-action="click->flash#dismiss" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-xs cursor-pointer select-none">
+      <div
+        data-controller="flash"
+        data-action="click->flash#dismiss"
+        class="fixed top-4 left-1/2 -translate-x-1/2 z-50
+               w-[calc(100%-2rem)] max-w-sm
+               cursor-pointer select-none">
         <div class="alert alert-soft alert-success shadow-lg rounded-2xl">
           <span class="material-symbols-outlined">check_circle</span>
           <span class="text-sm font-bold"><%= notice %></span>
@@ -25,16 +46,24 @@
     <% end %>
 
     <% if alert %>
-      <% unless (controller_name == 'sessions' && action_name == 'new') %>
-        <div data-controller="flash" 
-             data-flash-auto-dismiss-value="false"
-            data-action="click->flash#dismiss" 
-            class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-xs cursor-pointer select-none alert alert-soft alert-error shadow-lg rounded-2xl flex items-center gap-2">
+      <% unless controller_name == "sessions" && action_name == "new" %>
+        <div
+          data-controller="flash"
+          data-flash-auto-dismiss-value="false"
+          data-action="click->flash#dismiss"
+          class="fixed top-4 left-1/2 -translate-x-1/2 z-50
+                 w-[calc(100%-2rem)] max-w-sm
+                 cursor-pointer select-none
+                 alert alert-soft alert-error shadow-lg rounded-2xl
+                 flex items-center gap-2">
           <span class="material-symbols-outlined">error</span>
           <span class="text-sm font-medium"><%= alert %></span>
         </div>
       <% end %>
     <% end %>
-    <%= yield %>
+
+    <div class="relative z-10">
+      <%= yield %>
+    </div>
   </body>
 </html>

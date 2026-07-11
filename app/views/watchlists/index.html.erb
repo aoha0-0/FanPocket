@@ -1,46 +1,79 @@
-<main class="max-w-screen-xl mx-auto px-6 mt-16 pb-40">
-  <!-- これからの予定セクション -->
-  <!-- Date Header Section -->
-  <div class="mb-12 pt-4 text-center"> 
-    <h2 class="font-headline font-extrabold text-3xl tracking-tight text-primary">これからの予定</h2>
+<main class="w-full max-w-3xl mx-auto px-4 sm:px-6 mt-10 md:mt-14 pb-40 md:pb-32">
+  <%# これからの予定セクション %>
+  <div class="mb-8 md:mb-10 pt-4 text-center">
+    <h2 class="font-headline font-extrabold text-2xl sm:text-3xl tracking-tight text-primary">
+      これからの予定
+    </h2>
   </div>
+
   <div class="mb-6">
     <% if @future_watchlists.any? %>
-      <div class="space-y-6">
+      <div class="space-y-4 md:space-y-5">
         <% @future_watchlists.each do |watchlist| %>
-          <%= render 'watchlist_card', watchlist: watchlist, is_past: false %>
+          <%= render "watchlist_card", watchlist: watchlist, is_past: false %>
         <% end %>
       </div>
     <% else %>
-      <%# 未来の予定がない時のメッセージ %>
-      <div class="flex flex-col items-center justify-center py-12 text-center bg-white/30 rounded-3xl border border-dashed border-[#4f5052]">
-        <span class="material-symbols-outlined text-4xl text-[#B6E0F3] mb-2">auto_awesome</span>
-        <p class="text-[#4f5052] font-headline font-bold">お気に入りの予定を、ポケットに入れて持ち歩こう。</p>
+      <div class="flex flex-col items-center justify-center
+                  px-5 py-10 md:py-12
+                  text-center bg-white/30 rounded-3xl
+                  border border-dashed border-[#4f5052]">
+        <span class="material-symbols-outlined text-4xl text-[#B6E0F3] mb-2">
+          auto_awesome
+        </span>
+
+        <p class="text-[#4f5052] text-sm sm:text-base font-headline font-bold leading-relaxed">
+          お気に入りの予定を、ポケットに入れて持ち歩こう。
+        </p>
       </div>
     <% end %>
   </div>
 
-  <!-- 終わった予定（思い出）セクション -->
+  <%# 終わった予定セクション %>
   <% if @past_watchlists.any? %>
-    <div class="mt-12 mb-6 px-2 ">
-    <div class="divider font-headline text-sm opacity-40 gap-1">
-      <span>これまでの足跡</span>
-      <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'opsz' 20, 'wght' 300;">
-        footprint
-      </span>
-    </div>
+    <section class="mt-10 md:mt-12 mb-6">
+      <div class="divider font-headline text-sm opacity-40 gap-1">
+        <span>これまでの足跡</span>
+
+        <span
+          class="material-symbols-outlined text-lg"
+          style="font-variation-settings: 'opsz' 20, 'wght' 300;">
+          footprint
+        </span>
+      </div>
+
+      <div class="space-y-4 md:space-y-5">
         <% @past_watchlists.each do |watchlist| %>
-          <div class="space-y-6">
-          <%= render 'watchlist_card', watchlist: watchlist, is_past: true %>
+          <%= render "watchlist_card", watchlist: watchlist, is_past: true %>
         <% end %>
       </div>
-    </div>
+    </section>
   <% end %>
 </main>
 
-<!-- Floating Action Button (新規作成へ) -->
-<%= link_to new_watchlist_path, class: "fixed bottom-24 right-6 z-50 w-14 h-14 rounded-2xl text-on-primary flex items-center justify-center transition-all duration-200 active:scale-90 shadow-2xl", style: "background-color: #B6E0F3;" do %>
-  <span class="material-symbols-outlined text-3xl text-[#2d6489]">add</span>
-<% end %>
+<%# 新規作成ボタン %>
+<div class="fixed inset-x-0 bottom-24 md:bottom-8 z-40 pointer-events-none">
+  <div class="w-full max-w-3xl mx-auto px-4 sm:px-6 flex justify-end">
+    <%= link_to new_watchlist_path,
+                class: "pointer-events-auto
+                        flex items-center justify-center
+                        w-14 h-14 md:w-12 md:h-12
+                        rounded-2xl
+                        text-on-primary
+                        transition-all duration-200
+                        active:scale-90 hover:scale-105
+                        shadow-2xl
+                        focus-visible:outline
+                        focus-visible:outline-2
+                        focus-visible:outline-offset-2
+                        focus-visible:outline-[#2d6489]",
+                style: "background-color: #B6E0F3;",
+                aria: { label: "予定を新しく登録する" } do %>
+      <span class="material-symbols-outlined text-3xl md:text-2xl text-[#2d6489]">
+        add
+      </span>
+    <% end %>
+  </div>
+</div>
 
-<%= render 'layouts/footer' %>
+<%= render "layouts/footer" %>
