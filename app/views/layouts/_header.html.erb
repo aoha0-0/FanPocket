@@ -1,0 +1,41 @@
+<header class="bg-white/80 backdrop-blur-sm sticky top-0 z-40
+               transition-colors border-b border-white shadow-sm">
+  <div class="relative flex items-center justify-center w-full px-4 py-5">
+    <div class="absolute left-4 flex items-center">
+      <% if local_assigns[:back_path].present? %>
+        <%= link_to back_path,
+                    class: "md:hidden flex items-center justify-center
+                            text-primary hover:opacity-70 transition-opacity",
+                    aria: { label: "前の画面に戻る" } do %>
+          <span class="material-symbols-outlined">
+            arrow_back
+          </span>
+        <% end %>
+      <% end %>
+
+      <button
+        type="button"
+        data-action="click->sidebar#open"
+        class="hidden md:flex items-center justify-center
+               text-primary hover:opacity-70 transition-opacity"
+        aria-label="メニューを開く"
+        aria-expanded="false">
+        <span class="material-symbols-outlined">
+          menu
+        </span>
+      </button>
+    </div>
+
+    <div class="flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-white shadow-sm">
+      <%= image_tag "logo.png",
+          class: "w-8 h-8 md:w-9 md:h-9 object-contain",
+          alt: "" %>
+
+      <span class="font-headline font-bold text-xl md:text-2xl tracking-tight text-primary">
+        FanPocket
+      </span>
+    </div>
+
+    <div class="absolute right-4 w-6" aria-hidden="true"></div>
+  </div>
+</header>
