@@ -1,6 +1,5 @@
-<%= render "layouts/header",
+<%= render "layouts/app_navigation",
            back_path: watchlist_path %>
-<%= render "layouts/sidebar" %>
 
 <div class="hidden md:block w-full max-w-3xl mx-auto px-4 sm:px-6 pt-4">
   <%= link_to watchlist_path(@watchlist),
@@ -16,8 +15,8 @@
 
 <main class="flex-grow px-6 max-w-3xl mx-auto w-full pt-8">
   <div class="mb-10">
-    <h2 class="font-headline font-extrabold text-4xl text-center text-primary tracking-tight">予定の編集</h2>
-    <p class="text-center text-[#4f5052] text-base mt-2">登録内容を修正して更新しましょう</p>
+    <h2 class="font-headline font-extrabold text-3xl text-center text-primary tracking-tight">予定の編集</h2>
+    <p class="text-center text-[#4f5052] text-sm mt-2">登録内容を修正して更新しましょう</p>
   </div>
 
   <%= render 'form', watchlist: @watchlist %>

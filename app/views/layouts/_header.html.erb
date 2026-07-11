@@ -1,6 +1,6 @@
 <header class="bg-white/80 backdrop-blur-sm sticky top-0 z-40
                transition-colors border-b border-white shadow-sm">
-  <div class="relative flex items-center justify-center w-full px-4 py-5 ">
+  <div class="relative flex items-center justify-center w-full px-4 py-5">
     <div class="absolute left-4 flex items-center">
       <% if local_assigns[:back_path].present? %>
         <%= link_to back_path,
@@ -15,9 +15,11 @@
 
       <button
         type="button"
+        data-action="click->sidebar#open"
         class="hidden md:flex items-center justify-center
                text-primary hover:opacity-70 transition-opacity"
-        aria-label="メニューを開く">
+        aria-label="メニューを開く"
+        aria-expanded="false">
         <span class="material-symbols-outlined">
           menu
         </span>

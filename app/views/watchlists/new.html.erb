@@ -1,8 +1,7 @@
 <body class="bg-surface text-on-surface font-body min-h-screen pb-32">
   <!-- TopAppBar -->
-  <%= render "layouts/header",
+  <%= render "layouts/app_navigation",
            back_path: watchlists_path %>
-  <%= render "layouts/sidebar" %>
 
   <div class="hidden md:block w-full max-w-3xl mx-auto px-4 sm:px-6 pt-4">
     <%= link_to watchlists_path,
@@ -16,12 +15,16 @@
     <% end %>
   </div>
 
-  <main class="flex-grow px-6 max-w-3xl mx-auto w-full pt-8">
-    <div class="mb-10">
-      <h2 class="font-headline font-extrabold text-4xl text-center text-primary tracking-tight">予定の追加</h2>
-      <p class="text-center text-[#4f5052] text-base mt-2">URLを保存して新しい活動を記録しましょう</p>
-    </div>
+  <div class="text-center mt-10 mb-10">
+    <h2 class="font-headline font-extrabold text-3xl tracking-tight text-primary">
+      予定の追加
+    </h2>
+    <p class="text-center text-[#4f5052] text-sm mt-2">
+      URLを保存して新しい活動を記録しましょう
+    </p>
+  </div>
 
+  <main class="flex-grow px-6 max-w-3xl mx-auto w-full pt-8">
     <%= render 'form', watchlist: @watchlist %>
   </main>
 </body>

@@ -1,14 +1,13 @@
-<%= render "layouts/header" %>
-<%= render "layouts/sidebar" %>
+<%= render "layouts/app_navigation" %>
+
+<div class="text-center mt-15 mb-15">
+  <h2 class="font-headline font-extrabold text-3xl tracking-tight text-primary">
+    これからの予定
+  </h2>
+</div>
 
 <main class="w-full max-w-3xl mx-auto px-4 sm:px-6 mt-10 md:mt-14 pb-40 md:pb-32">
   <%# これからの予定セクション %>
-  <div class="mb-8 md:mb-10 pt-4 text-center">
-    <h2 class="font-headline font-extrabold text-2xl sm:text-3xl tracking-tight text-primary">
-      これからの予定
-    </h2>
-  </div>
-
   <div class="mb-6">
     <% if @future_watchlists.any? %>
       <div class="space-y-4 md:space-y-5">
@@ -55,8 +54,9 @@
 </main>
 
 <%# 新規作成ボタン %>
-<div class="fixed inset-x-0 bottom-24 md:bottom-8 z-40 pointer-events-none">
-  <div class="w-full max-w-3xl mx-auto px-4 sm:px-6 flex justify-end">
+<div class="fixed inset-x-0 bottom-24 md:inset-x-auto md:right-10 md:bottom-10 z-40 pointer-events-none">
+  <div class="w-full max-w-3xl mx-auto px-4 sm:px-6 flex justify-end
+              md:w-auto md:max-w-none md:px-0">
     <%= link_to new_watchlist_path,
                 class: "pointer-events-auto
                         flex items-center justify-center
