@@ -7,6 +7,3 @@ import { application } from "controllers/application"
 // Importmap環境でコントローラーを正しく自動ロードする記述
 import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
 eagerLoadControllersFrom("controllers", application)
-
-import SidebarController from "./sidebar_controller"
-application.register("sidebar", SidebarController)
