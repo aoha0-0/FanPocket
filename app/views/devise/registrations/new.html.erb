@@ -85,6 +85,26 @@
       <% end %>
     </main>
 
+    <!-- Social Login -->
+    <section class="w-full space-y-6">
+      <div class="flex items-center gap-4">
+        <div class="h-px flex-1 bg-gray-200"></div>
+        <span class="text-xs font-medium text-gray-400">または</span>
+        <div class="h-px flex-1 bg-gray-200"></div>
+      </div>
+
+      <%= button_to user_google_oauth2_omniauth_authorize_path,
+                    method: :post,
+                    data: { turbo: false },
+                    class: "w-full h-16 bg-white border border-gray-200 text-gray-700 font-semibold rounded-full hover:bg-gray-50 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm" do %>
+        <%= image_tag "google_logo.svg",
+                alt: "Google",
+                class: "w-6 h-6" %>
+
+        <span>Google で新規登録</span>
+      <% end %>
+    </section>
+
     <footer class="flex flex-col items-center pt-8">
       <%= link_to new_session_path(resource_name), class: "inline-flex items-center space-x-2 text-gray-400 hover:text-primary transition-colors font-medium text-sm group" do %>
         <span>ログインはこちら</span>
