@@ -17,3 +17,33 @@
 }
 .text-primary { color: var(--color-primary) !important; }
 .bg-primary { background-color: var(--color-primary) !important; }
+
+/* LINE Login Button */
+.line-login-button {
+  position: relative;
+  overflow: hidden;
+  background-color: #06c755;
+}
+
+.line-login-button::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background-color: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.line-login-button:hover::before {
+  opacity: 0.1;
+}
+
+.line-login-button:active::before {
+  opacity: 0.3;
+}
+
+.line-login-button > * {
+  position: relative;
+  z-index: 1;
+}

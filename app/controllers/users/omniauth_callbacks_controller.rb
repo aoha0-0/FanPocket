@@ -3,29 +3,28 @@
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     def google_oauth2
-      @user = User.from_omniauth(request.env['omniauth.auth'])
+      handle_omniauth('Google')
+    end
 
-      return handle_success if @user.persisted?
-
-      handle_failure
+    def line
+      handle_omniauth('LINE')
     end
 
     def failure
-      redirect_with_alert('Googleでの認証に失敗しました。もう一度お試しください。')
+      redirect_with_alert('SNS認証に失敗しました。もう一度お試しください。')
     end
 
     private
 
-    def handle_success
-      flash[:notice] = I18n.t(
-        'devise.omniauth_callbacks.success',
-        kind: 'Google'
-      )
-      sign_in_and_redirect @user, event: :authentication
-    end
+    def handle_omniauth(provider_name)
+      @user = User.from_omniauth(request.env['omniauth.auth'])
 
-    def handle_failure
-      redirect_with_alert('Googleでのログインに失敗しました。もう一度お試しください。')
+      if @user.persisted?
+        sign_in_and_redirect @user, event: :authentication
+      else
+        redirect_to new_user_registration_url,
+                    alert: "#{provider_name}ログインに失敗しました。"
+      end
     end
 
     def redirect_with_alert(message)
