@@ -40,6 +40,7 @@ gem "jbuilder"
 # gem "bcrypt", "~> 3.1.7"
 gem "devise"
 gem "omniauth-google-oauth2"
+gem "omniauth-line"
 
 gem 'resend'
 
