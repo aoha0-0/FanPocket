@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_21_163832) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_23_111657) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "social_accounts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_social_accounts_on_provider_and_uid", unique: true
+    t.index ["user_id"], name: "index_social_accounts_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email"
@@ -45,5 +55,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_21_163832) do
     t.index ["user_id"], name: "index_watchlists_on_user_id"
   end
 
+  add_foreign_key "social_accounts", "users"
   add_foreign_key "watchlists", "users"
 end

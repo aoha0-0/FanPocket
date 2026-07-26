@@ -40,8 +40,28 @@
             <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
           </div>
         </button>
-      </div>
-    </section>
+
+        <div class="h-px mx-4 bg-gray-100"></div>
+          <div class="px-4 pt-4 pb-2">
+            <p class="text-xs font-semibold text-on-surface-variant">
+              外部アカウント連携
+            </p>
+          </div>
+
+          <%= render "social_account_button",
+                      provider: "google_oauth2",
+                      title: "Googleアカウント",
+                      image: "google_logo.svg",
+                      path: user_google_oauth2_omniauth_authorize_path %>
+
+          <%= render "social_account_button",
+                      provider: "line",
+                      title: "LINEアカウント",
+                      image: "LINE_Brand_icon.png",
+                      path: user_line_omniauth_authorize_path %>
+
+        </div>
+      </section>
 
     <section>
       <div class="flex items-center gap-2 mb-3 px-1">

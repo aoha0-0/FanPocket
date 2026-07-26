@@ -1,0 +1,28 @@
+<% linked = current_user.linked_with?(provider) %>
+
+<div class="h-px mx-4 bg-gray-100"></div>
+
+<%= button_to "#{path}?purpose=link",
+              method: :post,
+              disabled: linked,
+              data: { turbo: false },
+              class: "w-full min-h-11 flex items-center justify-between p-4 text-left transition-colors
+                      #{linked ? 'cursor-default' : 'hover:bg-gray-50 active:bg-gray-50'}" do %>
+  <div class="flex items-center gap-2">
+    <%= image_tag image,
+                  alt: "",
+                  class: "w-6 h-6 shrink-0" %>
+
+    <div>
+      <p class="text-primary font-medium"><%= title %></p>
+
+      <p class="text-xs text-on-surface-variant">
+        <%= linked ? "連携済み" : "未連携" %>
+      </p>
+    </div>
+  </div>
+
+  <span class="text-sm font-medium text-primary">
+    <%= linked ? "連携済み" : "連携する" %>
+  </span>
+<% end %>
