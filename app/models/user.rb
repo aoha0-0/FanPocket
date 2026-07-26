@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  attr_accessor :omniauth_provider
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable,
@@ -17,15 +19,57 @@ class User < ApplicationRecord
   after_create_commit :send_welcome_email, if: -> { email.present? }
 
   def email_required?
-    provider != 'line'
+    omniauth_provider != 'line'
   end
 
   def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      user.email = auth.info.email
-      user.password = Devise.friendly_token[0, 20]
+    social_account = find_social_account(auth)
+
+    return { user: social_account.user, created: false } if social_account
+
+    user = create_user_with_social_account(auth)
+
+    { user: user, created: true }
+  end
+
+  def self.find_social_account(auth)
+    SocialAccount.find_by(
+      provider: auth.provider,
+      uid: auth.uid
+    )
+  end
+
+  def self.create_user_with_social_account(auth)
+    transaction do
+      user = create!(user_attributes_from(auth))
+
+      user.social_accounts.create!(
+        social_account_attributes_from(auth)
+      )
+
+      user
     end
   end
+
+  def self.user_attributes_from(auth)
+    {
+      email: auth.info.email.presence,
+      password: Devise.friendly_token[0, 20],
+      omniauth_provider: auth.provider
+    }
+  end
+
+  def self.social_account_attributes_from(auth)
+    {
+      provider: auth.provider,
+      uid: auth.uid
+    }
+  end
+
+  private_class_method :find_social_account,
+                       :create_user_with_social_account,
+                       :user_attributes_from,
+                       :social_account_attributes_from
 
   def link_social_account(auth)
     return :already_linked if already_linked?(auth)

@@ -11,7 +11,8 @@ module Users
     end
 
     def failure
-      redirect_with_alert('SNS認証に失敗しました。もう一度お試しください。')
+      redirect_to new_user_session_path,
+                  alert: 'SNS認証に失敗しました。もう一度お試しください。'
     end
 
     private
@@ -27,13 +28,22 @@ module Users
     end
 
     def handle_login(auth, provider_name)
-      @user = User.from_omniauth(auth)
+      result = User.from_omniauth(auth)
+      user = result[:user]
 
-      if @user.persisted?
-        sign_in_and_redirect @user, event: :authentication
+      flash[:notice] = login_message(result[:created], provider_name)
+
+      sign_in_and_redirect user, event: :authentication
+    rescue ActiveRecord::RecordInvalid
+      redirect_to new_user_registration_path,
+                  alert: "#{provider_name}アカウントでの登録に失敗しました。"
+    end
+
+    def login_message(created, provider_name)
+      if created
+        "#{provider_name}アカウントで新規登録しました。"
       else
-        redirect_to new_user_registration_url,
-                    alert: "#{provider_name}ログインに失敗しました。"
+        "#{provider_name}アカウントでログインしました。"
       end
     end
 
