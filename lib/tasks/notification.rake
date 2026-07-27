@@ -17,6 +17,9 @@ namespace :notification do
         content    = "気になっている「#{watchlist.display_title}」の締め切りまであと3日です。忘れないうちにチェックしてみませんか？"
 
         NotificationMailer.three_days_ago_notice(user_email, title, content).deliver_now
+
+        LineMessagingService.send_line_notification(user, content)
+
         puts "通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"
 
         # 1秒待つ（Resendのレートリミット対策）
@@ -45,6 +48,9 @@ namespace :notification do
         content    = "気になっている「#{watchlist.display_title}」の締め切りは明日です。大切な予定を見逃さないようにご確認ください。"
 
         NotificationMailer.day_before_notice(user_email, title, content).deliver_now
+
+        LineMessagingService.send_line_notification(user, content)
+        
         puts "前日通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"
 
         # 1秒待つ（Resendのレートリミット対策）
@@ -76,6 +82,9 @@ namespace :notification do
         content    = "気になっている「#{watchlist.display_title}」の締め切りは本日です。大切な予定を見逃さないようにご確認ください。"
 
         NotificationMailer.today_notice(user_email, title, content).deliver_now
+
+        LineMessagingService.send_line_notification(user, content)
+
         puts "当日締切通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"
 
         # 1秒待つ（Resendのレートリミット対策）
@@ -104,6 +113,9 @@ namespace :notification do
         content    = "気になっている「#{watchlist.display_title}」の開始は本日です。詳細をチェックしてみませんか？"
 
         NotificationMailer.start_notice(user_email, title, content).deliver_now
+
+        LineMessagingService.send_line_notification(user, content)
+
         puts "当日開始通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"
 
         # 1秒待つ（Resendのレートリミット対策）

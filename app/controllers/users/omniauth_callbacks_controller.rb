@@ -50,6 +50,8 @@ module Users
     def handle_account_linking(auth, provider_name)
       result = current_user.link_social_account(auth)
 
+      send_line_linked_message(auth) if line_linked_successfully?(auth, result)
+
       redirect_to settings_path,
                   flash_type(result) => flash_message(result, provider_name)
     end
@@ -73,6 +75,22 @@ module Users
 
     def linking?
       request.env.dig('omniauth.params', 'purpose') == 'link'
+    end
+
+    def line_linked_successfully?(auth, result)
+      result == :success && auth.provider == 'line'
+    end
+
+    def send_line_linked_message(auth)
+      LineMessagingService.push_text(
+        auth.uid,
+        <<~MESSAGE.strip
+          LINE連携が完了しました！🎉
+
+          FanPocketをご利用いただきありがとうございます。
+          大切な予定を見逃さないよう、LINEでお知らせします。
+        MESSAGE
+      )
     end
   end
 end
