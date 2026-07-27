@@ -17,8 +17,10 @@ env:
   REDIS_URL: ${{ secrets.REDIS_URL }}
   GOOGLE_CLIENT_ID: dummy_google_client_id
   GOOGLE_CLIENT_SECRET: dummy_google_client_secret
-  LINE_CHANNEL_ID: dummy_line_channel_id
-  LINE_CHANNEL_SECRET: dummy_line_channel_secret
+  LINE_LOGIN_CHANNEL_ID: dummy_line_login_channel_id
+  LINE_LOGIN_CHANNEL_SECRET: dummy_line_login_channel_secret
+  LINE_MESSAGING_CHANNEL_SECRET: dummy_line_messaging_channel_secret
+  LINE_MESSAGING_CHANNEL_ACCESS_TOKEN: dummy_line_messaging_channel_access_token
   MAILER_SENDER: ${{ secrets.MAILER_SENDER }}
 
 jobs:

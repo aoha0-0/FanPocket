@@ -50,7 +50,7 @@ namespace :notification do
         NotificationMailer.day_before_notice(user_email, title, content).deliver_now
 
         LineMessagingService.send_line_notification(user, content)
-        
+
         puts "前日通知送信完了: [Watchlist ID: #{watchlist.id}] to [User: #{user_email}]"
 
         # 1秒待つ（Resendのレートリミット対策）
