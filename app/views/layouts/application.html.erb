@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html data-theme="night">
   <head>
-    <title>App</title>
+    <title>FanPocket</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <%= csrf_meta_tags %>
@@ -13,6 +13,19 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <% if Rails.env.production? && ENV["GA_MEASUREMENT_ID"].present? %>
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ENV["GA_MEASUREMENT_ID"] %>"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', '<%= ENV["GA_MEASUREMENT_ID"] %>');
+      </script>
+    <% end %>
+  
   </head>
 
   <body class="relative min-h-screen overflow-x-hidden">
