@@ -280,8 +280,8 @@ Devise.setup do |config|
                 ENV.fetch("GOOGLE_CLIENT_SECRET")
 
   config.omniauth :line,
-                ENV.fetch("LINE_CHANNEL_ID"),
-                ENV.fetch("LINE_CHANNEL_SECRET"),
+                ENV.fetch("LINE_LOGIN_CHANNEL_ID"),
+                ENV.fetch("LINE_LOGIN_CHANNEL_SECRET"),
                 scope: 'profile openid email'
 
   # ==> Warden configuration
