@@ -282,7 +282,10 @@ Devise.setup do |config|
   config.omniauth :line,
                 ENV.fetch("LINE_LOGIN_CHANNEL_ID"),
                 ENV.fetch("LINE_LOGIN_CHANNEL_SECRET"),
-                scope: 'profile openid email'
+                scope: "profile openid email",
+                authorize_params: {
+                  bot_prompt: "aggressive"
+                }
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
