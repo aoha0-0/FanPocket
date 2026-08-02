@@ -51,15 +51,11 @@ jobs:
         run: bundle exec rails db:migrate
 
       # 4. 【朝7時通知】当日・開始日タスクの実行
-      # 💡 inputs.notification_type に修正（最新の仕様に準拠）
-      - name: Run Same Day Notifications (7:00 JST)
+      - name: Run Morning Notifications
         if: inputs.notification_type == 'morning'
-        run: bundle exec rake notification:send_same_day
+        run: bundle exec rake notification:send_morning
 
       # 5. 【夜20時通知】3日前・前日タスクの実行
-      # 💡 inputs.notification_type に修正（最新の仕様に準拠）
-      - name: Run Night Notifications (20:00 JST)
+      - name: Run Night Notifications
         if: inputs.notification_type == 'night'
-        run: |
-          bundle exec rake notification:send_3days_prior
-          bundle exec rake notification:send_day_before
+        run: bundle exec rake notification:send_night
