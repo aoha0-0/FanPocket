@@ -47,8 +47,6 @@ gem 'resend'
 gem 'letter_opener'
 gem 'letter_opener_web', '~> 3.0'
 
-gem 'sidekiq'
-
 gem 'metainspector'
 gem "nokogiri"
 

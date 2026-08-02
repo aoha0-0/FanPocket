@@ -2,6 +2,7 @@
 
 class Watchlist < ApplicationRecord
   belongs_to :user
+  has_many :notification_deliveries, dependent: :destroy
 
   before_validation :set_end_at_to_end_of_day, if: :end_at_time_blank?
 

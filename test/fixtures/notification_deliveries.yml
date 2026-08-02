@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  watchlist: one
+  channel: 1
+  notification_type: 1
+  sent_at: 2026-08-01 11:36:42
+
+two:
+  watchlist: two
+  channel: 1
+  notification_type: 1
+  sent_at: 2026-08-01 11:36:42

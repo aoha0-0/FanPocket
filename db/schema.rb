@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_23_111657) do
+ActiveRecord::Schema[7.1].define(version: 2026_08_01_023643) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "notification_deliveries", force: :cascade do |t|
+    t.bigint "watchlist_id", null: false
+    t.integer "channel", null: false
+    t.integer "notification_type", null: false
+    t.datetime "sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["watchlist_id", "channel", "notification_type"], name: "idx_on_watchlist_id_channel_notification_type_e10fc11b38", unique: true
+    t.index ["watchlist_id"], name: "index_notification_deliveries_on_watchlist_id"
+  end
 
   create_table "social_accounts", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -55,6 +66,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_23_111657) do
     t.index ["user_id"], name: "index_watchlists_on_user_id"
   end
 
+  add_foreign_key "notification_deliveries", "watchlists"
   add_foreign_key "social_accounts", "users"
   add_foreign_key "watchlists", "users"
 end
