@@ -10,4 +10,9 @@ namespace :notification do
   task send_night: :environment do
     NotificationService.send_night_notifications
   end
+
+  desc '直前LINE通知を送信する'
+  task send_realtime_line: :environment do
+    NotificationService.send_realtime_line_notifications
+  end
 end

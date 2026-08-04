@@ -12,7 +12,9 @@ class NotificationDelivery < ApplicationRecord
     deadline_three_days_before: 0,
     deadline_day_before: 1,
     deadline_same_day: 2,
-    start_same_day: 3
+    start_same_day: 3,
+    start_ten_minutes_before: 4,
+    deadline_three_hours_before: 5
   }
 
   validates :channel, presence: true

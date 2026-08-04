@@ -16,11 +16,18 @@ class LineMessagingService
       false
     end
 
-    def send_line_notification(user, content)
-      line_account = user.social_accounts.find_by(provider: 'line')
-      return unless line_account
+    def push_flex(line_user_id, title, message, url)
+      response = send_flex_request(
+        line_user_id,
+        title,
+        message,
+        url
+      )
 
-      push_text(line_account.uid, content)
+      return true if response.is_a?(Net::HTTPSuccess)
+
+      log_error(response)
+      false
     end
 
     private
@@ -34,11 +41,33 @@ class LineMessagingService
       end
     end
 
+    def send_flex_request(line_user_id, title, message, url)
+      uri = URI(ENDPOINT)
+      request = build_flex_request(uri, line_user_id, title, message, url)
+
+      Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+        http.request(request)
+      end
+    end
+
     def build_request(uri, line_user_id, text)
       request = Net::HTTP::Post.new(uri)
       request['Content-Type'] = 'application/json'
       request['Authorization'] = authorization_header
       request.body = message_body(line_user_id, text).to_json
+      request
+    end
+
+    def build_flex_request(uri, line_user_id, title, message, url)
+      request = Net::HTTP::Post.new(uri)
+      request['Content-Type'] = 'application/json'
+      request['Authorization'] = authorization_header
+      request.body = LineFlexMessageBuilder.call(
+        line_user_id,
+        title,
+        message,
+        url
+      ).to_json
       request
     end
 
