@@ -9,5 +9,9 @@ class NotificationService
     def send_night_notifications
       NightNotificationService.call
     end
+
+    def send_realtime_line_notifications
+      RealtimeLineNotificationService.call
+    end
   end
 end

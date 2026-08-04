@@ -79,7 +79,10 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   
   # Render本番環境のURLを設定（自身のRender URLに変更してください）
-  config.action_mailer.default_url_options = { host: 'fanpocket.onrender.com' }
+  config.action_mailer.default_url_options = { 
+    host: 'fanpocket.onrender.com',
+    protocol: 'https'
+  }
 
   # SMTP経由でResendから送信する設定
   config.action_mailer.smtp_settings = {
