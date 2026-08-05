@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   end
 
   resources :watchlists, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+  resources :notifications, only: [:index, :show]
   resource :settings, only: [:show]
   
   resources :url_parsers, only: [] do

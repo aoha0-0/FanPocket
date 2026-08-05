@@ -36,6 +36,27 @@
       </span>
     </div>
 
-    <div class="absolute right-4 w-6" aria-hidden="true"></div>
+    <div class="absolute right-5 md:right-6 flex items-center">
+      <%= link_to notifications_path,
+                  class: "relative flex items-center justify-center
+                          text-primary hover:opacity-70 transition-opacity",
+                  aria: { label: "通知を確認する" } do %>
+        <span
+          class="material-symbols-outlined text-[28px] md:text-[32px]"
+          style="font-variation-settings: 'FILL' <%= current_page?(notifications_path) ? 1 : 0 %>;">
+          notifications
+        </span>
+
+        <% unread_count = current_user.notifications.unread.count %>
+        <% if unread_count.positive? %>
+          <span class="absolute -right-2 -top-2 flex h-5 min-w-5
+             md:h-6 md:min-w-6
+             items-center justify-center rounded-full
+             bg-red-500 px-1 text-xs md:text-sm font-bold text-white">
+             <%= unread_count > 99 ? "99+" : unread_count %>
+          </span>
+        <% end %>
+      <% end %>
+    </div>
   </div>
 </header>

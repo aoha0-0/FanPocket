@@ -24,11 +24,7 @@ class NightNotificationService
     def send_three_days_prior_notification(watchlist)
       user = watchlist.user
       return unless user
-      return if delivered?(
-        watchlist,
-        :email,
-        :deadline_three_days_before
-      )
+      return if delivered?(watchlist, :email, :deadline_three_days_before)
 
       deliver_three_days_prior_notification(watchlist, user)
     rescue StandardError => e
@@ -38,16 +34,29 @@ class NightNotificationService
     def deliver_three_days_prior_notification(watchlist, user)
       content = three_days_prior_content(watchlist)
 
+      create_three_days_prior_notification(watchlist, content)
+      send_three_days_prior_email(watchlist, user, content)
+      record_delivery(watchlist, :email, :deadline_three_days_before)
+
+      log_success('締切3日前', watchlist.id, user.email)
+      sleep 1
+    end
+
+    def create_three_days_prior_notification(watchlist, content)
+      InAppNotificationService.create!(
+        watchlist: watchlist,
+        notification_type: :deadline_three_days_before,
+        title: '締め切りの3日前です',
+        message: content
+      )
+    end
+
+    def send_three_days_prior_email(watchlist, user, content)
       NotificationMailer.three_days_ago_notice(
         user.email,
         watchlist.title,
         content
       ).deliver_now
-
-      record_delivery(watchlist, :email, :deadline_three_days_before)
-
-      log_success('締切3日前', watchlist.id, user.email)
-      sleep 1
     end
 
     def three_days_prior_content(watchlist)
@@ -68,11 +77,7 @@ class NightNotificationService
     def send_day_before_notification(watchlist)
       user = watchlist.user
       return unless user
-      return if delivered?(
-        watchlist,
-        :email,
-        :deadline_day_before
-      )
+      return if delivered?(watchlist, :email, :deadline_day_before)
 
       deliver_day_before_notification(watchlist, user)
     rescue StandardError => e
@@ -82,16 +87,29 @@ class NightNotificationService
     def deliver_day_before_notification(watchlist, user)
       content = day_before_content(watchlist)
 
+      create_day_before_notification(watchlist, content)
+      send_day_before_email(watchlist, user, content)
+      record_delivery(watchlist, :email, :deadline_day_before)
+
+      log_success('締切前日', watchlist.id, user.email)
+      sleep 1
+    end
+
+    def create_day_before_notification(watchlist, content)
+      InAppNotificationService.create!(
+        watchlist: watchlist,
+        notification_type: :deadline_day_before,
+        title: '明日締め切りです',
+        message: content
+      )
+    end
+
+    def send_day_before_email(watchlist, user, content)
       NotificationMailer.day_before_notice(
         user.email,
         watchlist.title,
         content
       ).deliver_now
-
-      record_delivery(watchlist, :email, :deadline_day_before)
-
-      log_success('締切前日', watchlist.id, user.email)
-      sleep 1
     end
 
     def day_before_content(watchlist)

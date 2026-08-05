@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  watchlist: one
+  notification_type: 1
+  title: MyString
+  message: MyText
+  read_at: 2026-08-04 22:25:00
+
+two:
+  user: two
+  watchlist: two
+  notification_type: 1
+  title: MyString
+  message: MyText
+  read_at: 2026-08-04 22:25:00

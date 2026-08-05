@@ -1,0 +1,70 @@
+<%= render "layouts/app_navigation", back_path: watchlists_path %>
+
+<main class="w-full max-w-2xl mx-auto px-4 sm:px-6 mt-10 md:mt-14 pb-28 md:pb-12">
+  <div class="mb-8 md:mb-10 text-center">
+    <h2 class="font-headline font-extrabold text-3xl md:text-4xl tracking-tight text-primary">
+      通知
+    </h2>
+
+    <p class="mt-2 text-[#4f5052] text-sm md:text-base">
+      大切な予定のお知らせを確認できます
+    </p>
+  </div>
+
+  <% if @notifications.any? %>
+    <div class="space-y-4">
+      <% @notifications.each do |notification| %>
+        <%= link_to notification_path(notification),
+                    class: "block rounded-2xl bg-white p-5 shadow-sm border transition hover:shadow-md #{notification.read? ? 'border-gray-100 opacity-70' : 'border-primary'}" do %>
+          <div class="flex items-start gap-3">
+            <div class="shrink-0">
+              <span class="material-symbols-outlined text-primary text-2xl">
+                notifications
+              </span>
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <div class="flex items-start justify-between gap-3">
+                <h3 class="font-bold text-gray-800">
+                  <%= notification.title %>
+                </h3>
+
+                <% unless notification.read? %>
+                  <span class="shrink-0 rounded-full bg-primary px-2.5 py-1 text-xs font-bold text-white">
+                    未読
+                  </span>
+                <% end %>
+              </div>
+
+              <p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-gray-600">
+                <%= notification.message %>
+              </p>
+
+              <p class="mt-3 text-xs text-gray-400">
+                <%= l notification.created_at, format: :short %>
+              </p>
+            </div>
+
+            <span class="material-symbols-outlined shrink-0 text-gray-300">
+              chevron_right
+            </span>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="rounded-2xl bg-white px-6 py-12 text-center shadow-sm">
+      <span class="material-symbols-outlined text-5xl text-gray-300">
+        notifications_none
+      </span>
+
+      <p class="mt-4 font-bold text-gray-600">
+        通知はまだありません
+      </p>
+
+      <p class="mt-2 text-sm text-gray-400">
+        予定に関する通知が届くと、ここに表示されます
+      </p>
+    </div>
+  <% end %>
+</main>
