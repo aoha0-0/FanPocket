@@ -32,16 +32,30 @@ class MorningNotificationService
     def deliver_deadline_same_day_notification(watchlist, user)
       content = deadline_same_day_content(watchlist)
 
-      NotificationMailer.today_notice(
-        user.email,
-        watchlist.title,
-        content
-      ).deliver_now
+      create_deadline_same_day_notification(watchlist, content)
+      send_deadline_same_day_email(watchlist, user, content)
 
       record_delivery(watchlist, :email, :deadline_same_day)
 
       log_success('当日締切', watchlist.id, user.email)
       sleep 1
+    end
+
+    def create_deadline_same_day_notification(watchlist, content)
+      InAppNotificationService.create!(
+        watchlist: watchlist,
+        notification_type: :deadline_same_day,
+        title: '締め切りは本日です',
+        message: content
+      )
+    end
+
+    def send_deadline_same_day_email(watchlist, user, content)
+      NotificationMailer.today_notice(
+        user.email,
+        watchlist.title,
+        content
+      ).deliver_now
     end
 
     def deadline_same_day_content(watchlist)
@@ -70,16 +84,30 @@ class MorningNotificationService
     def deliver_start_same_day_notification(watchlist, user)
       content = start_same_day_content(watchlist)
 
-      NotificationMailer.start_notice(
-        user.email,
-        watchlist.title,
-        content
-      ).deliver_now
+      create_start_same_day_notification(watchlist, content)
+      send_start_same_day_email(watchlist, user, content)
 
       record_delivery(watchlist, :email, :start_same_day)
 
       log_success('当日開始', watchlist.id, user.email)
       sleep 1
+    end
+
+    def create_start_same_day_notification(watchlist, content)
+      InAppNotificationService.create!(
+        watchlist: watchlist,
+        notification_type: :start_same_day,
+        title: '開始は本日です',
+        message: content
+      )
+    end
+
+    def send_start_same_day_email(watchlist, user, content)
+      NotificationMailer.start_notice(
+        user.email,
+        watchlist.title,
+        content
+      ).deliver_now
     end
 
     def start_same_day_content(watchlist)

@@ -16,6 +16,7 @@ class RealtimeLineNotificationService
         Watchlist.starting_within_ten_minutes,
         log_type: '開始10分前LINE',
         notification_type: :start_ten_minutes_before,
+        title: '開始まであと10分です',
         message: start_ten_minutes_before_message
       )
     end
@@ -25,23 +26,26 @@ class RealtimeLineNotificationService
         Watchlist.deadline_three_hours_before,
         log_type: '締切3時間前LINE',
         notification_type: :deadline_three_hours_before,
+        title: '締め切りまであと3時間です',
         message: deadline_three_hours_before_message
       )
     end
 
-    def send_notifications(targets, log_type:, notification_type:, message:)
+    def send_notifications(targets, log_type:, notification_type:, title:, message:)
       targets = targets.includes(user: :social_accounts)
 
       log_start(log_type, targets.count)
 
       targets.find_each do |watchlist|
-        send_notification(watchlist, log_type:, notification_type:, message:)
+        send_notification(watchlist, log_type:, notification_type:, title:, message:)
       end
 
       log_finish(log_type)
     end
 
-    def send_notification(watchlist, log_type:, notification_type:, message:)
+    def send_notification(watchlist, log_type:, notification_type:, title:, message:)
+      create_in_app_notification(watchlist, notification_type, title, message)
+
       line_account = line_account_for(watchlist.user)
 
       return unless line_account
@@ -70,6 +74,15 @@ class RealtimeLineNotificationService
 
       record_delivery(watchlist, :line, notification_type)
       log_success(log_type, watchlist.id, line_account.uid)
+    end
+
+    def create_in_app_notification(watchlist, notification_type, title, message)
+      InAppNotificationService.create!(
+        watchlist: watchlist,
+        notification_type: notification_type,
+        title: title,
+        message: message
+      )
     end
 
     def notification_title(watchlist)

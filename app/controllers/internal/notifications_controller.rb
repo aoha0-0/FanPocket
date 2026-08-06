@@ -10,6 +10,7 @@ module Internal
     def create
       NotificationService.send_morning_notifications if morning_time?
       NotificationService.send_night_notifications if night_time?
+      NotificationService.send_realtime_line_notifications
 
       head :ok
     end
