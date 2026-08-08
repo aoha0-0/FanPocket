@@ -22,7 +22,6 @@ class MorningNotificationService
     def send_deadline_same_day_notification(watchlist)
       user = watchlist.user
       return unless user
-      return if delivered?(watchlist, :email, :deadline_same_day)
 
       deliver_deadline_same_day_notification(watchlist, user)
     rescue StandardError => e
@@ -33,8 +32,14 @@ class MorningNotificationService
       content = deadline_same_day_content(watchlist)
 
       create_deadline_same_day_notification(watchlist, content)
-      send_deadline_same_day_email(watchlist, user, content)
+      deliver_deadline_same_day_email(watchlist, user, content)
+    end
 
+    def deliver_deadline_same_day_email(watchlist, user, content)
+      return unless user.notification_setting&.email_deadline_same_day?
+      return if delivered?(watchlist, :email, :deadline_same_day)
+
+      send_deadline_same_day_email(watchlist, user, content)
       record_delivery(watchlist, :email, :deadline_same_day)
 
       log_success('当日締切', watchlist.id, user.email)
@@ -74,7 +79,6 @@ class MorningNotificationService
     def send_start_same_day_notification(watchlist)
       user = watchlist.user
       return unless user
-      return if delivered?(watchlist, :email, :start_same_day)
 
       deliver_start_same_day_notification(watchlist, user)
     rescue StandardError => e
@@ -85,8 +89,14 @@ class MorningNotificationService
       content = start_same_day_content(watchlist)
 
       create_start_same_day_notification(watchlist, content)
-      send_start_same_day_email(watchlist, user, content)
+      deliver_start_same_day_email(watchlist, user, content)
+    end
 
+    def deliver_start_same_day_email(watchlist, user, content)
+      return unless user.notification_setting&.email_start_same_day?
+      return if delivered?(watchlist, :email, :start_same_day)
+
+      send_start_same_day_email(watchlist, user, content)
       record_delivery(watchlist, :email, :start_same_day)
 
       log_success('当日開始', watchlist.id, user.email)

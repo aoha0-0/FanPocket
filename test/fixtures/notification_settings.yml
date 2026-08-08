@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  email_three_days_before: false
+  email_day_before: false
+  email_deadline_same_day: false
+  email_start_same_day: false
+  line_start_ten_minutes_before: false
+  line_deadline_three_hours_before: false
+
+two:
+  user: two
+  email_three_days_before: false
+  email_day_before: false
+  email_deadline_same_day: false
+  email_start_same_day: false
+  line_start_ten_minutes_before: false
+  line_deadline_three_hours_before: false

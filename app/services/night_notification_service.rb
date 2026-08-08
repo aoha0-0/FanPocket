@@ -15,16 +15,13 @@ class NightNotificationService
       targets = Watchlist.alert_three_days_prior.includes(:user)
 
       log_start('締切3日前', targets.count)
-      targets.find_each do |watchlist|
-        send_three_days_prior_notification(watchlist)
-      end
+      targets.find_each { |watchlist| send_three_days_prior_notification(watchlist) }
       log_finish('締切3日前')
     end
 
     def send_three_days_prior_notification(watchlist)
       user = watchlist.user
       return unless user
-      return if delivered?(watchlist, :email, :deadline_three_days_before)
 
       deliver_three_days_prior_notification(watchlist, user)
     rescue StandardError => e
@@ -35,6 +32,13 @@ class NightNotificationService
       content = three_days_prior_content(watchlist)
 
       create_three_days_prior_notification(watchlist, content)
+      deliver_three_days_prior_email(watchlist, user, content)
+    end
+
+    def deliver_three_days_prior_email(watchlist, user, content)
+      return unless user.notification_setting&.email_three_days_before?
+      return if delivered?(watchlist, :email, :deadline_three_days_before)
+
       send_three_days_prior_email(watchlist, user, content)
       record_delivery(watchlist, :email, :deadline_three_days_before)
 
@@ -68,16 +72,13 @@ class NightNotificationService
       targets = Watchlist.alert_day_before.includes(:user)
 
       log_start('締切前日', targets.count)
-      targets.find_each do |watchlist|
-        send_day_before_notification(watchlist)
-      end
+      targets.find_each { |watchlist| send_day_before_notification(watchlist) }
       log_finish('締切前日')
     end
 
     def send_day_before_notification(watchlist)
       user = watchlist.user
       return unless user
-      return if delivered?(watchlist, :email, :deadline_day_before)
 
       deliver_day_before_notification(watchlist, user)
     rescue StandardError => e
@@ -88,6 +89,13 @@ class NightNotificationService
       content = day_before_content(watchlist)
 
       create_day_before_notification(watchlist, content)
+      deliver_day_before_email(watchlist, user, content)
+    end
+
+    def deliver_day_before_email(watchlist, user, content)
+      return unless user.notification_setting&.email_day_before?
+      return if delivered?(watchlist, :email, :deadline_day_before)
+
       send_day_before_email(watchlist, user, content)
       record_delivery(watchlist, :email, :deadline_day_before)
 
