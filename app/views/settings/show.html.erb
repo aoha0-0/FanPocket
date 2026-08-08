@@ -62,6 +62,82 @@
 
         </div>
       </section>
+    
+    <section>
+      <div class="flex items-center gap-2 mb-3 px-1">
+        <span class="material-symbols-outlined text-primary text-xl">notifications</span>
+        <h3 class="font-bold text-sm text-on-surface-variant">通知設定</h3>
+      </div>
+
+      <%= form_with model: @notification_setting,
+                    url: settings_path,
+                    method: :patch do |f| %>
+
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-base-200">
+          <div class="px-4 pt-4 pb-2">
+            <p class="text-xs font-semibold text-on-surface-variant">
+            メール通知
+            </p>
+            <p class="mt-1 text-xs text-gray-400">
+              予定を余裕を持って確認するための通知です
+            </p>
+          </div>
+
+          <div class="px-4">
+            <label class="flex items-center justify-between py-4 border-b border-gray-100">
+              <span class="text-primary font-medium">3日前</span>
+              <%= f.check_box :email_three_days_before, class: "toggle toggle-primary" %>
+            </label>
+
+            <label class="flex items-center justify-between py-4 border-b border-gray-100">
+              <span class="text-primary font-medium">前日</span>
+              <%= f.check_box :email_day_before, class: "toggle toggle-primary" %>
+            </label>
+
+            <label class="flex items-center justify-between py-4 border-b border-gray-100">
+              <span class="text-primary font-medium">締切当日</span>
+              <%= f.check_box :email_deadline_same_day, class: "toggle toggle-primary" %>
+            </label>
+
+            <label class="flex items-center justify-between py-4">
+              <span class="text-primary font-medium">開始当日</span>
+              <%= f.check_box :email_start_same_day, class: "toggle toggle-primary" %>
+            </label>
+          </div>
+
+          <div class="h-px bg-gray-100"></div>
+
+          <div class="px-4 pt-4 pb-2">
+            <p class="text-xs font-semibold text-on-surface-variant">
+              LINE通知
+            </p>
+            <p class="mt-1 text-xs text-gray-400">
+              行動が必要な直前にお知らせします
+            </p>
+          </div>
+
+          <div class="px-4">
+            <label class="flex items-center justify-between py-4 border-b border-gray-100">
+              <span class="text-primary font-medium">開始10分前</span>
+              <%= f.check_box :line_start_ten_minutes_before, class: "toggle toggle-primary" %>
+            </label>
+
+            <label class="flex items-center justify-between py-4">
+              <span class="text-primary font-medium">締切3時間前</span>
+              <%= f.check_box :line_deadline_three_hours_before, class: "toggle toggle-primary" %>
+            </label>
+          </div>
+
+          <div class="p-4 border-t border-gray-100">
+            <%= f.button type: "submit",
+                           class: "w-full bg-[#B6E0F3] text-[#2d6489] font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] flex items-center justify-center gap-3" do %>
+              <span class="material-symbols-outlined font-bold">save</span>
+                通知設定を保存
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </section>
 
     <section>
       <div class="flex items-center gap-2 mb-3 px-1">

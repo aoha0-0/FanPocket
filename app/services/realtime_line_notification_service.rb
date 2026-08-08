@@ -11,49 +11,68 @@ class RealtimeLineNotificationService
 
     private
 
+    def line_notification_enabled?(user, setting_key)
+      user.notification_setting&.public_send("#{setting_key}?")
+    end
+
     def send_start_ten_minutes_before
       send_notifications(
         Watchlist.starting_within_ten_minutes,
-        log_type: '開始10分前LINE',
-        notification_type: :start_ten_minutes_before,
-        title: '開始まであと10分です',
-        message: start_ten_minutes_before_message
+        RealtimeLineNotificationConfig::CONFIGS[:start_ten_minutes_before]
       )
     end
 
     def send_deadline_three_hours_before
       send_notifications(
         Watchlist.deadline_three_hours_before,
-        log_type: '締切3時間前LINE',
-        notification_type: :deadline_three_hours_before,
-        title: '締め切りまであと3時間です',
-        message: deadline_three_hours_before_message
+        RealtimeLineNotificationConfig::CONFIGS[:deadline_three_hours_before]
       )
     end
 
-    def send_notifications(targets, log_type:, notification_type:, title:, message:)
+    def send_notifications(targets, config)
       targets = targets.includes(user: :social_accounts)
 
-      log_start(log_type, targets.count)
+      log_start(config[:log_type], targets.count)
 
       targets.find_each do |watchlist|
-        send_notification(watchlist, log_type:, notification_type:, title:, message:)
+        send_notification(watchlist, config)
       end
 
-      log_finish(log_type)
+      log_finish(config[:log_type])
     end
 
-    def send_notification(watchlist, log_type:, notification_type:, title:, message:)
-      create_in_app_notification(watchlist, notification_type, title, message)
+    def send_notification(watchlist, config)
+      create_in_app_notification(
+        watchlist,
+        config[:notification_type],
+        config[:title],
+        config[:message]
+      )
 
-      line_account = line_account_for(watchlist.user)
-
-      return unless line_account
-      return if delivered?(watchlist, :line, notification_type)
-
-      deliver_notification(watchlist, line_account, log_type:, notification_type:, message:)
+      deliver_line_notification(watchlist, config)
     rescue StandardError => e
-      log_error(log_type, watchlist.id, e)
+      log_error(config[:log_type], watchlist.id, e)
+    end
+
+    def deliver_line_notification(watchlist, config)
+      user = watchlist.user
+      line_account = line_account_for(user)
+
+      return unless line_deliverable?(watchlist, user, line_account, config)
+
+      deliver_notification(
+        watchlist,
+        line_account,
+        log_type: config[:log_type],
+        notification_type: config[:notification_type],
+        message: config[:message]
+      )
+    end
+
+    def line_deliverable?(watchlist, user, line_account, config)
+      line_account &&
+        line_notification_enabled?(user, config[:setting_key]) &&
+        !delivered?(watchlist, :line, config[:notification_type])
     end
 
     def deliver_notification(
@@ -87,14 +106,6 @@ class RealtimeLineNotificationService
 
     def notification_title(watchlist)
       "🌟 #{watchlist.display_title}"
-    end
-
-    def start_ten_minutes_before_message
-      "開始まであと10分です。\n\nまもなく始まります。\n詳細をご確認ください。"
-    end
-
-    def deadline_three_hours_before_message
-      "締め切りまであと3時間です。\n\n大切な予定を見逃さないようご確認ください。"
     end
 
     def watchlist_url(watchlist)
