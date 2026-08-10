@@ -30,16 +30,16 @@
             <span class="material-symbols-outlined text-lg shrink-0">chevron_right</span>
           </div>
         </button>
-        <div class="h-px mx-4 bg-gray-100"></div>
-        <button class="w-full min-h-11 flex items-center justify-between p-4 hover:bg-gray-50 active:bg-gray-50 transition-colors text-left" disabled>
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary/50 text-xl">lock</span>
-            <span class="text-primary font-medium">パスワードの変更</span>
-          </div>
-          <div class="flex items-center gap-2 text-on-surface-variant">
+        <div class="border-b border-gray-100 mx-4">
+          <%= link_to edit_user_registration_path,
+                      class: "block w-full min-h-11 flex items-center justify-between py-4 hover:bg-gray-50 active:bg-gray-50 transition-colors text-left" do %>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary/50 text-xl">lock</span>
+              <span class="text-primary font-medium">パスワードを変更する</span>
+            </div>
             <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
-          </div>
-        </button>
+          <% end %>
+        </div>
 
         <div class="h-px mx-4 bg-gray-100"></div>
           <div class="px-4 pt-4 pb-2">
