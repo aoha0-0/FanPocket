@@ -1,0 +1,76 @@
+<%= render "layouts/app_navigation" %>
+
+<main class="w-full max-w-2xl mx-auto px-4 sm:px-6 mt-10 md:mt-14 pb-28 md:pb-12">
+  <div class="mb-8 md:mb-10 text-center">
+    <h2 class="font-headline font-extrabold text-4xl tracking-tight text-primary">
+      メールアドレス変更
+    </h2>
+
+    <p class="mt-2 text-sm font-medium text-gray-500 leading-relaxed px-4">
+      現在のパスワードを確認して、新しいメールアドレスへ変更します<br>
+      <span class="text-sm text-gray-400">
+        メールアドレスとパスワードで登録した方のみ変更できます
+      </span>
+    </p>
+  </div>
+
+  <%= form_for(resource,
+               as: resource_name,
+               url: update_user_email_path,
+               html: { method: :patch }) do |f| %>
+
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <div class="space-y-5">
+      <div>
+        <%= f.label :email,
+                    "新しいメールアドレス",
+                    class: "text-gray-500 text-[11px] font-bold px-6 tracking-widest uppercase opacity-60" %>
+
+        <div class="relative group mt-2">
+          <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-[#8BBEE8] group-focus-within:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[20px]">mail</span>
+          </div>
+
+          <%= f.email_field :email,
+                            autocomplete: "email",
+                            class: "w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :current_password,
+                    "現在のパスワード",
+                    class: "text-gray-500 text-[11px] font-bold px-6 tracking-widest uppercase opacity-60" %>
+
+        <div class="relative group mt-2" data-controller="password-toggle">
+          <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none text-[#8BBEE8] group-focus-within:text-primary transition-colors">
+            <span class="material-symbols-outlined text-[20px]">lock</span>
+          </div>
+
+          <%= f.password_field :current_password,
+                               autocomplete: "current-password",
+                               placeholder: "••••••••",
+                               class: "w-full h-14 pl-14 pr-14 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300",
+                               data: { password_toggle_target: "input" } %>
+
+          <button type="button"
+                  class="absolute inset-y-0 right-0 pr-6 flex items-center text-gray-400 hover:text-primary transition-colors"
+                  data-action="password-toggle#toggle">
+            <span class="material-symbols-outlined text-[20px]"
+                  data-password-toggle-target="icon">
+              visibility
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <%= f.submit "メールアドレスを変更する",
+                   class: "w-full bg-[#B6E0F3] text-[#2d6489] font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] cursor-pointer" %>
+    </div>
+  <% end %>
+</main>
+
+<%= render "layouts/footer" %>
