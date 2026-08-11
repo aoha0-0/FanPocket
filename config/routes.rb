@@ -5,6 +5,16 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
+  devise_scope :user do
+    get "users/edit_email",
+        to: "users/registrations#edit_email",
+        as: :edit_user_email
+
+    patch "users/update_email",
+          to: "users/registrations#update_email",
+          as: :update_user_email
+  end
+
   root "watchlists#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
