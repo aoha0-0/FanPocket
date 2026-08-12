@@ -5,11 +5,15 @@ class WatchlistsController < ApplicationController
   before_action :set_watchlist, only: %i[show edit update]
 
   def index
+    watchlists = current_user.watchlists
+
+    watchlists = watchlists.tagged_with(params[:tag]) if params[:tag].present?
+
     # 1. 「これからの予定」
-    @future_watchlists = current_user.watchlists.upcoming
+    @future_watchlists = watchlists.upcoming
 
     # 2. 「これまでの足跡」
-    @past_watchlists = current_user.watchlists.past
+    @past_watchlists = watchlists.past
   end
 
   def show; end
@@ -20,17 +24,22 @@ class WatchlistsController < ApplicationController
 
   def create
     @watchlist = current_user.watchlists.build(watchlist_params)
+
     if @watchlist.save
+      @watchlist.save_tags
       redirect_to watchlists_path, notice: '新しい予定を登録しました'
     else
       render :new, status: :unprocessable_entity
     end
   end
 
-  def edit; end
+  def edit
+    @watchlist.tag_names = @watchlist.tags.pluck(:name).join(', ')
+  end
 
   def update
     if @watchlist.update(watchlist_params)
+      @watchlist.save_tags
       redirect_to watchlist_path(@watchlist), notice: '更新しました'
     else
       render :edit, status: :unprocessable_entity
@@ -64,16 +73,19 @@ class WatchlistsController < ApplicationController
     redirect_to watchlists_path, alert: '指定されたページは見つかりません'
   end
 
+  WATCHLIST_PARAMS = %i[
+    title
+    memo
+    url
+    start_at
+    end_at
+    is_done
+    reception_type
+    reception_detail
+    tag_names
+  ].freeze
+
   def watchlist_params
-    params.require(:watchlist).permit(
-      :title,
-      :memo,
-      :url,
-      :start_at,
-      :end_at,
-      :is_done,
-      :reception_type,
-      :reception_detail
-    )
+    params.require(:watchlist).permit(*WATCHLIST_PARAMS)
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_08_08_131207) do
+ActiveRecord::Schema[7.1].define(version: 2026_08_11_091719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,6 +61,15 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_08_131207) do
     t.index ["user_id"], name: "index_social_accounts_on_user_id"
   end
 
+  create_table "tags", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "name"], name: "index_tags_on_user_id_and_name", unique: true
+    t.index ["user_id"], name: "index_tags_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "encrypted_password", default: "", null: false
@@ -74,6 +83,16 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_08_131207) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "watchlist_tags", force: :cascade do |t|
+    t.bigint "watchlist_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tag_id"], name: "index_watchlist_tags_on_tag_id"
+    t.index ["watchlist_id", "tag_id"], name: "index_watchlist_tags_on_watchlist_id_and_tag_id", unique: true
+    t.index ["watchlist_id"], name: "index_watchlist_tags_on_watchlist_id"
   end
 
   create_table "watchlists", force: :cascade do |t|
@@ -97,5 +116,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_08_131207) do
   add_foreign_key "notifications", "users"
   add_foreign_key "notifications", "watchlists"
   add_foreign_key "social_accounts", "users"
+  add_foreign_key "tags", "users"
+  add_foreign_key "watchlist_tags", "tags"
+  add_foreign_key "watchlist_tags", "watchlists"
   add_foreign_key "watchlists", "users"
 end
