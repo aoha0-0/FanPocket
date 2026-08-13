@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :watchlists, dependent: :destroy
   has_many :social_accounts, dependent: :destroy
   has_many :notifications, dependent: :destroy
+  has_many :tags, dependent: :destroy
   has_one :notification_setting, dependent: :destroy
 
   after_create :create_notification_setting

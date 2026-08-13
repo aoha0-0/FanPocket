@@ -39,8 +39,11 @@
   </div>
 
   <div class="space-y-3">
-    <%= f.label :reception_type, "種別",
-      class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" %>
+    <%= f.label :reception_type,
+      class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+      <span class="material-symbols-outlined text-lg">category</span>
+      種別
+    <% end %>
 
     <div class="flex flex-wrap gap-3">
       <label class="flex items-center gap-2 text-sm">
@@ -72,7 +75,7 @@
 
   <div class="space-y-3">
     <%= f.label :reception_detail, "種別詳細",
-      class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" %>
+      class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1 ml-8" %>
 
     <%= f.text_field :reception_detail,
       class: "w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300",
@@ -80,14 +83,18 @@
   </div>
 
   <div class="space-y-3">
-    <%= f.label :title, "タイトル", class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" %>
-    
+    <%= f.label :title,
+      class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+      <span class="material-symbols-outlined text-lg">title</span>
+      タイトル
+    <% end %>
+
     <%= f.text_field :title, 
           data: { 
             watchlist_form_target: "titleInput",
             action: "input->watchlist-form#checkTitle"
           }, 
-          class: "w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:title].any?}", placeholder: "タイトルを入力" %>
+          class: "w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:title].any?}", placeholder: "グッズ予約、ライブ名など" %>
 
     <% if watchlist.errors[:title].any? %>
       <p data-watchlist-form-target="titleErrorMessage" class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
@@ -97,19 +104,35 @@
     <% end %>
   </div>
 
+  <div class="space-y-3">
+  <%= f.label :tag_names,
+    class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+    <span class="material-symbols-outlined text-lg">tag</span>
+    タグ
+  <% end %>
+
+  <%= f.text_field :tag_names,
+    class: "w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300",
+    placeholder: "アーティスト名, ライブ, グッズなど" %>
+
+  <p class="text-xs text-gray-400 px-1">
+    複数入力する場合は「,」「、」などで区切ってください
+  </p>
+</div>
+
   <div class="grid grid-cols-1 gap-8 mt-8">
     <div class="space-y-3">
       <%= f.label :start_at, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
         <span class="material-symbols-outlined text-lg">calendar_today</span>開始日時
       <% end %>
-      <%= f.text_field :start_at, data: { controller: "flatpickr", watchlist_form_target: "startAtInput" }, class: "datepicker w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:start_at].any?}", placeholder: "年/月/日 --:--" %>
+      <%= f.text_field :start_at, data: { controller: "flatpickr", watchlist_form_target: "startAtInput" }, class: "datepicker w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:start_at].any?}", placeholder: "年/月/日 --:--" %>
     </div>
 
     <div class="space-y-3">
       <%= f.label :end_at, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
         <span class="material-symbols-outlined text-lg">timer</span>締切日時
       <% end %>
-      <%= f.text_field :end_at, data: { controller: "flatpickr", watchlist_form_target: "endAtInput" }, class: "datepicker w-full h-14 pl-14 pr-8 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:end_at].any?}", placeholder: "年/月/日 --:--" %>
+      <%= f.text_field :end_at, data: { controller: "flatpickr", watchlist_form_target: "endAtInput" }, class: "datepicker w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:end_at].any?}", placeholder: "年/月/日 --:--" %>
       
       <% if watchlist.errors[:end_at].any? %>
         <p data-watchlist-form-target="endAtRealtimeError" class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
@@ -125,7 +148,7 @@
     <%= f.label :memo, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
       <span class="material-symbols-outlined text-lg">description</span>メモ
     <% end %>
-    <%= f.text_area :memo, class: "w-full min-h-[120px] pl-12 pr-8 py-5 bg-[#f0f4f8] border-none rounded-[32px] shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-400/60 leading-relaxed", placeholder: "持ち物、連番相手の連絡先など..." %>
+    <%= f.text_area :memo, class: "w-full min-h-[120px] px-6 py-5 bg-[#f0f4f8] border-none rounded-[32px] shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-400/60 leading-relaxed", placeholder: "持ち物、連番相手の連絡先など..." %>
   </div>
 
   <div class="form-control mb-4 pb-4">

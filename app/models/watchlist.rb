@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 class Watchlist < ApplicationRecord
+  include WatchlistNotifiable
+  attr_accessor :tag_names
+
   belongs_to :user
 
   has_many :notification_deliveries, dependent: :destroy
   has_many :notifications, dependent: :destroy
+  has_many :watchlist_tags, dependent: :destroy
+  has_many :tags, through: :watchlist_tags
 
   before_validation :set_end_at_to_end_of_day, if: :end_at_time_blank?
 
@@ -16,6 +21,8 @@ class Watchlist < ApplicationRecord
 
   validate :end_at_must_be_future, on: :create
   validate :end_at_must_be_after_start_at
+  
+  validates :reception_detail, length: { maximum: 20 }, allow_blank: true
 
   enum :reception_type, {
     not_set: 0,     # 指定なし
@@ -24,7 +31,6 @@ class Watchlist < ApplicationRecord
     made_to_order: 3, # 受注販売
     general: 4 # 一般販売
   }, default: :not_set
-  validates :reception_detail, length: { maximum: 20 }, allow_blank: true
 
   def reception_type_label
     I18n.t(
@@ -44,6 +50,20 @@ class Watchlist < ApplicationRecord
 
   def display_title
     "#{reception_label_text}#{title}"
+  end
+
+  def save_tags
+    names = tag_names
+            .to_s
+            .split(/[,，、]/)
+            .map(&:strip)
+            .reject(&:blank?)
+
+    selected_tags = names.map do |name|
+      user.tags.find_or_create_by!(name: name)
+    end
+
+    self.tags = selected_tags
   end
 
   # 「これからの予定」を取得するスコープ
@@ -67,42 +87,13 @@ class Watchlist < ApplicationRecord
       .order(end_at: :desc)
   }
 
-  # 3日前通知用
-  scope :alert_three_days_prior, lambda {
-    where(is_done: false, end_at: 3.days.from_now.all_day)
-  }
-
-  # 前日通知用
-  scope :alert_day_before, lambda {
-    where(is_done: false, end_at: 1.day.from_now.all_day)
-  }
-
-  # 当日通知用
-  scope :alert_same_day, lambda {
-    where(is_done: false, end_at: Time.current.all_day)
-  }
-
-  # 今日が開始日かつ未完了のデータを取得
-  scope :starting_today, lambda {
-    where(start_at: Time.current.all_day, is_done: false)
-  }
-
-  # 開始10分前LINE通知用
-  scope :starting_within_ten_minutes, lambda { |current_time = Time.current|
-    where(is_done: false)
-      .where('start_at > ? AND start_at <= ?', current_time, current_time + 10.minutes)
-  }
-
-  # 締切3時間前LINE通知用
-  scope :deadline_three_hours_before, lambda { |current_time = Time.current|
-    notification_limit = current_time + 3.hours
-
-    where(is_done: false)
-      .where(
-        'end_at > ? AND end_at <= ?',
-        notification_limit - 10.minutes,
-        notification_limit
-      )
+  scope :tagged_with, lambda { |keyword|
+    where(
+      id: WatchlistTag
+          .joins(:tag)
+          .where('tags.name ILIKE ?', "%#{keyword}%")
+          .select(:watchlist_id)
+    )
   }
 
   private
