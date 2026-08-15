@@ -12,7 +12,7 @@
                   px-4 py-4 sm:p-5
                   sticky-note-shadow
                   border-l-6 sm:border-l-8
-                  <%= is_past ? 'border-gray-300' : 'border-[#B6E0F3]' %>">
+                  <%= watchlist_border_class(watchlist) %>">
 
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <%# 左側：日時・種別・タイトル %>
@@ -71,9 +71,10 @@
       </div>
 
       <%# 右側：ステータス %>
-      <div class="flex items-center justify-between gap-3
-                  sm:flex-col sm:items-end sm:justify-center
+      <div class="flex justify-end gap-3
+                  sm:flex-col sm:items-end sm:justify-start
                   sm:min-h-12
+                  sm:pt-7
                   <%= 'opacity-60' if is_past || watchlist.is_done? %>">
 
         <div>
@@ -90,7 +91,7 @@
               <% days_to_start = (watchlist.start_at.to_date - Date.current).to_i %>
 
               <span class="inline-flex items-center min-h-7
-                           bg-[#B6E0F3]/50 text-[#2d6489]
+                           <%= watchlist_badge_class(watchlist) %> text-[#2d6489]
                            text-[10px] font-bold
                            px-3 py-1
                            rounded-full
@@ -103,7 +104,7 @@
               <% days_left = (watchlist.end_at.to_date - Date.current).to_i %>
 
               <span class="inline-flex items-center min-h-7
-                           bg-[#B6E0F3]/50 text-[#2d6489]
+                           <%= watchlist_badge_class(watchlist) %> text-[#2d6489]
                            text-[10px] font-bold
                            px-3 py-1
                            rounded-full
@@ -138,7 +139,7 @@
             inventory_2
           </span>
         <% else %>
-          <span class="material-symbols-outlined absolute top-4 right-4 text-lg text-[#B6E0F3]"
+          <span class="material-symbols-outlined absolute top-4 right-4 text-lg <%= watchlist_pin_class(watchlist) %>"
                         aria-hidden="true">
             push_pin
           </span>
