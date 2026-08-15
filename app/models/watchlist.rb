@@ -2,6 +2,7 @@
 
 class Watchlist < ApplicationRecord
   include WatchlistNotifiable
+  include WatchlistSchedulable
   attr_accessor :tag_names
 
   belongs_to :user
