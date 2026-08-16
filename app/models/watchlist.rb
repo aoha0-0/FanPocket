@@ -22,7 +22,7 @@ class Watchlist < ApplicationRecord
 
   validate :end_at_must_be_future, on: :create
   validate :end_at_must_be_after_start_at
-  
+
   validates :reception_detail, length: { maximum: 20 }, allow_blank: true
 
   enum :reception_type, {
