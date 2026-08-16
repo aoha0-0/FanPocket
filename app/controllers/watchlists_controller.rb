@@ -27,6 +27,8 @@ class WatchlistsController < ApplicationController
 
     if @watchlist.save
       @watchlist.save_tags
+      current_user.update!(onboarding_completed_at: Time.current) if current_user.onboarding_completed_at.nil?
+
       redirect_to watchlists_path, notice: '新しい予定を登録しました'
     else
       render :new, status: :unprocessable_entity
