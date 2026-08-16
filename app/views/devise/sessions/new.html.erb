@@ -117,13 +117,24 @@
     <!-- Footer Actions -->
     <footer class="flex flex-col items-center space-y-4 pt-4 pb-8">
       <div class="flex flex-col sm:flex-row items-center sm:space-x-2 space-y-1 sm:space-y-0 text-center">
-        <span class="text-gray-500 text-sm">アカウントをお持ちでないですか？</span>
-        <%= link_to "新規登録はこちら", new_registration_path(resource_name), class: "text-primary text-sm font-semibold hover:opacity-70 transition-opacity" %>
+      <span class="text-gray-500 text-sm">アカウントをお持ちでないですか？</span>
+        <%= link_to "新規登録はこちら",
+          new_registration_path(resource_name),
+          class: "text-primary text-sm font-semibold hover:opacity-70 transition-opacity" %>
       </div>
-      <%# classを1つに統合し、横並びや間隔を調整しやすいように調整 %>
-      <div class="flex gap-4">
-        <%= link_to '利用規約', terms_path, class: "text-primary text-sm font-semibold hover:opacity-70 transition-opacity" %>
-        <%= link_to 'プライバシーポリシー', privacy_path, class: "text-primary text-sm font-semibold hover:opacity-70 transition-opacity" %>
+
+      <div class="flex flex-wrap justify-center gap-x-4 gap-y-2">
+        <%= link_to "使い方ガイド",
+          guide_path,
+          class: "text-primary text-sm font-semibold hover:opacity-70 transition-opacity" %>
+
+        <%= link_to "利用規約",
+          terms_path,
+          class: "text-primary text-sm font-semibold hover:opacity-70 transition-opacity" %>
+
+        <%= link_to "プライバシーポリシー",
+          privacy_path,
+          class: "text-primary text-sm font-semibold hover:opacity-70 transition-opacity" %>
       </div>
     </footer>
   </div>

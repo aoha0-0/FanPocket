@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   
   get 'terms', to: 'static_pages#terms'
   get 'privacy', to: 'static_pages#privacy'
+  get 'guide', to: 'static_pages#guide', as: :guide
   # Defines the root path route ("/")
   # root "posts#index"
 

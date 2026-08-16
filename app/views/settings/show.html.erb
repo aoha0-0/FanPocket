@@ -148,13 +148,13 @@
       <div class="bg-white rounded-xl p-1 shadow-sm overflow-hidden border border-base-200">
         <%# 1. 使いかたガイド %>
         <div class="border-b border-gray-100 mx-4">
-          <button class="w-full min-h-11 flex items-center justify-between py-4 hover:bg-gray-50 active:bg-gray-50 transition-colors text-left" disabled>
+          <%= link_to guide_path, class: "block w-full min-h-11 flex items-center justify-between py-4 hover:bg-gray-50 active:bg-gray-50 transition-colors text-left" do %>
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-primary/50 text-xl">menu_book</span>
               <span class="text-primary font-medium">使いかたガイド</span>
             </div>
-            <span class="material-symbols-outlined text-on-surface-variant text-lg">open_in_new</span>
-          </button>
+            <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
+          <% end %>
         </div>
 
         <%# 2. 利用規約（blockを追加し、外側をborderを持つdivで包む） %>
