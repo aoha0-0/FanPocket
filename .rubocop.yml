@@ -20,3 +20,4 @@ Style/Documentation:
 Metrics/BlockLength:
   Exclude:
     - 'lib/tasks/**/*.rake'
+    - 'spec/**/*'

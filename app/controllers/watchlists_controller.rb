@@ -31,7 +31,7 @@ class WatchlistsController < ApplicationController
 
       redirect_to watchlists_path, notice: '新しい予定を登録しました'
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -44,7 +44,7 @@ class WatchlistsController < ApplicationController
       @watchlist.save_tags
       redirect_to watchlist_path(@watchlist), notice: '更新しました'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
