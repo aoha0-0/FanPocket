@@ -19,8 +19,18 @@
       <div class="min-w-0 flex-1 pr-8 <%= 'opacity-60' if is_past || watchlist.is_done? %>">
         <div class="flex flex-wrap items-center gap-1.5 mb-2">
           <% if watchlist.start_at.present? %>
-            <time class="font-label text-xs text-on-surface-variant/70">
+            <time class="inline-flex items-center gap-1.5 font-label text-xs text-on-surface-variant/70">
+              <span class="text-[#2d6489] font-bold">
+                開始
+              </span>
               <%= watchlist.start_at.strftime("%Y.%m.%d %H:%M") %>
+            </time>
+          <% elsif watchlist.end_at.present? %>
+            <time class="inline-flex items-center gap-1.5 font-label text-xs text-on-surface-variant/70">
+              <span class="text-[#2d6489] font-bold">
+                締切
+              </span>
+              <%= watchlist.end_at.strftime("%Y.%m.%d %H:%M") %>
             </time>
           <% end %>
 
