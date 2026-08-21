@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class NotificationMailer < ApplicationMailer
-  default from: 'noreply@fanpocket.fun'
-
   def send_notice(user_email, title, content)
     @title = title
     @content = content
