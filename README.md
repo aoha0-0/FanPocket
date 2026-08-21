@@ -61,7 +61,7 @@ FanPocketでは、推し活の予定だけをまとめ、対応が完了した�
 
 <!-- 一覧画面のスクリーンショット -->
 <p align="center">
-  <img src="https://i.gyazo.com/ffa3e66857207bdb9c62e4b20fd5366f.png" width="350" alt="これからの予定一覧">
+  <img src="https://i.gyazo.com/ffa3e66857207bdb9c62e4b20fd5366f.png" width="600" alt="これからの予定一覧">
 </p>
 
 チケットの申し込みやグッズ販売など、これから対応したい推し活予定を一覧で管理できます。
