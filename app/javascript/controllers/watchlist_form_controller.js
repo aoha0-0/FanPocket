@@ -41,13 +41,13 @@ export default class extends Controller {
         clearInterval(interval)
         
         if (startConnected) {
-          this.startAtInputTarget._flatpickr.set('onChange', this.checkStartDate)
-          this.startAtInputTarget._flatpickr.set('onClose', this.checkStartDate)
+          this.startAtInputTarget._flatpickr.set('onChange', () => this.checkStartDate())
+          this.startAtInputTarget._flatpickr.set('onClose', () => this.checkStartDate())
         }
         
         if (endConnected) {
-          this.endAtInputTarget._flatpickr.set('onChange', this.checkDate)
-          this.endAtInputTarget._flatpickr.set('onClose', this.checkDate)
+          this.endAtInputTarget._flatpickr.set('onChange', () => this.checkDate())
+          this.endAtInputTarget._flatpickr.set('onClose', () => this.checkDate())
         }
       } else if (attempts > 10) {
         clearInterval(interval)
@@ -183,6 +183,8 @@ export default class extends Controller {
 
         startButton.addEventListener("click", () => {
           this.insertDateTime("開始", suggestion.value)
+          choiceContainer.remove()
+          button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
         })
 
         const endButton = document.createElement("button")
@@ -192,6 +194,8 @@ export default class extends Controller {
 
         endButton.addEventListener("click", () => {
           this.insertDateTime("締切", suggestion.value)
+          choiceContainer.remove()
+          button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
         })
 
         const buttonRow = document.createElement("div")

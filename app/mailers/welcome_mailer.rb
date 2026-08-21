@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class WelcomeMailer < ApplicationMailer
-  default from: 'no-reply@fanpocket.fun'
-
   def send_welcome_email(user)
     @user = user
     # メールの添付データとしてロゴ画像を登録（インライン配置用）
