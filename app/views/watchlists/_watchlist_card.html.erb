@@ -71,10 +71,9 @@
         <% if watchlist.tags.any? %>
           <div class="mt-1 flex flex-wrap gap-x-2 gap-y-1">
             <% watchlist.tags.each do |tag| %>
-              <%= link_to watchlists_path(tag_id: tag.id),
-                          class: "text-sm font-medium text-primary/70 hover:opacity-70" do %>
+              <span class="text-sm font-medium text-primary/70">
                 #<%= tag.name %>
-              <% end %>
+              </span>
             <% end %>
           </div>
         <% end %>
