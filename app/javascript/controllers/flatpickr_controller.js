@@ -10,7 +10,6 @@ export default class extends Controller {
       enableTime: true,
       dateFormat: "Y-m-d H:i",
       minuteIncrement: 1,
-      disableMobile: true,
     })
   }
 }
