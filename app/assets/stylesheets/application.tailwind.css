@@ -47,3 +47,10 @@
   position: relative;
   z-index: 1;
 }
+
+/* iOSの日時入力で、入力後の文字位置を他のフォームと揃える */
+@supports (-webkit-touch-callout: none) {
+  input.flatpickr-mobile {
+    text-indent: 1rem;
+  }
+}
