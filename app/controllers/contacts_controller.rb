@@ -16,7 +16,7 @@ class ContactsController < ApplicationController
     elsif @contact.valid?
       send_contact
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
