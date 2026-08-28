@@ -1,0 +1,28 @@
+<p>FanPocketにお問い合わせが届きました。</p>
+
+<hr>
+
+<p>
+  <strong>問い合わせ種別</strong><br>
+  <%= @category_label %>
+</p>
+
+<p>
+  <strong>問い合わせ内容</strong>
+</p>
+
+<div>
+  <%= simple_format(@contact.content) %>
+</div>
+
+<hr>
+
+<p>
+  <strong>送信ユーザーID</strong><br>
+  <%= @user.id %>
+</p>
+
+<p>
+  <strong>メールアドレス</strong><br>
+  <%= @user.email.presence || "未登録（SNSログイン）" %>
+</p>

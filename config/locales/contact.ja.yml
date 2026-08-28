@@ -1,0 +1,7 @@
+ja:
+  activemodel:
+    attributes:
+      contact:
+        category: 問い合わせ種別
+        content: 問い合わせ内容
+        
