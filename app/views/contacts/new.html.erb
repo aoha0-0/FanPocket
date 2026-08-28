@@ -1,0 +1,88 @@
+<body class="bg-surface text-on-surface font-body min-h-screen pb-32">
+  <%= render "layouts/app_navigation",
+             back_path: settings_path %>
+
+  <div class="hidden md:block w-full max-w-4xl mx-auto px-6 pt-6">
+    <%= link_to settings_path,
+                class: "inline-flex items-center gap-1
+                        text-sm font-bold text-primary
+                        hover:opacity-70 transition-opacity" do %>
+      <span class="material-symbols-outlined text-xl">
+        arrow_back
+      </span>
+      <span>設定へ</span>
+    <% end %>
+  </div>
+
+  <div class="text-center mt-10 mb-10 px-6">
+    <h2 class="font-headline font-extrabold text-3xl tracking-tight text-primary">
+      お問い合わせ
+    </h2>
+
+    <p class="text-center text-[#4f5052] text-sm mt-2">
+      不具合やご要望などをお聞かせください
+    </p>
+  </div>
+
+  <main class="flex-grow px-6 max-w-3xl mx-auto w-full pt-8">
+    <%= form_with model: @contact,
+                  url: contact_path,
+                  class: "space-y-10",
+                  html: { novalidate: true },
+                  local: true do |f| %>
+
+      <div class="space-y-3">
+        <%= f.label :category,
+                    class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+          <span class="material-symbols-outlined text-lg">category</span>
+          問い合わせ種別
+        <% end %>
+
+        <%= f.select :category,
+                     Contact::CATEGORIES.map { |value, label| [label, value] },
+                     { prompt: "選択してください" },
+                     class: "w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium #{'ring-2 ring-error/40 bg-error/5' if @contact.errors[:category].any?}" %>
+
+        <% if @contact.errors[:category].any? %>
+          <p class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">info</span>
+            <%= @contact.errors.full_messages_for(:category).first %>
+          </p>
+        <% end %>
+      </div>
+
+      <div class="space-y-3">
+        <%= f.label :content,
+                    class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+          <span class="material-symbols-outlined text-lg">edit_note</span>
+          問い合わせ内容
+        <% end %>
+
+        <%= f.text_area :content,
+                        maxlength: 2000,
+                        rows: 8,
+                        class: "w-full min-h-[200px] px-6 py-5 bg-[#f0f4f8] border-none rounded-[32px] shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-400/60 leading-relaxed #{'ring-2 ring-error/40 bg-error/5' if @contact.errors[:content].any?}",
+                        placeholder: "不具合が起きた状況や、ご意見・ご要望をご入力ください" %>
+
+        <% if @contact.errors[:content].any? %>
+          <p class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">info</span>
+            <%= @contact.errors.full_messages_for(:content).first %>
+          </p>
+        <% end %>
+
+        <p class="text-xs text-gray-400 px-1">
+          2000文字以内で入力してください
+        </p>
+      </div>
+
+      <div class="pt-6 pb-20">
+        <%= f.button type: "submit",
+                     class: "w-full bg-[#B6E0F3] text-[#2d6489] font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] flex items-center justify-center gap-3" do %>
+          <span class="material-symbols-outlined font-bold">send</span>
+          送信する
+        <% end %>
+      </div>
+    <% end %>
+  </main>
+</body>

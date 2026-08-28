@@ -157,6 +157,18 @@
           <% end %>
         </div>
 
+        <%# 2. お問い合わせ %>
+        <div class="border-b border-gray-100 mx-4">
+          <%= link_to new_contact_path,
+                      class: "block w-full min-h-11 flex items-center justify-between py-4 hover:bg-gray-50 active:bg-gray-50 transition-colors text-left" do %>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary/50 text-xl">contact_support</span>
+              <span class="text-primary font-medium">お問い合わせ</span>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant text-lg">chevron_right</span>
+          <% end %>
+        </div>
+
         <%# 2. 利用規約（blockを追加し、外側をborderを持つdivで包む） %>
         <div class="border-b border-gray-100 mx-4">
           <%= link_to terms_path, class: "block w-full min-h-11 flex items-center justify-between py-4 hover:bg-gray-50 active:bg-gray-50 transition-colors text-left" do %>
