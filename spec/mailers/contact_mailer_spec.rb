@@ -61,5 +61,31 @@ RSpec.describe ContactMailer, type: :mailer do
       expect(body).to include(user.id.to_s)
       expect(body).to include('user@example.com')
     end
+
+    context 'ユーザーにメールアドレスがない場合' do
+      let(:user) do
+        create(
+          :user,
+          email: nil,
+          omniauth_provider: 'line'
+        )
+      end
+
+      it '返信先を設定しない' do
+        expect(mail.reply_to).to be_nil
+      end
+
+      it 'HTML本文にメールアドレス未登録と表示する' do
+        body = mail.html_part.body.decoded
+
+        expect(body).to include('未登録（SNSログイン）')
+      end
+
+      it 'テキスト本文にメールアドレス未登録と表示する' do
+        body = mail.text_part.body.decoded
+
+        expect(body).to include('未登録（SNSログイン）')
+      end
+    end
   end
 end
