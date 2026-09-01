@@ -39,7 +39,11 @@ Rails.application.routes.draw do
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
 
-  resources :watchlists, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+  resources :watchlists, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+    member do
+      patch :toggle_completion
+    end
+  end
   resources :notifications, only: [:index, :show]
   resource :settings, only: [:show, :update]
   resource :contact, only: [:new, :create]
