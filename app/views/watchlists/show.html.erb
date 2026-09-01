@@ -94,7 +94,29 @@
         </div>
         <span class="text-sky-600 font-bold text-lg">未対応</span>
       <% end %>
+    </div>
 
+    <div class="mt-5">
+      <% if @watchlist.is_done? %>
+        <%= button_to toggle_completion_watchlist_path(@watchlist),
+                      method: :patch,
+                      class: "w-full py-3 font-semibold text-sm flex items-center justify-center gap-2 text-gray-500 hover:opacity-70 transition-colors font-headline" do %>
+          <span class="material-symbols-outlined text-lg">undo</span>
+          未完了に戻す
+        <% end %>
+      <% else %>
+        <%= button_to toggle_completion_watchlist_path(@watchlist),
+                      method: :patch,
+                      form: {
+                        data: {
+                          turbo_confirm: "この予定を完了にしますか？\n完了にすると通知の対象外になります。"
+                        }
+                      },
+                      class: "w-full bg-teal-100 text-teal-700 font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] flex items-center justify-center gap-3" do %>
+          <span class="material-symbols-outlined font-bold">done_all</span>
+          この予定を完了にする
+        <% end %>
+      <% end %>
     </div>
   </div>
 
