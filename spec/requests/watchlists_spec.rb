@@ -85,125 +85,96 @@ RSpec.describe 'Watchlists', type: :request do
     end
   end
 
-  describe 'PATCH /watchlists/:id' do
-    let(:watchlist) do
-      create(
-        :watchlist,
-        user: user,
-        title: 'チケット申し込み'
-      )
-    end
-
-    context '有効なパラメータの場合' do
-      let(:valid_params) do
-        {
-          watchlist: {
-            title: 'グッズ申し込み'
-          }
-        }
+  describe 'PATCH /watchlists/:id/toggle_completion' do
+    context '未完了の予定の場合' do
+      let(:watchlist) do
+        create(
+          :watchlist,
+          user: user,
+          is_done: false
+        )
       end
 
-      it '予定を更新する' do
-        patch watchlist_path(watchlist), params: valid_params
-
-        watchlist.reload
-
-        expect(watchlist.title).to eq('グッズ申し込み')
+      it '予定を完了にする' do
+        expect do
+          patch toggle_completion_watchlist_path(watchlist)
+        end.to change { watchlist.reload.is_done }.from(false).to(true)
       end
 
       it '予定詳細へリダイレクトする' do
-        patch watchlist_path(watchlist), params: valid_params
+        patch toggle_completion_watchlist_path(watchlist)
 
         expect(response).to redirect_to(watchlist_path(watchlist))
       end
-    end
 
-    context '無効なパラメータの場合' do
-      let(:invalid_params) do
-        {
-          watchlist: {
-            title: ''
-          }
-        }
-      end
+      it '完了したことを通知する' do
+        patch toggle_completion_watchlist_path(watchlist)
 
-      it '予定を更新しない' do
-        original_title = watchlist.title
-
-        patch watchlist_path(watchlist), params: invalid_params
-
-        watchlist.reload
-
-        expect(watchlist.title).to eq(original_title)
-      end
-
-      it '422を返す' do
-        patch watchlist_path(watchlist), params: invalid_params
-
-        expect(response).to have_http_status(:unprocessable_content)
+        expect(flash[:notice]).to eq('予定を完了にしました')
       end
     end
 
-    context '他のユーザーの予定を更新しようとした場合' do
+    context '完了した予定の場合' do
+      let(:watchlist) do
+        create(
+          :watchlist,
+          user: user,
+          is_done: true
+        )
+      end
+
+      it '予定を未完了に戻す' do
+        expect do
+          patch toggle_completion_watchlist_path(watchlist)
+        end.to change { watchlist.reload.is_done }.from(true).to(false)
+      end
+
+      it '未完了に戻したことを通知する' do
+        patch toggle_completion_watchlist_path(watchlist)
+
+        expect(flash[:notice]).to eq('予定を未完了に戻しました')
+      end
+    end
+
+    context '他のユーザーの予定の場合' do
       let(:other_user) { create(:user) }
 
       let(:other_watchlist) do
         create(
           :watchlist,
           user: other_user,
-          title: 'チケット申し込み'
+          is_done: false
         )
       end
 
-      let(:valid_params) do
-        {
-          watchlist: {
-            title: '変更後のタイトル'
-          }
-        }
-      end
-
-      it '他のユーザーの予定を更新しない' do
-        patch watchlist_path(other_watchlist), params: valid_params
-
-        other_watchlist.reload
-
-        expect(other_watchlist.title).to eq('チケット申し込み')
+      it '完了状態を変更しない' do
+        expect do
+          patch toggle_completion_watchlist_path(other_watchlist)
+        end.not_to(change { other_watchlist.reload.is_done })
       end
 
       it '予定一覧へリダイレクトする' do
-        patch watchlist_path(other_watchlist), params: valid_params
+        patch toggle_completion_watchlist_path(other_watchlist)
 
         expect(response).to redirect_to(watchlists_path)
       end
     end
 
-    context 'タグを含む有効なパラメータの場合' do
+    context 'ログインしていない場合' do
       let(:watchlist) do
         create(
           :watchlist,
-          user: user
+          user: user,
+          is_done: false
         )
       end
 
-      let(:valid_params_with_tags) do
-        {
-          watchlist: {
-            title: 'チケット申し込み',
-            tag_names: 'グッズ'
-          }
-        }
-      end
+      it 'ログイン画面へリダイレクトする' do
+        sign_out user
 
-      it 'タグを更新する' do
-        watchlist.tag_names = 'ライブ'
-        watchlist.save_tags
+        patch toggle_completion_watchlist_path(watchlist)
 
-        patch watchlist_path(watchlist), params: valid_params_with_tags
-
-        watchlist.reload
-
-        expect(watchlist.tags.pluck(:name)).to contain_exactly('グッズ')
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end
