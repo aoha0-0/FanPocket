@@ -5,7 +5,7 @@ export default class extends Controller {
     "titleInput", "titleErrorMessage",
     "urlInput", "fetchButton", "noticeMessage", 
     "startAtInput", "endAtInput", "endAtRealtimeError",
-    "suggestionsContainer" 
+    "suggestionsContainer", "noSuggestionsMessage"
   ]
 
   // 画面が表示された時、およびTurboで画面が書き換わった時に毎回確実に動く魔法
@@ -105,6 +105,14 @@ export default class extends Controller {
 
   // ✨ 日時候補の取得
   async fetchDateSuggestions(url) {
+    if (this.hasSuggestionsContainerTarget) {
+      this.suggestionsContainerTarget.innerHTML = ""
+    }
+
+    if (this.hasNoSuggestionsMessageTarget) {
+      this.noSuggestionsMessageTarget.classList.add("hidden")
+    }
+
     try {
       const response = await fetch(`/api/date_suggestions?url=${encodeURIComponent(url)}`)
       const data = await response.json()
@@ -113,6 +121,8 @@ export default class extends Controller {
 
       if (response.ok && data.suggestions.length > 0) {
         this.renderDateSuggestions(data.suggestions)
+      } else if (response.ok && this.hasNoSuggestionsMessageTarget) {
+        this.noSuggestionsMessageTarget.classList.remove("hidden")
       }
     } catch (error) {
       console.error(error)
