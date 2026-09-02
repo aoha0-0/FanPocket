@@ -35,7 +35,27 @@
     </button>
     
     <p data-watchlist-form-target="noticeMessage" class="text-xs font-semibold pl-4 hidden flex items-center gap-1"></p>
+
     <div data-watchlist-form-target="suggestionsContainer" class="mt-2 flex flex-wrap gap-2"></div>
+
+    <div
+      data-watchlist-form-target="noSuggestionsMessage"
+      class="hidden mt-2 rounded-2xl bg-[#B6E0F3]/25 px-4 py-3">
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-lg text-primary/60">
+          calendar_month
+        </span>
+
+        <div>
+          <p class="text-sm font-semibold text-primary/80">
+            日付候補が見つかりませんでした
+          </p>
+          <p class="mt-1 text-xs leading-relaxed text-gray-500">
+            開始日時・締切日時は下の入力欄から手動で入力できます。
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="space-y-3">
