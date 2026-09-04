@@ -203,6 +203,34 @@
         <% end %>
       </div>
     </section>
+
+        <section>
+      <div class="flex items-center gap-2 mb-3 px-1">
+        <span class="material-symbols-outlined text-error text-xl">warning</span>
+        <h3 class="font-bold text-sm text-on-surface-variant">アカウント削除</h3>
+      </div>
+
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-base-200">
+        <p class="text-sm text-[#4f5052] leading-relaxed">
+          アカウントを削除すると、登録した予定・タグ・通知設定・通知履歴・SNS連携情報がすべて削除されます。
+        </p>
+        <p class="mt-2 text-sm font-semibold text-error">
+          この操作は取り消せません。
+        </p>
+
+        <%= button_to user_registration_path,
+                      method: :delete,
+                      form: {
+                        class: "mt-4",
+                        data: {
+                          turbo_confirm: "アカウントと登録したデータはすべて削除されます。\nこの操作は取り消せません。本当に削除しますか？"
+                        }
+                      },
+                      class: "w-full py-3 rounded-full border border-error/30 bg-error/5 text-error font-headline font-semibold hover:bg-error/10 transition-colors active:scale-[0.97]" do %>
+          アカウントを削除する
+        <% end %>
+      </div>
+    </section>
   </div>
 </main>
 
