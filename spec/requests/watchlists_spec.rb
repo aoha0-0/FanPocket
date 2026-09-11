@@ -402,6 +402,92 @@ RSpec.describe 'Watchlists', type: :request do
     end
   end
 
+  describe 'GET /watchlists/:id/share' do
+    context '自分の予定の場合' do
+      it '共有内容の確認画面を表示する' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: 'チケット申し込み'
+        )
+
+        get share_watchlist_path(watchlist)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('共有内容の確認')
+        expect(response.body).to include('チケット申し込み')
+      end
+
+      it '共有対象の情報だけを表示する' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: '東京ドーム公演',
+          start_at: Time.zone.local(2026, 11, 20, 17, 0),
+          end_at: Time.zone.local(2026, 11, 25, 23, 59),
+          reception_type: :lottery,
+          reception_detail: 'FC1次',
+          url: 'https://example.com',
+          memo: '共有しないメモ',
+          is_done: true
+        )
+
+        watchlist.tag_names = '共有しないタグ'
+        watchlist.save_tags
+
+        get share_watchlist_path(watchlist)
+
+        expect(response.body).to include('東京ドーム公演')
+        expect(response.body).to include('2026/11/20 17:00')
+        expect(response.body).to include('2026/11/25 23:59')
+        expect(response.body).to include('抽選')
+        expect(response.body).to include('FC1次')
+        expect(response.body).to include('https://example.com')
+
+        expect(response.body).not_to include('共有しないメモ')
+        expect(response.body).not_to include('共有しないタグ')
+        expect(response.body).not_to include('対応済み')
+      end
+
+      it '未設定の項目は共有内容に表示しない' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: 'グッズ販売',
+          start_at: nil,
+          end_at: Time.zone.local(2026, 11, 25, 23, 59),
+          reception_type: :not_set,
+          reception_detail: nil,
+          url: 'https://example.com'
+        )
+
+        get share_watchlist_path(watchlist)
+
+        document = Nokogiri::HTML(response.body)
+        preview = document.at_css('[data-testid="share-preview"]').text
+
+        expect(preview).to include('グッズ販売')
+        expect(preview).to include('締切')
+        expect(preview).not_to include('開始')
+        expect(preview).not_to include('受付')
+      end
+    end
+
+    context '他のユーザーの予定の場合' do
+      it '予定一覧へリダイレクトする' do
+        other_user = create(:user)
+        other_watchlist = create(
+          :watchlist,
+          user: other_user
+        )
+
+        get share_watchlist_path(other_watchlist)
+
+        expect(response).to redirect_to(watchlists_path)
+      end
+    end
+  end
+
   describe 'GET /watchlists/:id/edit' do
     context '自分の予定の場合' do
       it '編集画面を表示する' do
