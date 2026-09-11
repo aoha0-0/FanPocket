@@ -1,0 +1,107 @@
+<%= render "layouts/app_navigation",
+           back_path: watchlist_path(@watchlist) %>
+
+<main class="max-w-2xl mx-auto px-6 mt-4 pb-10 space-y-8"
+      data-controller="share"
+      data-share-text-value="<%= watchlist_share_text(@watchlist) %>">
+  <div data-share-target="message"
+       class="hidden alert alert-soft alert-success shadow-lg rounded-2xl">
+    <span class="material-symbols-outlined">check_circle</span>
+    <span class="text-sm font-bold">共有内容をコピーしました</span>
+  </div>
+
+  <div class="mb-15">
+    <h2 class="font-headline font-extrabold mt-13 mb-4 text-3xl text-center text-primary tracking-tight">
+      共有内容の確認
+    </h2>
+
+    <p class="text-sm text-gray-500 text-center">
+      メモやタグなどの個人用情報は共有されません。
+    </p>
+  </div>
+
+ <section class="bg-white rounded-3xl puffy-shadow overflow-hidden">
+    <div class="flex gap-4 p-6 border-b border-gray-100">
+      <div class="w-11 h-11 rounded-full bg-[#B6E0F3]/30 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-primary">description</span>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-primary/60 mb-1">タイトル</p>
+        <p class="font-bold text-gray-700"><%= @watchlist.title %></p>
+      </div>
+    </div>
+
+    <% if @watchlist.start_at.present? %>
+      <div class="flex gap-4 p-6 border-b border-gray-100">
+        <div class="w-11 h-11 rounded-full bg-[#B6E0F3]/30 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-primary">calendar_month</span>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-primary/60 mb-1">開始</p>
+          <p class="text-gray-700">
+            <%= @watchlist.start_at.strftime("%Y/%m/%d %H:%M") %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @watchlist.end_at.present? %>
+      <div class="flex gap-4 p-6 border-b border-gray-100">
+        <div class="w-11 h-11 rounded-full bg-[#B6E0F3]/30 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-primary">event_busy</span>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-primary/60 mb-1">締切</p>
+          <p class="text-gray-700">
+            <%= @watchlist.end_at.strftime("%Y/%m/%d %H:%M") %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @watchlist.reception_type != "not_set" || @watchlist.reception_detail.present? %>
+      <div class="flex gap-4 p-6 border-b border-gray-100">
+        <div class="w-11 h-11 rounded-full bg-[#B6E0F3]/30 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-primary">confirmation_number</span>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-primary/60 mb-1">受付</p>
+
+          <% if @watchlist.reception_type != "not_set" %>
+            <p class="text-gray-700"><%= @watchlist.reception_type_label %></p>
+          <% end %>
+
+          <% if @watchlist.reception_detail.present? %>
+            <p class="text-gray-700"><%= @watchlist.reception_detail %></p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @watchlist.url.present? %>
+      <div class="flex gap-4 p-6">
+        <div class="w-11 h-11 rounded-full bg-[#B6E0F3]/30 flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-primary">link</span>
+        </div>
+        <div class="min-w-0">
+          <p class="text-xs font-bold text-primary/60 mb-1">URL</p>
+          <p class="text-sm text-gray-600 break-all"><%= @watchlist.url %></p>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+  <button type="button"
+          data-action="click->share#share"
+          class="w-full bg-[#B6E0F3] text-[#2d6489] font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] flex items-center justify-center gap-3">
+    <span class="material-symbols-outlined font-bold">share</span>
+    共有する
+  </button>
+
+  <%= link_to watchlist_path(@watchlist),
+            class: "block text-center text-primary text-sm font-semibold hover:opacity-70 transition-opacity" do %>
+    もどる
+  <% end %>
+  </main>
+
+<%= render "layouts/footer" %>

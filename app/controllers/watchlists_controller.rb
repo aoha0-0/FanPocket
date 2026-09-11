@@ -2,7 +2,7 @@
 
 class WatchlistsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_watchlist, only: %i[show edit update toggle_completion]
+  before_action :set_watchlist, only: %i[show edit update toggle_completion share]
 
   def index
     watchlists = current_user.watchlists
@@ -55,6 +55,8 @@ class WatchlistsController < ApplicationController
     notice = @watchlist.is_done? ? '予定を完了にしました' : '予定を未完了に戻しました'
     redirect_to watchlist_path(@watchlist), notice: notice
   end
+
+  def share; end
 
   def destroy
     watchlist = current_user.watchlists.find(params[:id])
