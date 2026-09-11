@@ -205,6 +205,12 @@
     この予定を編集する
   <% end %>
 
+  <%= link_to share_watchlist_path(@watchlist),
+              class: "w-full bg-white text-primary font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] flex items-center justify-center gap-3 hover:opacity-70 transition-opacity" do %>
+    <span class="material-symbols-outlined font-bold">share</span>
+    この予定を共有する
+  <% end %>
+
   <%= button_to watchlist_path(@watchlist), method: :delete, form: { data: { turbo_confirm: "この予定を削除してもよろしいですか？" } }, class: "w-full py-2 font-semibold text-sm flex items-center justify-center gap-2 text-error hover:opacity-70 transition-colors font-headline" do %>
     <span class="material-symbols-outlined text-lg">delete</span>
     削除

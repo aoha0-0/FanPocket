@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   resources :watchlists, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
     member do
       patch :toggle_completion
+      get :share
     end
   end
   resources :notifications, only: [:index, :show]
