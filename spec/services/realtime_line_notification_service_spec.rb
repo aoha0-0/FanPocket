@@ -235,7 +235,7 @@ RSpec.describe RealtimeLineNotificationService do
             :watchlist,
             user: user,
             start_at: 1.day.ago,
-            end_at: 175.minutes.from_now
+            end_at: 175.minutes.from_n
           )
 
           allow(LineMessagingService)

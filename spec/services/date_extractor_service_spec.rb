@@ -35,7 +35,7 @@ RSpec.describe DateExtractorService do
           expect(result).to include(
             {
               label: '候補: 5月8日 20:00',
-            value: '2026-05-08T20:00'
+              value: '2026-05-08T20:00'
             }
           )
         end
