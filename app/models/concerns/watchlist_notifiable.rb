@@ -4,7 +4,9 @@ module WatchlistNotifiable
   extend ActiveSupport::Concern
 
   included do
-    scope :alert_three_days_prior, -> { where(is_done: false, end_at: 3.days.from_now.all_day, end_at_auto_filled: false) }
+    scope :alert_three_days_prior, lambda {
+      where(is_done: false, end_at: 3.days.from_now.all_day, end_at_auto_filled: false)
+    }
     scope :alert_day_before, -> { where(is_done: false, end_at: 1.day.from_now.all_day, end_at_auto_filled: false) }
     scope :alert_same_day, -> { where(is_done: false, end_at: Time.current.all_day, end_at_auto_filled: false) }
     scope :starting_today, -> { where(start_at: Time.current.all_day, is_done: false) }

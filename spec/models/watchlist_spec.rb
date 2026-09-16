@@ -545,7 +545,7 @@ RSpec.describe Watchlist, type: :model do
           start_at: 3.days.from_now,
           end_at: nil
         )
-        
+
         targets = Watchlist.alert_three_days_prior
 
         expect(targets).not_to include(auto_filled_watchlist)
@@ -574,7 +574,7 @@ RSpec.describe Watchlist, type: :model do
           start_at: 1.day.from_now,
           end_at: nil
         )
-        
+
         targets = Watchlist.alert_day_before
 
         expect(targets).not_to include(auto_filled_watchlist)
@@ -641,7 +641,7 @@ RSpec.describe Watchlist, type: :model do
 
         expect(targets).not_to include(auto_filled_watchlist)
       end
-    
+
       context '自動補完されていない締切日時の予定がある場合' do
         it '通知対象に含まれる' do
           current_time = Time.zone.parse('2026-09-16 21:00')

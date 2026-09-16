@@ -130,9 +130,9 @@ class Watchlist < ApplicationRecord
   end
 
   def update_end_at_auto_filled
-    if will_save_change_to_end_at?
-      self.end_at_auto_filled = false
-    end
+    return unless will_save_change_to_end_at?
+
+    self.end_at_auto_filled = false
   end
 
   def end_at_must_be_after_start_at
