@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_08_16_060143) do
+ActiveRecord::Schema[7.1].define(version: 2026_09_14_114413) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -109,6 +109,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_08_16_060143) do
     t.datetime "updated_at", null: false
     t.integer "reception_type", default: 0, null: false
     t.string "reception_detail"
+    t.boolean "end_at_auto_filled", default: false, null: false
     t.index ["user_id"], name: "index_watchlists_on_user_id"
   end
 

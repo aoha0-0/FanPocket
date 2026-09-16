@@ -12,6 +12,7 @@ class Watchlist < ApplicationRecord
   has_many :watchlist_tags, dependent: :destroy
   has_many :tags, through: :watchlist_tags
 
+  before_validation :update_end_at_auto_filled
   before_validation :set_end_at_to_end_of_day, if: :end_at_time_blank?
 
   validates :title, presence: true, length: { maximum: 255 }
@@ -114,6 +115,7 @@ class Watchlist < ApplicationRecord
     if end_at.blank? && start_at.present?
       # 締切が空なら、開始日時の日の 23:59:59 をセット
       self.end_at = start_at.end_of_day
+      self.end_at_auto_filled = true
     elsif end_at.present?
       # 締切が入力されているなら、その締切日の 23:59:59 に上書き
       self.end_at = end_at.end_of_day
@@ -125,6 +127,12 @@ class Watchlist < ApplicationRecord
     return unless start_at.blank? && end_at.blank?
 
     errors.add(:base, :start_at_or_end_at_blank)
+  end
+
+  def update_end_at_auto_filled
+    if will_save_change_to_end_at?
+      self.end_at_auto_filled = false
+    end
   end
 
   def end_at_must_be_after_start_at
