@@ -59,6 +59,37 @@ RSpec.describe Watchlist, type: :model do
         watchlist.valid?
 
         expect(watchlist.end_at).to be_within(1.second).of(watchlist.start_at.end_of_day)
+        expect(watchlist.end_at_auto_filled).to be true
+      end
+    end
+
+    context '開始日時と締切日時を入力した場合' do
+      it '締切日時は自動補完として扱われない' do
+        watchlist = build(
+          :watchlist,
+          start_at: 3.days.from_now,
+          end_at: 4.days.from_now
+        )
+
+        watchlist.valid?
+
+        expect(watchlist.end_at_auto_filled).to be false
+      end
+    end
+
+    context '自動補完された締切日時をユーザーが編集した場合' do
+      it '自動補完として扱われなくなる' do
+        watchlist = create(
+          :watchlist,
+          start_at: 3.days.from_now,
+          end_at: nil
+        )
+
+        expect(watchlist.end_at_auto_filled).to be true
+
+        watchlist.update(end_at: 4.days.from_now)
+
+        expect(watchlist.end_at_auto_filled).to be false
       end
     end
 
