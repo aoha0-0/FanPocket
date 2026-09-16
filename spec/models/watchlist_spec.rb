@@ -536,4 +536,127 @@ RSpec.describe Watchlist, type: :model do
       end
     end
   end
+
+  describe '.alert_three_days_prior' do
+    context '自動補完された締切日時の予定がある場合' do
+      it '通知対象に含まれない' do
+        auto_filled_watchlist = create(
+          :watchlist,
+          start_at: 3.days.from_now,
+          end_at: nil
+        )
+        
+        targets = Watchlist.alert_three_days_prior
+
+        expect(targets).not_to include(auto_filled_watchlist)
+      end
+    end
+
+    context '自動補完されていない締切日時の予定がある場合' do
+      it '通知対象に含まれる' do
+        normal_watchlist = create(
+          :watchlist,
+          end_at: 3.days.from_now
+        )
+
+        targets = Watchlist.alert_three_days_prior
+
+        expect(targets).to include(normal_watchlist)
+      end
+    end
+  end
+
+  describe '.alert_day_before' do
+    context '自動補完された締切日時の予定がある場合' do
+      it '通知対象に含まれない' do
+        auto_filled_watchlist = create(
+          :watchlist,
+          start_at: 1.day.from_now,
+          end_at: nil
+        )
+        
+        targets = Watchlist.alert_day_before
+
+        expect(targets).not_to include(auto_filled_watchlist)
+      end
+    end
+
+    context '自動補完されていない締切日時の予定がある場合' do
+      it '通知対象に含まれる' do
+        normal_watchlist = create(
+          :watchlist,
+          start_at: nil,
+          end_at: 1.day.from_now
+        )
+
+        targets = Watchlist.alert_day_before
+
+        expect(targets).to include(normal_watchlist)
+      end
+    end
+  end
+
+  describe '.alert_same_day' do
+    context '自動補完された締切日時の予定がある場合' do
+      it '通知対象に含まれない' do
+        auto_filled_watchlist = create(
+          :watchlist,
+          start_at: Time.current,
+          end_at: nil
+        )
+
+        targets = Watchlist.alert_same_day
+
+        expect(targets).not_to include(auto_filled_watchlist)
+      end
+    end
+
+    context '自動補完されていない締切日時の予定がある場合' do
+      it '通知対象に含まれる' do
+        normal_watchlist = create(
+          :watchlist,
+          start_at: nil,
+          end_at: Time.current.end_of_day
+        )
+
+        targets = Watchlist.alert_same_day
+
+        expect(targets).to include(normal_watchlist)
+      end
+    end
+  end
+
+  describe '.deadline_three_hours_before' do
+    context '自動補完された締切日時の予定がある場合' do
+      it '通知対象に含まれない' do
+        current_time = Time.zone.parse('2026-09-16 21:00')
+
+        auto_filled_watchlist = create(
+          :watchlist,
+          start_at: current_time,
+          end_at: nil
+        )
+
+        targets = Watchlist.deadline_three_hours_before(current_time)
+
+        expect(targets).not_to include(auto_filled_watchlist)
+      end
+    
+      context '自動補完されていない締切日時の予定がある場合' do
+        it '通知対象に含まれる' do
+          current_time = Time.zone.parse('2026-09-16 21:00')
+
+          normal_watchlist = create(
+            :watchlist,
+            start_at: nil,
+            end_at: current_time + 2.hours + 55.minutes
+          )
+
+          targets = Watchlist.deadline_three_hours_before(current_time)
+
+          expect(targets).to include(normal_watchlist)
+        end
+      end
+    end
+  end
 end
