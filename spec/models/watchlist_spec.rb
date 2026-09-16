@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Watchlist, type: :model do
+  include ActiveSupport::Testing::TimeHelpers
   describe 'バリデーション' do
     context '必要な情報が揃っている場合' do
       it '有効である' do
@@ -629,32 +630,32 @@ RSpec.describe Watchlist, type: :model do
   describe '.deadline_three_hours_before' do
     context '自動補完された締切日時の予定がある場合' do
       it '通知対象に含まれない' do
-        current_time = Time.zone.parse('2026-09-16 21:00')
+        travel_to Time.zone.local(2026, 9, 16, 21, 0) do
+          auto_filled_watchlist = create(
+            :watchlist,
+            start_at: Time.current,
+            end_at: nil
+          )
 
-        auto_filled_watchlist = create(
-          :watchlist,
-          start_at: current_time,
-          end_at: nil
-        )
+          targets = Watchlist.deadline_three_hours_before(Time.current)
 
-        targets = Watchlist.deadline_three_hours_before(current_time)
-
-        expect(targets).not_to include(auto_filled_watchlist)
+          expect(targets).not_to include(auto_filled_watchlist)
+        end
       end
 
       context '自動補完されていない締切日時の予定がある場合' do
         it '通知対象に含まれる' do
-          current_time = Time.zone.parse('2026-09-16 21:00')
+          travel_to Time.zone.local(2026, 9, 16, 21, 0) do
+            normal_watchlist = create(
+              :watchlist,
+              start_at: nil,
+              end_at: Time.current + 2.hours + 55.minutes
+            )
 
-          normal_watchlist = create(
-            :watchlist,
-            start_at: nil,
-            end_at: current_time + 2.hours + 55.minutes
-          )
+            targets = Watchlist.deadline_three_hours_before(Time.current)
 
-          targets = Watchlist.deadline_three_hours_before(current_time)
-
-          expect(targets).to include(normal_watchlist)
+            expect(targets).to include(normal_watchlist)
+          end
         end
       end
     end
