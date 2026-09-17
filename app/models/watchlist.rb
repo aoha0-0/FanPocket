@@ -3,6 +3,7 @@
 class Watchlist < ApplicationRecord
   include WatchlistNotifiable
   include WatchlistSchedulable
+  include WatchlistSearchable
   attr_accessor :tag_names
 
   belongs_to :user
@@ -82,23 +83,6 @@ class Watchlist < ApplicationRecord
     where(is_done: true)
       .or(where('end_at < ?', Time.current))
       .order(end_at: :desc)
-  }
-
-  scope :tagged_with, lambda { |keyword|
-    sanitized_keyword = sanitize_sql_like(keyword)
-
-    where(
-      id: WatchlistTag
-          .joins(:tag)
-          .where('tags.name ILIKE ?', "%#{sanitized_keyword}%")
-          .select(:watchlist_id)
-    )
-  }
-
-  scope :title_containing, lambda { |keyword|
-    sanitized_keyword = sanitize_sql_like(keyword)
-
-    where('title ILIKE ?', "%#{sanitized_keyword}%")
   }
 
   private
