@@ -660,4 +660,48 @@ RSpec.describe Watchlist, type: :model do
       end
     end
   end
+
+  describe '.end_at_notification_targets' do
+    context '締切の予定で終了通知設定がOFFの場合' do
+      it '通知対象に含まれる' do
+        deadline_watchlist = create(
+          :watchlist,
+          end_type: :deadline,
+          ending_notification_enabled: false
+        )
+
+        targets = Watchlist.end_at_notification_targets
+
+        expect(targets).to include(deadline_watchlist)
+      end
+    end
+
+    context '終了の予定で終了通知設定がONの場合' do
+      it '通知対象に含まれる' do
+        ending_watchlist = create(
+          :watchlist,
+          end_type: :ending,
+          ending_notification_enabled: true
+        )
+
+        targets = Watchlist.end_at_notification_targets
+
+        expect(targets).to include(ending_watchlist)
+      end
+    end
+
+    context '終了の予定で終了通知設定がOFFの場合' do
+      it '通知対象に含まれない' do
+        ending_watchlist = create(
+          :watchlist,
+          end_type: :ending,
+          ending_notification_enabled: false
+        )
+
+        targets = Watchlist.end_at_notification_targets
+
+        expect(targets).not_to include(ending_watchlist)
+      end
+    end
+  end
 end
