@@ -34,6 +34,11 @@ class Watchlist < ApplicationRecord
     made_to_order: 3 # 受注販売
   }, default: :not_set
 
+  enum :end_type, {
+    deadline: 0,
+    ending: 1
+  }, default: :deadline
+
   def reception_type_label
     I18n.t("enums.watchlist.reception_type.#{reception_type}")
   end
