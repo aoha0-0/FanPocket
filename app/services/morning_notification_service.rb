@@ -50,7 +50,7 @@ class MorningNotificationService
       InAppNotificationService.create!(
         watchlist: watchlist,
         notification_type: :deadline_same_day,
-        title: '締め切りは本日です',
+        title: deadline_same_day_title(watchlist),
         message: content
       )
     end
@@ -63,9 +63,18 @@ class MorningNotificationService
       ).deliver_now
     end
 
+    def deadline_same_day_title(watchlist)
+      watchlist.deadline? ? '締め切りは本日です' : '終了は本日です'
+    end
+
     def deadline_same_day_content(watchlist)
-      "気になっている「#{watchlist.display_title}」の締め切りは本日です。" \
-        '大切な予定を見逃さないようにご確認ください。'
+      if watchlist.deadline?
+        "気になっている「#{watchlist.display_title}」の締め切りは本日です。" \
+          '大切な予定を見逃さないようにご確認ください。'
+      else
+        "気になっている「#{watchlist.display_title}」の終了は本日です。" \
+          '終了前に、もう一度チェックしてみませんか？'
+      end
     end
 
     def send_start_same_day
