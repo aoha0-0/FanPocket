@@ -29,18 +29,6 @@ class RealtimeLineNotificationService
       )
     end
 
-    def notification_title_for(watchlist, config)
-      return config[:title] unless config[:ending_title]
-
-      watchlist.deadline? ? config[:title] : config[:ending_title]
-    end
-
-    def notification_message_for(watchlist, config)
-      return config[:message] unless config[:ending_message]
-
-      watchlist.deadline? ? config[:message] : config[:ending_message]
-    end
-
     def send_notifications(targets, config)
       targets = targets.includes(user: :social_accounts)
 
@@ -57,8 +45,8 @@ class RealtimeLineNotificationService
       create_in_app_notification(
         watchlist,
         config[:notification_type],
-        notification_title_for(watchlist, config),
-        notification_message_for(watchlist, config)
+        EndNotificationContent.notification_title_for(watchlist, config),
+        EndNotificationContent.notification_message_for(watchlist, config)
       )
 
       deliver_line_notification(watchlist, config)
@@ -77,7 +65,7 @@ class RealtimeLineNotificationService
         line_account,
         log_type: config[:log_type],
         notification_type: config[:notification_type],
-        message: notification_message_for(watchlist, config)
+        message: EndNotificationContent.notification_message_for(watchlist, config)
       )
     end
 

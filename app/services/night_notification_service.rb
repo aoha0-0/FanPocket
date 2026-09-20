@@ -29,7 +29,7 @@ class NightNotificationService
     end
 
     def deliver_three_days_prior_notification(watchlist, user)
-      content = three_days_prior_content(watchlist)
+      content = EndNotificationContent.three_days_prior_content(watchlist)
 
       create_three_days_prior_notification(watchlist, content)
       deliver_three_days_prior_email(watchlist, user, content)
@@ -50,7 +50,7 @@ class NightNotificationService
       InAppNotificationService.create!(
         watchlist: watchlist,
         notification_type: :deadline_three_days_before,
-        title: three_days_prior_title(watchlist),
+        title: EndNotificationContent.three_days_prior_title(watchlist),
         message: content
       )
     end
@@ -61,20 +61,6 @@ class NightNotificationService
         watchlist.title,
         content
       ).deliver_now
-    end
-
-    def three_days_prior_title(watchlist)
-      watchlist.deadline? ? '締め切りの3日前です' : '終了まであと3日です'
-    end
-
-    def three_days_prior_content(watchlist)
-      if watchlist.deadline?
-        "気になっている「#{watchlist.display_title}」の締め切りまであと3日です。" \
-          '忘れないうちにチェックしてみませんか？'
-      else
-        "気になっている「#{watchlist.display_title}」の終了まであと3日です。" \
-          '終了前に、もう一度チェックしてみませんか？'
-      end
     end
 
     def send_day_before
@@ -95,7 +81,7 @@ class NightNotificationService
     end
 
     def deliver_day_before_notification(watchlist, user)
-      content = day_before_content(watchlist)
+      content = EndNotificationContent.day_before_content(watchlist)
 
       create_day_before_notification(watchlist, content)
       deliver_day_before_email(watchlist, user, content)
@@ -116,7 +102,7 @@ class NightNotificationService
       InAppNotificationService.create!(
         watchlist: watchlist,
         notification_type: :deadline_day_before,
-        title: day_before_title(watchlist),
+        title: EndNotificationContent.day_before_title(watchlist),
         message: content
       )
     end
@@ -127,20 +113,6 @@ class NightNotificationService
         watchlist.title,
         content
       ).deliver_now
-    end
-
-    def day_before_title(watchlist)
-      watchlist.deadline? ? '明日締め切りです' : '終了は明日です'
-    end
-
-    def day_before_content(watchlist)
-      if watchlist.deadline?
-        "気になっている「#{watchlist.display_title}」の締め切りは明日です。" \
-          '大切な予定を見逃さないようにご確認ください。'
-      else
-        "気になっている「#{watchlist.display_title}」の終了は明日です。" \
-          '終了前に、もう一度チェックしてみませんか？'
-      end
     end
   end
 end
