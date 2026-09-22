@@ -342,4 +342,34 @@ RSpec.describe EndNotificationContent do
       end
     end
   end
+
+  describe '.deadline_same_day_email_subject' do
+    context '締切の予定の場合' do
+      it '締切用のメール件名を返す' do
+        deadline_watchlist = create(
+          :watchlist,
+          title: '東京ドーム公演',
+          end_type: :deadline
+        )
+
+        subject = EndNotificationContent.deadline_same_day_email_subject(deadline_watchlist)
+
+        expect(subject).to eq('【FanPocket】⏰本日締切です：東京ドーム公演')
+      end
+    end
+
+    context '終了の予定の場合' do
+      it '終了用のメール件名を返す' do
+        ending_watchlist = create(
+          :watchlist,
+          title: '東京ドーム公演',
+          end_type: :ending
+        )
+
+        subject = EndNotificationContent.deadline_same_day_email_subject(ending_watchlist)
+
+        expect(subject).to eq('【FanPocket】⏰本日終了です：東京ドーム公演')
+      end
+    end
+  end
 end

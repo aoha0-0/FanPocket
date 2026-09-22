@@ -67,5 +67,11 @@ class EndNotificationContent
 
       "【FanPocket】🌟#{label}：#{watchlist.title}"
     end
+
+    def deadline_same_day_email_subject(watchlist)
+      label = watchlist.deadline? ? '本日締切です' : '本日終了です'
+
+      "【FanPocket】⏰#{label}：#{watchlist.title}"
+    end
   end
 end

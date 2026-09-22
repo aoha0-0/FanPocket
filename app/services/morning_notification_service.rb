@@ -59,7 +59,8 @@ class MorningNotificationService
       NotificationMailer.today_notice(
         user.email,
         watchlist.title,
-        content
+        content,
+        EndNotificationContent.deadline_same_day_email_subject(watchlist)
       ).deliver_now
     end
 

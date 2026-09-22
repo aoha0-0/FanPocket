@@ -23,10 +23,10 @@ class NotificationMailer < ApplicationMailer
   end
 
   # 当日7時通知
-  def today_notice(user_email, title, content)
+  def today_notice(user_email, title, content, subject)
     @title = title
     @content = content
-    mail(to: user_email, subject: "【FanPocket】⏰本日締切です：#{@title}")
+    mail(to: user_email, subject: subject)
   end
 
   def start_notice(user_email, title, content)
