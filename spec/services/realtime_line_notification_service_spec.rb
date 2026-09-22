@@ -266,7 +266,7 @@ RSpec.describe RealtimeLineNotificationService do
             line_deadline_three_hours_before: true
           )
 
-          watchlist = create(
+          create(
             :watchlist,
             user: user,
             start_at: 1.day.ago,
