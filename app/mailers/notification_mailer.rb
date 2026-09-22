@@ -16,10 +16,10 @@ class NotificationMailer < ApplicationMailer
   end
 
   # 前日20時通知
-  def day_before_notice(user_email, title, content)
+  def day_before_notice(user_email, title, content, subject)
     @title = title
     @content = content
-    mail(to: user_email, subject: "【FanPocket】🌟明日締切です：#{@title}")
+    mail(to: user_email, subject: subject)
   end
 
   # 当日7時通知

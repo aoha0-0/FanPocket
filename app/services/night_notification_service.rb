@@ -112,7 +112,8 @@ class NightNotificationService
       NotificationMailer.day_before_notice(
         user.email,
         watchlist.title,
-        content
+        content,
+        EndNotificationContent.day_before_email_subject(watchlist)
       ).deliver_now
     end
   end
