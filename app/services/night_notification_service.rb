@@ -59,7 +59,8 @@ class NightNotificationService
       NotificationMailer.three_days_ago_notice(
         user.email,
         watchlist.title,
-        content
+        content,
+        EndNotificationContent.three_days_prior_email_subject(watchlist)
       ).deliver_now
     end
 

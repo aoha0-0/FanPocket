@@ -57,7 +57,6 @@ RSpec.describe EndNotificationContent do
 
         expect(content).to eq("気になっている「#{ending_watchlist.display_title}」の終了まであと3日です。" \
           '終了前に、もう一度チェックしてみませんか？')
-        
       end
     end
   end
@@ -245,7 +244,7 @@ RSpec.describe EndNotificationContent do
 
         message = EndNotificationContent.notification_message_for(watchlist, config)
 
-        expect(message).to eq( "開始まであと10分です。\n\nまもなく始まります。\n詳細をご確認ください。")
+        expect(message).to eq("開始まであと10分です。\n\nまもなく始まります。\n詳細をご確認ください。")
       end
     end
 
@@ -280,6 +279,36 @@ RSpec.describe EndNotificationContent do
         message = EndNotificationContent.notification_message_for(watchlist, config)
 
         expect(message).to eq("終了まであと3時間です。\n\n終了前に、もう一度チェックしてみませんか？")
+      end
+    end
+  end
+
+  describe '.three_days_prior_email_subject' do
+    context '締切の予定の場合' do
+      it '締切用のメール件名を返す' do
+        deadline_watchlist = create(
+          :watchlist,
+          title: '東京ドーム公演',
+          end_type: :deadline
+        )
+
+        subject = EndNotificationContent.three_days_prior_email_subject(deadline_watchlist)
+
+        expect(subject).to eq('【FanPocket】📅あと3日で締切です：東京ドーム公演')
+      end
+    end
+
+    context '終了の予定の場合' do
+      it '終了用のメール件名を返す' do
+        ending_watchlist = create(
+          :watchlist,
+          title: '東京ドーム公演',
+          end_type: :ending
+        )
+
+        subject = EndNotificationContent.three_days_prior_email_subject(ending_watchlist)
+
+        expect(subject).to eq('【FanPocket】📅あと3日で終了です：東京ドーム公演')
       end
     end
   end

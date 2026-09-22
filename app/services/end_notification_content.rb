@@ -55,5 +55,11 @@ class EndNotificationContent
 
       watchlist.deadline? ? config[:message] : config[:ending_message]
     end
+
+    def three_days_prior_email_subject(watchlist)
+      label = watchlist.deadline? ? 'あと3日で締切です' : 'あと3日で終了です'
+
+      "【FanPocket】📅#{label}：#{watchlist.title}"
+    end
   end
 end
