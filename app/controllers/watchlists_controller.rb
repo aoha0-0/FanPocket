@@ -91,6 +91,8 @@ class WatchlistsController < ApplicationController
     url
     start_at
     end_at
+    end_type
+    ending_notification_enabled
     reception_type
     reception_detail
     tag_names

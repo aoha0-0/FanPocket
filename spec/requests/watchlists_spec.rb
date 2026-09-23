@@ -23,6 +23,18 @@ RSpec.describe 'Watchlists', type: :request do
         }
       end
 
+      let(:ending_params) do
+        {
+          watchlist: {
+            title: '東京ドーム公演',
+            start_at: 1.day.from_now,
+            end_at: 3.days.from_now,
+            end_type: :ending,
+            ending_notification_enabled: true
+          }
+        }
+      end
+
       it '予定を1件作成する' do
         expect do
           post watchlists_path, params: valid_params
@@ -33,6 +45,15 @@ RSpec.describe 'Watchlists', type: :request do
         post watchlists_path, params: valid_params
 
         expect(response).to redirect_to(watchlists_path)
+      end
+
+      it '終了・終了通知ONで予定を作成できる' do
+        post watchlists_path, params: ending_params
+
+        watchlist = Watchlist.last
+
+        expect(watchlist.ending?).to be true
+        expect(watchlist.ending_notification_enabled?).to be true
       end
     end
 
