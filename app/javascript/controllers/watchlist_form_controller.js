@@ -4,7 +4,7 @@ export default class extends Controller {
   static targets = [ 
     "titleInput", "titleErrorMessage",
     "urlInput", "fetchButton", "noticeMessage", 
-    "startAtInput", "endAtInput", "endAtRealtimeError",
+    "startAtInput", "endAtInput", "endType", "endAtLabel", "endAtRealtimeError",
     "suggestionsContainer", "noSuggestionsMessage"
   ]
 
@@ -20,6 +20,8 @@ export default class extends Controller {
 
    // Flatpickrの準備を待って、確実にイベントを仕込む
     this.bindFlatpickr()
+
+    this.updateEndType()
   }
 
   // すべてを一括でチェックする安全用の関数
@@ -335,6 +337,16 @@ export default class extends Controller {
       this.endAtRealtimeErrorTarget.classList.remove("hidden")
     } else {
       this.endAtRealtimeErrorTarget.classList.add("hidden")
+    }
+  }
+
+  updateEndType(){
+    const selectedEndType = this.endTypeTargets.find((radio) => radio.checked)
+
+    if (selectedEndType.value === "ending") {
+      this.endAtLabelTarget.textContent = "終了日時"
+    } else {
+      this.endAtLabelTarget.textContent = "締切日時"
     }
   }
 }

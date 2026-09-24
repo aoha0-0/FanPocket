@@ -28,3 +28,6 @@ ja:
         lottery: "抽選"
         first_come: "先着"
         made_to_order: "受注販売"
+      end_type:
+        deadline: "締切"
+        ending: "終了"
