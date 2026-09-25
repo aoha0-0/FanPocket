@@ -4,8 +4,9 @@ export default class extends Controller {
   static targets = [ 
     "titleInput", "titleErrorMessage",
     "urlInput", "fetchButton", "noticeMessage", 
-    "startAtInput", "endAtInput", "endType", "endAtLabel", "endAtRealtimeError",
-    "suggestionsContainer", "noSuggestionsMessage"
+    "startAtInput", "endAtInput", "endType", "endAtLabel",
+    "endingNotificationField", "endingNotificationCheckbox",
+    "endAtRealtimeError", "suggestionsContainer", "noSuggestionsMessage"
   ]
 
   // 画面が表示された時、およびTurboで画面が書き換わった時に毎回確実に動く魔法
@@ -345,8 +346,11 @@ export default class extends Controller {
 
     if (selectedEndType.value === "ending") {
       this.endAtLabelTarget.textContent = "終了日時"
+      this.endingNotificationFieldTarget.classList.remove("hidden")
     } else {
       this.endAtLabelTarget.textContent = "締切日時"
+      this.endingNotificationFieldTarget.classList.add("hidden")
+      this.endingNotificationCheckboxTarget.checked = false
     }
   }
 }
