@@ -186,7 +186,7 @@ export default class extends Controller {
         arrow.className = "absolute -top-2 left-5 w-3 h-3 rotate-45 bg-white border-l border-t border-primary/20"
 
         const message = document.createElement("p")
-        message.textContent = "どちらに入力しますか？"
+        message.textContent = "どの日時にしますか？"
         message.className = "text-xs text-gray-500"
 
         const startButton = document.createElement("button")
@@ -200,13 +200,31 @@ export default class extends Controller {
           button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
         })
 
-        const endButton = document.createElement("button")
-        endButton.type = "button"
-        endButton.textContent = "締切日時にする"
-        endButton.className = "btn btn-xs btn-soft btn-secondary normal-case font-normal"
+        const deadlineButton = document.createElement("button")
+        deadlineButton.type = "button"
+        deadlineButton.textContent = "締切日時にする"
+        deadlineButton.className = "btn btn-xs btn-soft btn-secondary normal-case font-normal"
 
-        endButton.addEventListener("click", () => {
+        deadlineButton.addEventListener("click", () => {
           this.insertDateTime("締切", suggestion.value)
+          const deadlineRadio = this.endTypeTargets.find((radio) => radio.value === "deadline")
+          deadlineRadio.checked = true
+          this.updateEndType()
+          choiceContainer.remove()
+          button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
+        })
+
+        const endingButton = document.createElement("button")
+        endingButton.type = "button"
+        endingButton.textContent = "終了日時にする"
+        endingButton.className = "btn btn-xs btn-soft btn-secondary normal-case font-normal"
+
+        endingButton.addEventListener("click", () => {
+          this.insertDateTime("終了", suggestion.value)
+
+          const endingRadio = this.endTypeTargets.find((radio) => radio.value === "ending")
+          endingRadio.checked = true
+          this.updateEndType()
           choiceContainer.remove()
           button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
         })
@@ -215,7 +233,8 @@ export default class extends Controller {
         buttonRow.className = "flex gap-2"
 
         buttonRow.appendChild(startButton)
-        buttonRow.appendChild(endButton)
+        buttonRow.appendChild(deadlineButton)
+        buttonRow.appendChild(endingButton)
 
         choiceContainer.appendChild(arrow)
         choiceContainer.appendChild(message)
@@ -242,6 +261,12 @@ export default class extends Controller {
 
     button.addEventListener("click", () => {
       this.insertDateTime(suggestion.label, suggestion.value)
+
+      if (title === "締切日時") {
+        const deadlineRadio = this.endTypeTargets.find((radio) => radio.value === "deadline")
+        deadlineRadio.checked = true
+        this.updateEndType()
+      }
     })
 
       buttonWrapper.appendChild(button)
