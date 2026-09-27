@@ -339,8 +339,11 @@ export default class extends Controller {
 
     let errorMessage = ""
 
+    const selectedEndType = this.endTypeTargets.find((radio) => radio.checked)
+    const endAtLabel = selectedEndType.value === "ending" ? "終了日時" : "締切日時"
+
     if (endAt < now) {
-      errorMessage = "締切日時は未来の日時を選択してください"
+      errorMessage = `${endAtLabel}は未来の日時を選択してください`
     }
 
     if (this.hasStartAtInputTarget) {
@@ -350,7 +353,7 @@ export default class extends Controller {
         const startAt = new Date(startAtValue.replace(/\//g, "-"))
 
         if (endAt <= startAt) {
-          errorMessage = "締切日時は開始日時より後の日時を選択してください"
+          errorMessage = `${endAtLabel}は開始日時より後の日時を選択してください`
         }
       }
     }
