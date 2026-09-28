@@ -51,7 +51,7 @@
             日付候補が見つかりませんでした
           </p>
           <p class="mt-1 text-xs leading-relaxed text-gray-500">
-            開始日時・締切日時は下の入力欄から手動で入力できます。
+            開始日時 / 締切・終了日時は下の入力欄から手動で入力できます。
           </p>
         </div>
       </div>
@@ -168,7 +168,7 @@
       <% if watchlist.errors[:end_at].any? %>
         <p data-watchlist-form-target="endAtRealtimeError" class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
           <span class="material-symbols-outlined text-sm">info</span>
-          <%= watchlist.errors.full_messages_for(:end_at).first %>
+          <%= watchlist.deadline? ? "締切日時" : "終了日時" %><%= watchlist.errors[:end_at].first %>
         </p>
       <% end %>
     

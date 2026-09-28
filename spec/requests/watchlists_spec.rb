@@ -81,6 +81,43 @@ RSpec.describe 'Watchlists', type: :request do
       end
     end
 
+    context '終了日時が過去の場合' do
+      let(:ending_with_past_end_at_params) do
+        {
+          watchlist: {
+            title: '配信アーカイブ',
+            end_at: 1.day.ago,
+            end_type: :ending
+          }
+        }
+      end
+
+      it '終了日時としてエラーメッセージを表示する' do
+        post watchlists_path, params: ending_with_past_end_at_params
+
+        expect(response.body).to include('終了日時は未来の日時を選択してください')
+      end
+    end
+
+    context '終了日時が開始日時以前の場合' do
+      let(:ending_before_start_at_params) do
+        {
+          watchlist: {
+            title: '配信アーカイブ',
+            start_at: 3.days.from_now,
+            end_at: 2.days.from_now,
+            end_type: :ending
+          }
+        }
+      end
+
+      it '終了日時としてエラーメッセージを表示する' do
+        post watchlists_path, params: ending_before_start_at_params
+
+        expect(response.body).to include('終了日時は開始日時より後の日時を選択してください')
+      end
+    end
+
     context 'タグを含む有効なパラメータの場合' do
       let(:valid_params_with_tags) do
         {
