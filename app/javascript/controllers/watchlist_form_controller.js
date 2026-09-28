@@ -281,7 +281,7 @@ export default class extends Controller {
   insertDateTime(label, value) {
     let targetInput = null
 
-    // ラベルに「開始」が含まれていれば開始入力欄へ、それ以外（締切や候補）なら締切入力欄を優先
+    // ラベルに「開始」が含まれていれば開始入力欄へ、それ以外は締切・終了入力欄へ
     if (label.includes("開始") && this.hasStartAtInputTarget) {
       targetInput = this.startAtInputTarget
     } else if (this.hasEndAtInputTarget) {
@@ -324,7 +324,7 @@ export default class extends Controller {
     this.checkDate()
   }
 
-  // 締切日時のチェック 
+  // 締切・終了日時のチェック
   checkDate() {
     if (!this.hasEndAtInputTarget || !this.hasEndAtRealtimeErrorTarget) return
 

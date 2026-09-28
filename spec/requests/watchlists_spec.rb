@@ -529,6 +529,24 @@ RSpec.describe 'Watchlists', type: :request do
         expect(preview).not_to include('開始')
         expect(preview).not_to include('受付')
       end
+
+      it '終了の予定は共有文に終了日時として含める' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: '配信アーカイブ',
+          end_at: Time.zone.local(2026, 11, 25, 23, 59),
+          end_type: :ending
+        )
+
+        get share_watchlist_path(watchlist)
+
+        document = Nokogiri::HTML(response.body)
+        share_element = document.at_css('[data-controller="share"]')
+        share_text = share_element['data-share-text-value']
+
+        expect(share_text).to include('終了：2026/11/25 23:59')
+      end
     end
 
     context '他のユーザーの予定の場合' do
