@@ -29,7 +29,7 @@ class NightNotificationService
     end
 
     def deliver_three_days_prior_notification(watchlist, user)
-      content = three_days_prior_content(watchlist)
+      content = EndNotificationContent.three_days_prior_content(watchlist)
 
       create_three_days_prior_notification(watchlist, content)
       deliver_three_days_prior_email(watchlist, user, content)
@@ -50,7 +50,7 @@ class NightNotificationService
       InAppNotificationService.create!(
         watchlist: watchlist,
         notification_type: :deadline_three_days_before,
-        title: '締め切りの3日前です',
+        title: EndNotificationContent.three_days_prior_title(watchlist),
         message: content
       )
     end
@@ -59,13 +59,9 @@ class NightNotificationService
       NotificationMailer.three_days_ago_notice(
         user.email,
         watchlist.title,
-        content
+        content,
+        EndNotificationContent.three_days_prior_email_subject(watchlist)
       ).deliver_now
-    end
-
-    def three_days_prior_content(watchlist)
-      "気になっている「#{watchlist.display_title}」の締め切りまであと3日です。" \
-        '忘れないうちにチェックしてみませんか？'
     end
 
     def send_day_before
@@ -86,7 +82,7 @@ class NightNotificationService
     end
 
     def deliver_day_before_notification(watchlist, user)
-      content = day_before_content(watchlist)
+      content = EndNotificationContent.day_before_content(watchlist)
 
       create_day_before_notification(watchlist, content)
       deliver_day_before_email(watchlist, user, content)
@@ -107,7 +103,7 @@ class NightNotificationService
       InAppNotificationService.create!(
         watchlist: watchlist,
         notification_type: :deadline_day_before,
-        title: '明日締め切りです',
+        title: EndNotificationContent.day_before_title(watchlist),
         message: content
       )
     end
@@ -116,13 +112,9 @@ class NightNotificationService
       NotificationMailer.day_before_notice(
         user.email,
         watchlist.title,
-        content
+        content,
+        EndNotificationContent.day_before_email_subject(watchlist)
       ).deliver_now
-    end
-
-    def day_before_content(watchlist)
-      "気になっている「#{watchlist.display_title}」の締め切りは明日です。" \
-        '大切な予定を見逃さないようにご確認ください。'
     end
   end
 end

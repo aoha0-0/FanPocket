@@ -147,7 +147,7 @@
         <div class="flex items-center gap-2 mb-2">
           <span class="material-symbols-outlined text-primary-dim text-xl">alarm</span>
           <span class="text-on-surface font-semibold text-sm">
-            締切日時 <%= @watchlist.end_at.strftime("%Y年%m月%d日 (#{%w(日 月 火 水 木 金 土)[@watchlist.end_at.wday]})") %>
+            <%= @watchlist.deadline? ? "締切日時" : "終了日時" %> <%= @watchlist.end_at.strftime("%Y年%m月%d日 (#{%w(日 月 火 水 木 金 土)[@watchlist.end_at.wday]})") %>
           </span>
         </div>
         <div class="relative z-10">

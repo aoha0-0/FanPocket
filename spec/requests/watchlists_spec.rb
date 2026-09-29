@@ -23,6 +23,18 @@ RSpec.describe 'Watchlists', type: :request do
         }
       end
 
+      let(:ending_params) do
+        {
+          watchlist: {
+            title: '東京ドーム公演',
+            start_at: 1.day.from_now,
+            end_at: 3.days.from_now,
+            end_type: :ending,
+            ending_notification_enabled: true
+          }
+        }
+      end
+
       it '予定を1件作成する' do
         expect do
           post watchlists_path, params: valid_params
@@ -33,6 +45,15 @@ RSpec.describe 'Watchlists', type: :request do
         post watchlists_path, params: valid_params
 
         expect(response).to redirect_to(watchlists_path)
+      end
+
+      it '終了・終了通知ONで予定を作成できる' do
+        post watchlists_path, params: ending_params
+
+        watchlist = Watchlist.last
+
+        expect(watchlist.ending?).to be true
+        expect(watchlist.ending_notification_enabled?).to be true
       end
     end
 
@@ -57,6 +78,43 @@ RSpec.describe 'Watchlists', type: :request do
         post watchlists_path, params: invalid_params
 
         expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+
+    context '終了日時が過去の場合' do
+      let(:ending_with_past_end_at_params) do
+        {
+          watchlist: {
+            title: '配信アーカイブ',
+            end_at: 1.day.ago,
+            end_type: :ending
+          }
+        }
+      end
+
+      it '終了日時としてエラーメッセージを表示する' do
+        post watchlists_path, params: ending_with_past_end_at_params
+
+        expect(response.body).to include('終了日時は未来の日時を選択してください')
+      end
+    end
+
+    context '終了日時が開始日時以前の場合' do
+      let(:ending_before_start_at_params) do
+        {
+          watchlist: {
+            title: '配信アーカイブ',
+            start_at: 3.days.from_now,
+            end_at: 2.days.from_now,
+            end_type: :ending
+          }
+        }
+      end
+
+      it '終了日時としてエラーメッセージを表示する' do
+        post watchlists_path, params: ending_before_start_at_params
+
+        expect(response.body).to include('終了日時は開始日時より後の日時を選択してください')
       end
     end
 
@@ -470,6 +528,24 @@ RSpec.describe 'Watchlists', type: :request do
         expect(preview).to include('締切')
         expect(preview).not_to include('開始')
         expect(preview).not_to include('受付')
+      end
+
+      it '終了の予定は共有文に終了日時として含める' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: '配信アーカイブ',
+          end_at: Time.zone.local(2026, 11, 25, 23, 59),
+          end_type: :ending
+        )
+
+        get share_watchlist_path(watchlist)
+
+        document = Nokogiri::HTML(response.body)
+        share_element = document.at_css('[data-controller="share"]')
+        share_text = share_element['data-share-text-value']
+
+        expect(share_text).to include('終了：2026/11/25 23:59')
       end
     end
 

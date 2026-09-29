@@ -13,7 +13,7 @@ ja:
         watchlist:
           attributes:
             base:
-              start_at_or_end_at_blank: "開始日時または締切日時のどちらかは入力してください"
+              start_at_or_end_at_blank: "開始日時または締切・終了日時のどちらかは入力してください"
             title:
               blank: "を入力してください"
             url:
@@ -28,3 +28,6 @@ ja:
         lottery: "抽選"
         first_come: "先着"
         made_to_order: "受注販売"
+      end_type:
+        deadline: "締切"
+        ending: "終了"

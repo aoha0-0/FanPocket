@@ -52,7 +52,7 @@
           <span class="material-symbols-outlined text-primary">event_busy</span>
         </div>
         <div>
-          <p class="text-xs font-bold text-primary/60 mb-1">締切</p>
+          <p class="text-xs font-bold text-primary/60 mb-1"><%= @watchlist.deadline? ? "締切" : "終了" %></p>
           <p class="text-gray-700">
             <%= @watchlist.end_at.strftime("%Y/%m/%d %H:%M") %>
           </p>

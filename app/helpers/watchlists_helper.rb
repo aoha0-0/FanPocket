@@ -47,8 +47,9 @@ module WatchlistsHelper
 
   def share_dates(watchlist)
     dates = []
+    label = watchlist.deadline? ? '締切' : '終了'
     dates << "開始：#{watchlist.start_at.strftime('%Y/%m/%d %H:%M')}" if watchlist.start_at.present?
-    dates << "締切：#{watchlist.end_at.strftime('%Y/%m/%d %H:%M')}" if watchlist.end_at.present?
+    dates << "#{label}：#{watchlist.end_at.strftime('%Y/%m/%d %H:%M')}" if watchlist.end_at.present?
 
     dates.presence&.join("\n")
   end

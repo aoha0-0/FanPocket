@@ -29,7 +29,7 @@ class MorningNotificationService
     end
 
     def deliver_deadline_same_day_notification(watchlist, user)
-      content = deadline_same_day_content(watchlist)
+      content = EndNotificationContent.deadline_same_day_content(watchlist)
 
       create_deadline_same_day_notification(watchlist, content)
       deliver_deadline_same_day_email(watchlist, user, content)
@@ -50,7 +50,7 @@ class MorningNotificationService
       InAppNotificationService.create!(
         watchlist: watchlist,
         notification_type: :deadline_same_day,
-        title: '締め切りは本日です',
+        title: EndNotificationContent.deadline_same_day_title(watchlist),
         message: content
       )
     end
@@ -59,13 +59,9 @@ class MorningNotificationService
       NotificationMailer.today_notice(
         user.email,
         watchlist.title,
-        content
+        content,
+        EndNotificationContent.deadline_same_day_email_subject(watchlist)
       ).deliver_now
-    end
-
-    def deadline_same_day_content(watchlist)
-      "気になっている「#{watchlist.display_title}」の締め切りは本日です。" \
-        '大切な予定を見逃さないようにご確認ください。'
     end
 
     def send_start_same_day

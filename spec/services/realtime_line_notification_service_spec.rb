@@ -249,5 +249,85 @@ RSpec.describe RealtimeLineNotificationService do
         end
       end
     end
+
+    context '終了3時間前通知の対象で、LINE連携済み・通知ON・未送信の場合' do
+      it '終了用の文言でLINE通知を送信する' do
+        travel_to Time.zone.local(2026, 9, 12, 12, 0) do
+          user = create(:user)
+
+          create(
+            :social_account,
+            user: user,
+            provider: 'line',
+            uid: 'line-user-id'
+          )
+
+          user.notification_setting.update!(
+            line_deadline_three_hours_before: true
+          )
+
+          create(
+            :watchlist,
+            user: user,
+            start_at: 1.day.ago,
+            end_at: 175.minutes.from_now,
+            end_type: :ending,
+            ending_notification_enabled: true
+          )
+
+          allow(LineMessagingService)
+            .to receive(:push_flex)
+            .and_return(true)
+
+          described_class.call
+
+          expect(LineMessagingService)
+            .to have_received(:push_flex)
+            .with(
+              anything,
+              anything,
+              "終了まであと3時間です。\n\n終了前に、もう一度チェックしてみませんか？",
+              anything
+            )
+        end
+      end
+    end
+
+    context '終了3時間前通知の対象時刻でも、終了通知設定がOFFの場合' do
+      it 'LINE通知を送信しない' do
+        travel_to Time.zone.local(2026, 9, 12, 12, 0) do
+          user = create(:user)
+
+          create(
+            :social_account,
+            user: user,
+            provider: 'line',
+            uid: 'line-user-id'
+          )
+
+          user.notification_setting.update!(
+            line_deadline_three_hours_before: true
+          )
+
+          create(
+            :watchlist,
+            user: user,
+            start_at: 1.day.ago,
+            end_at: 175.minutes.from_now,
+            end_type: :ending,
+            ending_notification_enabled: false
+          )
+
+          allow(LineMessagingService)
+            .to receive(:push_flex)
+            .and_return(true)
+
+          described_class.call
+
+          expect(LineMessagingService)
+            .not_to have_received(:push_flex)
+        end
+      end
+    end
   end
 end

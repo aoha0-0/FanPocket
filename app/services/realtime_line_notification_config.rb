@@ -14,7 +14,9 @@ module RealtimeLineNotificationConfig
       notification_type: :deadline_three_hours_before,
       setting_key: :line_deadline_three_hours_before,
       title: '締め切りまであと3時間です',
-      message: "締め切りまであと3時間です。\n\n大切な予定を見逃さないようご確認ください。"
+      message: "締め切りまであと3時間です。\n\n大切な予定を見逃さないようご確認ください。",
+      ending_title: '終了まであと3時間です',
+      ending_message: "終了まであと3時間です。\n\n終了前に、もう一度チェックしてみませんか？"
     }
   }.freeze
 end

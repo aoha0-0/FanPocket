@@ -34,6 +34,11 @@ class Watchlist < ApplicationRecord
     made_to_order: 3 # 受注販売
   }, default: :not_set
 
+  enum :end_type, {
+    deadline: 0,
+    ending: 1
+  }, default: :deadline
+
   def reception_type_label
     I18n.t("enums.watchlist.reception_type.#{reception_type}")
   end
@@ -88,25 +93,25 @@ class Watchlist < ApplicationRecord
   private
 
   def end_at_time_blank?
-    # パターンA: 開始日時があって、締切が完全に空のとき
+    # パターンA: 開始日時があって、締切・終了日時が完全に空のとき
     return true if start_at.present? && end_at.blank?
 
-    # パターンB: 締切があって、時間が 00:00:00（日付のみ入力）のとき
+    # パターンB: 締切・終了日時があって、時間が 00:00:00（日付のみ入力）のとき
     true if end_at.present? && end_at == end_at.beginning_of_day
   end
 
   def set_end_at_to_end_of_day
     if end_at.blank? && start_at.present?
-      # 締切が空なら、開始日時の日の 23:59:59 をセット
+      # 締切・終了日時が空なら、開始日時の日の 23:59:59 をセット
       self.end_at = start_at.end_of_day
       self.end_at_auto_filled = true
     elsif end_at.present?
-      # 締切が入力されているなら、その締切日の 23:59:59 に上書き
+      # 締切・終了日時が入力されているなら、その日の 23:59:59 に上書き
       self.end_at = end_at.end_of_day
     end
   end
 
-  # 開始時間または締切時間のどちらかは必須
+  # 開始時間または締切・終了時間のどちらかは必須
   def start_at_or_end_at_must_be_present
     return unless start_at.blank? && end_at.blank?
 

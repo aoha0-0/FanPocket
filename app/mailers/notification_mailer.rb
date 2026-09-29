@@ -9,24 +9,24 @@ class NotificationMailer < ApplicationMailer
   end
 
   # 3日前通知
-  def three_days_ago_notice(user_email, title, content)
+  def three_days_ago_notice(user_email, title, content, subject)
     @title = title
     @content = content
-    mail(to: user_email, subject: "【FanPocket】📅あと3日で締切です：#{@title}")
+    mail(to: user_email, subject: subject)
   end
 
   # 前日20時通知
-  def day_before_notice(user_email, title, content)
+  def day_before_notice(user_email, title, content, subject)
     @title = title
     @content = content
-    mail(to: user_email, subject: "【FanPocket】🌟明日締切です：#{@title}")
+    mail(to: user_email, subject: subject)
   end
 
   # 当日7時通知
-  def today_notice(user_email, title, content)
+  def today_notice(user_email, title, content, subject)
     @title = title
     @content = content
-    mail(to: user_email, subject: "【FanPocket】⏰本日締切です：#{@title}")
+    mail(to: user_email, subject: subject)
   end
 
   def start_notice(user_email, title, content)

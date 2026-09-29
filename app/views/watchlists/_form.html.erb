@@ -51,7 +51,7 @@
             日付候補が見つかりませんでした
           </p>
           <p class="mt-1 text-xs leading-relaxed text-gray-500">
-            開始日時・締切日時は下の入力欄から手動で入力できます。
+            開始日時 / 締切・終了日時は下の入力欄から手動で入力できます。
           </p>
         </div>
       </div>
@@ -146,14 +146,29 @@
 
     <div class="space-y-3">
       <%= f.label :end_at, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
-        <span class="material-symbols-outlined text-lg">timer</span>締切日時
+        <span class="material-symbols-outlined text-lg">timer</span>
+        <span data-watchlist-form-target="endAtLabel">締切日時</span>
       <% end %>
+
+      <div class="space-x-2 px-6 pt-2">
+        <%= f.radio_button :end_type, :deadline,  class: "radio radio-info", data: { watchlist_form_target: "endType", action: "change->watchlist-form#updateEndType" } %>
+        <%= f.label :end_type_deadline, t("enums.watchlist.end_type.deadline") %>
+
+        <%= f.radio_button :end_type, :ending,  class: "radio radio-info",  data: { watchlist_form_target: "endType", action: "change->watchlist-form#updateEndType" } %>
+        <%= f.label :end_type_ending, t("enums.watchlist.end_type.ending") %>
+      </div>
+
+      <div class="space-x-2 px-6 pt-2" data-watchlist-form-target="endingNotificationField">
+        <%= f.check_box :ending_notification_enabled, class: "w-4 h-4 rounded border-gray-300 text-[#8BBEE8] focus:ring-[#8BBEE8]/30", data: { watchlist_form_target: "endingNotificationCheckbox" } %>
+        <%= f.label :ending_notification_enabled, "終了通知を受け取る", class: "text-sm text-gray-500 font-medium cursor-pointer" %>
+      </div>
+
       <%= f.text_field :end_at, data: { controller: "flatpickr", watchlist_form_target: "endAtInput" }, class: "datepicker w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:end_at].any?}", placeholder: "年/月/日 --:--" %>
-      
+
       <% if watchlist.errors[:end_at].any? %>
         <p data-watchlist-form-target="endAtRealtimeError" class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
           <span class="material-symbols-outlined text-sm">info</span>
-          <%= watchlist.errors.full_messages_for(:end_at).first %>
+          <%= watchlist.deadline? ? "締切日時" : "終了日時" %><%= watchlist.errors[:end_at].first %>
         </p>
       <% end %>
     

@@ -45,8 +45,8 @@ class RealtimeLineNotificationService
       create_in_app_notification(
         watchlist,
         config[:notification_type],
-        config[:title],
-        config[:message]
+        EndNotificationContent.notification_title_for(watchlist, config),
+        EndNotificationContent.notification_message_for(watchlist, config)
       )
 
       deliver_line_notification(watchlist, config)
@@ -65,7 +65,7 @@ class RealtimeLineNotificationService
         line_account,
         log_type: config[:log_type],
         notification_type: config[:notification_type],
-        message: config[:message]
+        message: EndNotificationContent.notification_message_for(watchlist, config)
       )
     end
 

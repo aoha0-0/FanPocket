@@ -4,8 +4,9 @@ export default class extends Controller {
   static targets = [ 
     "titleInput", "titleErrorMessage",
     "urlInput", "fetchButton", "noticeMessage", 
-    "startAtInput", "endAtInput", "endAtRealtimeError",
-    "suggestionsContainer", "noSuggestionsMessage"
+    "startAtInput", "endAtInput", "endType", "endAtLabel",
+    "endingNotificationField", "endingNotificationCheckbox",
+    "endAtRealtimeError", "suggestionsContainer", "noSuggestionsMessage"
   ]
 
   // 画面が表示された時、およびTurboで画面が書き換わった時に毎回確実に動く魔法
@@ -20,6 +21,8 @@ export default class extends Controller {
 
    // Flatpickrの準備を待って、確実にイベントを仕込む
     this.bindFlatpickr()
+
+    this.updateEndType()
   }
 
   // すべてを一括でチェックする安全用の関数
@@ -183,7 +186,7 @@ export default class extends Controller {
         arrow.className = "absolute -top-2 left-5 w-3 h-3 rotate-45 bg-white border-l border-t border-primary/20"
 
         const message = document.createElement("p")
-        message.textContent = "どちらに入力しますか？"
+        message.textContent = "どの日時にしますか？"
         message.className = "text-xs text-gray-500"
 
         const startButton = document.createElement("button")
@@ -197,13 +200,31 @@ export default class extends Controller {
           button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
         })
 
-        const endButton = document.createElement("button")
-        endButton.type = "button"
-        endButton.textContent = "締切日時にする"
-        endButton.className = "btn btn-xs btn-soft btn-secondary normal-case font-normal"
+        const deadlineButton = document.createElement("button")
+        deadlineButton.type = "button"
+        deadlineButton.textContent = "締切日時にする"
+        deadlineButton.className = "btn btn-xs btn-soft btn-secondary normal-case font-normal"
 
-        endButton.addEventListener("click", () => {
+        deadlineButton.addEventListener("click", () => {
           this.insertDateTime("締切", suggestion.value)
+          const deadlineRadio = this.endTypeTargets.find((radio) => radio.value === "deadline")
+          deadlineRadio.checked = true
+          this.updateEndType()
+          choiceContainer.remove()
+          button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
+        })
+
+        const endingButton = document.createElement("button")
+        endingButton.type = "button"
+        endingButton.textContent = "終了日時にする"
+        endingButton.className = "btn btn-xs btn-soft btn-secondary normal-case font-normal"
+
+        endingButton.addEventListener("click", () => {
+          this.insertDateTime("終了", suggestion.value)
+
+          const endingRadio = this.endTypeTargets.find((radio) => radio.value === "ending")
+          endingRadio.checked = true
+          this.updateEndType()
           choiceContainer.remove()
           button.textContent = `${suggestion.label.replace(/^候補: /, "")} ▾`
         })
@@ -212,7 +233,8 @@ export default class extends Controller {
         buttonRow.className = "flex gap-2"
 
         buttonRow.appendChild(startButton)
-        buttonRow.appendChild(endButton)
+        buttonRow.appendChild(deadlineButton)
+        buttonRow.appendChild(endingButton)
 
         choiceContainer.appendChild(arrow)
         choiceContainer.appendChild(message)
@@ -239,6 +261,12 @@ export default class extends Controller {
 
     button.addEventListener("click", () => {
       this.insertDateTime(suggestion.label, suggestion.value)
+
+      if (title === "締切日時") {
+        const deadlineRadio = this.endTypeTargets.find((radio) => radio.value === "deadline")
+        deadlineRadio.checked = true
+        this.updateEndType()
+      }
     })
 
       buttonWrapper.appendChild(button)
@@ -253,7 +281,7 @@ export default class extends Controller {
   insertDateTime(label, value) {
     let targetInput = null
 
-    // ラベルに「開始」が含まれていれば開始入力欄へ、それ以外（締切や候補）なら締切入力欄を優先
+    // ラベルに「開始」が含まれていれば開始入力欄へ、それ以外は締切・終了入力欄へ
     if (label.includes("開始") && this.hasStartAtInputTarget) {
       targetInput = this.startAtInputTarget
     } else if (this.hasEndAtInputTarget) {
@@ -296,7 +324,7 @@ export default class extends Controller {
     this.checkDate()
   }
 
-  // 締切日時のチェック 
+  // 締切・終了日時のチェック
   checkDate() {
     if (!this.hasEndAtInputTarget || !this.hasEndAtRealtimeErrorTarget) return
 
@@ -311,8 +339,11 @@ export default class extends Controller {
 
     let errorMessage = ""
 
+    const selectedEndType = this.endTypeTargets.find((radio) => radio.checked)
+    const endAtLabel = selectedEndType.value === "ending" ? "終了日時" : "締切日時"
+
     if (endAt < now) {
-      errorMessage = "締切日時は未来の日時を選択してください"
+      errorMessage = `${endAtLabel}は未来の日時を選択してください`
     }
 
     if (this.hasStartAtInputTarget) {
@@ -322,7 +353,7 @@ export default class extends Controller {
         const startAt = new Date(startAtValue.replace(/\//g, "-"))
 
         if (endAt <= startAt) {
-          errorMessage = "締切日時は開始日時より後の日時を選択してください"
+          errorMessage = `${endAtLabel}は開始日時より後の日時を選択してください`
         }
       }
     }
@@ -335,6 +366,19 @@ export default class extends Controller {
       this.endAtRealtimeErrorTarget.classList.remove("hidden")
     } else {
       this.endAtRealtimeErrorTarget.classList.add("hidden")
+    }
+  }
+
+  updateEndType(){
+    const selectedEndType = this.endTypeTargets.find((radio) => radio.checked)
+
+    if (selectedEndType.value === "ending") {
+      this.endAtLabelTarget.textContent = "終了日時"
+      this.endingNotificationFieldTarget.classList.remove("hidden")
+    } else {
+      this.endAtLabelTarget.textContent = "締切日時"
+      this.endingNotificationFieldTarget.classList.add("hidden")
+      this.endingNotificationCheckboxTarget.checked = false
     }
   }
 }
