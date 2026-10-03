@@ -65,24 +65,24 @@
       種別
     <% end %>
 
-    <div class="flex flex-wrap gap-3">
+    <div class="flex flex-wrap gap-3 px-6">
       <label class="flex items-center gap-2 text-sm">
-        <%= f.radio_button :reception_type, "not_set", class: "radio radio-info" %>
+        <%= f.radio_button :reception_type, "not_set", class: "radio radio-info scale-90" %>
         指定なし
       </label>
 
       <label class="flex items-center gap-2 text-sm">
-        <%= f.radio_button :reception_type, "lottery", class: "radio radio-info" %>
+        <%= f.radio_button :reception_type, "lottery", class: "radio radio-info scale-90" %>
         抽選
       </label>
 
       <label class="flex items-center gap-2 text-sm">
-        <%= f.radio_button :reception_type, "first_come", class: "radio radio-info" %>
+        <%= f.radio_button :reception_type, "first_come", class: "radio radio-info scale-90" %>
         先着
       </label>
 
       <label class="flex items-center gap-2 text-sm">
-        <%= f.radio_button :reception_type, "made_to_order", class: "radio radio-info" %>
+        <%= f.radio_button :reception_type, "made_to_order", class: "radio radio-info scale-90" %>
         受注販売
       </label>
 
@@ -151,16 +151,16 @@
       <% end %>
 
       <div class="space-x-2 px-6 pt-2">
-        <%= f.radio_button :end_type, :deadline,  class: "radio radio-info", data: { watchlist_form_target: "endType", action: "change->watchlist-form#updateEndType" } %>
+        <%= f.radio_button :end_type, :deadline,  class: "radio radio-info scale-90", data: { watchlist_form_target: "endType", action: "change->watchlist-form#updateEndType" } %>
         <%= f.label :end_type_deadline, t("enums.watchlist.end_type.deadline") %>
 
-        <%= f.radio_button :end_type, :ending,  class: "radio radio-info",  data: { watchlist_form_target: "endType", action: "change->watchlist-form#updateEndType" } %>
+        <%= f.radio_button :end_type, :ending,  class: "radio radio-info scale-90",  data: { watchlist_form_target: "endType", action: "change->watchlist-form#updateEndType" } %>
         <%= f.label :end_type_ending, t("enums.watchlist.end_type.ending") %>
       </div>
 
-      <div class="space-x-2 px-6 pt-2" data-watchlist-form-target="endingNotificationField">
+      <div class="flex items-center space-x-2 px-6 pt-2 ml-2" data-watchlist-form-target="endingNotificationField">
         <%= f.check_box :ending_notification_enabled, class: "w-4 h-4 rounded border-gray-300 text-[#8BBEE8] focus:ring-[#8BBEE8]/30", data: { watchlist_form_target: "endingNotificationCheckbox" } %>
-        <%= f.label :ending_notification_enabled, "終了通知を受け取る", class: "text-sm text-gray-500 font-medium cursor-pointer" %>
+        <%= f.label :ending_notification_enabled, "終了通知を受け取る", class: "text-sm text-gray-500 font-medium cursor-pointer -translate-y-px" %>
       </div>
 
       <%= f.text_field :end_at, data: { controller: "flatpickr", watchlist_form_target: "endAtInput" }, class: "datepicker w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:end_at].any?}", placeholder: "年/月/日 --:--" %>
