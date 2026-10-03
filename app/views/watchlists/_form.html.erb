@@ -158,7 +158,7 @@
         <%= f.label :end_type_ending, t("enums.watchlist.end_type.ending") %>
       </div>
 
-      <div class="flex items-center space-x-2 px-6 pt-2" data-watchlist-form-target="endingNotificationField">
+      <div class="flex items-center space-x-2 px-6 pt-2 ml-2" data-watchlist-form-target="endingNotificationField">
         <%= f.check_box :ending_notification_enabled, class: "w-4 h-4 rounded border-gray-300 text-[#8BBEE8] focus:ring-[#8BBEE8]/30", data: { watchlist_form_target: "endingNotificationCheckbox" } %>
         <%= f.label :ending_notification_enabled, "終了通知を受け取る", class: "text-sm text-gray-500 font-medium cursor-pointer -translate-y-px" %>
       </div>
