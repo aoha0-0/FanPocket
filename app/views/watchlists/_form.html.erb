@@ -67,22 +67,22 @@
 
     <div class="flex flex-wrap gap-3">
       <label class="flex items-center gap-2 text-sm">
-        <%= f.radio_button :reception_type, "not_set", class: "radio radio-info" %>
+        <%= f.radio_button :reception_type, "not_set", class: "radio radio-info scale-90" %>
         指定なし
       </label>
 
       <label class="flex items-center gap-2 text-sm">
-        <%= f.radio_button :reception_type, "lottery", class: "radio radio-info" %>
+        <%= f.radio_button :reception_type, "lottery", class: "radio radio-info scale-90" %>
         抽選
       </label>
 
       <label class="flex items-center gap-2 text-sm">
-        <%= f.radio_button :reception_type, "first_come", class: "radio radio-info" %>
+        <%= f.radio_button :reception_type, "first_come", class: "radio radio-info scale-90" %>
         先着
       </label>
 
       <label class="flex items-center gap-2 text-sm">
-        <%= f.radio_button :reception_type, "made_to_order", class: "radio radio-info" %>
+        <%= f.radio_button :reception_type, "made_to_order", class: "radio radio-info scale-90" %>
         受注販売
       </label>
 
@@ -151,10 +151,10 @@
       <% end %>
 
       <div class="space-x-2 px-6 pt-2">
-        <%= f.radio_button :end_type, :deadline,  class: "radio radio-info", data: { watchlist_form_target: "endType", action: "change->watchlist-form#updateEndType" } %>
+        <%= f.radio_button :end_type, :deadline,  class: "radio radio-info scale-90", data: { watchlist_form_target: "endType", action: "change->watchlist-form#updateEndType" } %>
         <%= f.label :end_type_deadline, t("enums.watchlist.end_type.deadline") %>
 
-        <%= f.radio_button :end_type, :ending,  class: "radio radio-info",  data: { watchlist_form_target: "endType", action: "change->watchlist-form#updateEndType" } %>
+        <%= f.radio_button :end_type, :ending,  class: "radio radio-info scale-90",  data: { watchlist_form_target: "endType", action: "change->watchlist-form#updateEndType" } %>
         <%= f.label :end_type_ending, t("enums.watchlist.end_type.ending") %>
       </div>
 
