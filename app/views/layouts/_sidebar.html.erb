@@ -54,6 +54,22 @@
         </span>
       <% end %>
 
+      <%= link_to past_watchlists_path,
+                  class: "flex items-center gap-3
+                          px-4 py-3
+                          rounded-2xl
+                          text-primary
+                          hover:bg-[#B6E0F3]/30
+                          transition-colors" do %>
+        <span class="material-symbols-outlined">
+          footprint
+        </span>
+
+        <span class="font-bold">
+          これまでの足跡
+        </span>
+      <% end %>
+
       <%= link_to settings_path,
                   class: "flex items-center gap-3
                           px-4 py-3

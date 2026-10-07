@@ -1,14 +1,20 @@
 <%= render "layouts/app_navigation" %>
 
-<div class="text-center mt-15 mb-15">
+<div class="flex items-center justify-center gap-2 mt-15 mb-15">
   <h2 class="font-headline font-extrabold text-3xl tracking-tight text-primary">
-    これからの予定
+    これまでの足跡
   </h2>
+
+  <span
+    class="material-symbols-outlined text-3xl text-primary"
+    style="font-variation-settings: 'opsz' 28, 'wght' 300;">
+    footprint
+  </span>
 </div>
 
 <main class="w-full max-w-3xl mx-auto px-4 sm:px-6 mt-10 md:mt-14 pb-40 md:pb-32">
   <div class="mb-8">
-    <%= form_with url: watchlists_path,
+    <%= form_with url: past_watchlists_path,
                   method: :get,
                   local: true,
                   class: "space-y-3" do |f| %>
@@ -106,9 +112,8 @@
     <% end %>
   </div>
 
-  <%# 検索結果がない場合 %>
   <% if (params[:tag].present? || params[:title].present?) &&
-      @future_watchlists.empty? %>
+        @past_watchlists.empty? %>
 
     <div class="flex flex-col items-center justify-center
                 px-5 py-10 md:py-12
@@ -124,70 +129,27 @@
       </p>
     </div>
 
-  <% else %>
-
-    <%# これからの予定セクション %>
-    <% if @future_watchlists.any? %>
-      <div class="mb-6">
-        <div class="space-y-4 md:space-y-5">
-          <% @future_watchlists.each do |watchlist| %>
-            <%= render "watchlist_card", watchlist: watchlist, is_past: false %>
-          <% end %>
-        </div>
-      </div>
-
-    <% elsif params[:tag].blank? && params[:title].blank? %>
-      <%# 検索していない場合 %>
-      <% if current_user.onboarding_completed_at.nil? &&
-            current_user.watchlists.none? %>
-
-        <%= render "welcome_onboarding" %>
-
-      <% else %>
-        <div class="mb-6">
-          <div class="flex flex-col items-center justify-center
-                      px-5 py-10 md:py-12
-                      text-center bg-white/30 rounded-3xl
-                      border border-dashed border-[#4f5052]">
-
-            <span class="material-symbols-outlined text-4xl text-[#B6E0F3] mb-2">
-              auto_awesome
-            </span>
-
-            <p class="text-[#4f5052] text-sm sm:text-base font-headline font-bold leading-relaxed">
-              お気に入りの予定を、ポケットに入れて持ち歩こう。
-            </p>
-          </div>
-        </div>
+  <% elsif @past_watchlists.any? %>
+    <div class="space-y-4 md:space-y-5">
+      <% @past_watchlists.each do |watchlist| %>
+        <%= render "watchlist_card", watchlist: watchlist, is_past: true %>
       <% end %>
-    <% end %>
+    </div>
+  <% else %>
+    <div class="flex flex-col items-center justify-center
+                px-5 py-10 md:py-12
+                text-center bg-white/30 rounded-3xl
+                border border-dashed border-[#4f5052]">
+
+      <span class="material-symbols-outlined text-4xl text-[#B6E0F3] mb-2">
+        footprint
+      </span>
+
+      <p class="text-[#4f5052] text-sm sm:text-base font-headline font-bold leading-relaxed">
+        これまでの足跡はまだありません
+      </p>
+    </div>
   <% end %>
 </main>
-
-<%# 新規作成ボタン %>
-<div class="fixed inset-x-0 bottom-24 md:inset-x-auto md:right-10 md:bottom-10 z-40 pointer-events-none">
-  <div class="w-full max-w-3xl mx-auto px-4 sm:px-6 flex justify-end
-              md:w-auto md:max-w-none md:px-0">
-    <%= link_to new_watchlist_path,
-                class: "pointer-events-auto
-                        flex items-center justify-center
-                        w-14 h-14 md:w-12 md:h-12
-                        rounded-2xl
-                        text-on-primary
-                        transition-all duration-200
-                        active:scale-90 hover:scale-105
-                        shadow-2xl
-                        focus-visible:outline
-                        focus-visible:outline-2
-                        focus-visible:outline-offset-2
-                        focus-visible:outline-[#2d6489]",
-                style: "background-color: #B6E0F3;",
-                aria: { label: "予定を新しく登録する" } do %>
-      <span class="material-symbols-outlined text-3xl md:text-2xl text-[#2d6489]">
-        add
-      </span>
-    <% end %>
-  </div>
-</div>
 
 <%= render "layouts/footer" %>

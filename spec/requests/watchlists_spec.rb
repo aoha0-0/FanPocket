@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Watchlists', type: :request do
+  include ActiveSupport::Testing::TimeHelpers
   let(:user) { create(:user) }
 
   before do
@@ -317,6 +318,26 @@ RSpec.describe 'Watchlists', type: :request do
         expect(response.body).to include(own_watchlist.title)
         expect(response.body).not_to include(other_watchlist.title)
       end
+
+      it 'これからの予定だけを表示し、これまでの足跡は表示しない' do
+        future_watchlist = create(
+          :watchlist,
+          user: user,
+          title: 'これからのライブ'
+        )
+
+        past_watchlist = create(
+          :watchlist,
+          user: user,
+          title: '過去のライブ',
+          is_done: true
+        )
+
+        get watchlists_path
+
+        expect(response.body).to include(future_watchlist.title)
+        expect(response.body).not_to include(past_watchlist.title)
+      end
     end
 
     context 'タグを指定した場合' do
@@ -425,6 +446,44 @@ RSpec.describe 'Watchlists', type: :request do
         expect(response.body).to include(matched_watchlist.title)
         expect(response.body).not_to include(title_only_watchlist.title)
         expect(response.body).not_to include(tag_only_watchlist.title)
+      end
+    end
+  end
+
+  describe 'GET /watchlists/past' do
+    context 'ログインしている場合' do
+      it 'これまでの足跡だけを表示し、これからの予定は表示しない' do
+        future_watchlist = create(
+          :watchlist,
+          user: user,
+          title: 'これからのライブ'
+        )
+
+        past_watchlist = create(
+          :watchlist,
+          user: user,
+          title: '完了したライブ',
+          is_done: true
+        )
+
+        get past_watchlists_path
+
+        expect(response.body).to include(past_watchlist.title)
+        expect(response.body).not_to include(future_watchlist.title)
+      end
+
+      it '終了日時を過ぎた未完了の予定を表示する' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: '終了したライブ'
+        )
+
+        travel_to 4.days.from_now do
+          get past_watchlists_path
+
+          expect(response.body).to include(watchlist.title)
+        end
       end
     end
   end

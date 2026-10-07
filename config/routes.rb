@@ -40,6 +40,10 @@ Rails.application.routes.draw do
   end
 
   resources :watchlists, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+    collection do
+      get :past
+    end
+
     member do
       patch :toggle_completion
       get :share
