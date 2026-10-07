@@ -323,7 +323,7 @@ RSpec.describe 'Watchlists', type: :request do
         future_watchlist = create(
           :watchlist,
           user: user,
-          title: 'これからのライブ',
+          title: 'これからのライブ'
         )
 
         past_watchlist = create(
