@@ -3,6 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Watchlists', type: :request do
+  include ActiveSupport::Testing::TimeHelpers
   let(:user) { create(:user) }
 
   before do
@@ -469,6 +470,20 @@ RSpec.describe 'Watchlists', type: :request do
 
         expect(response.body).to include(past_watchlist.title)
         expect(response.body).not_to include(future_watchlist.title)
+      end
+
+      it '終了日時を過ぎた未完了の予定を表示する' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: '終了したライブ'
+        )
+
+        travel_to 4.days.from_now do
+          get past_watchlists_path
+
+          expect(response.body).to include(watchlist.title)
+        end
       end
     end
   end
