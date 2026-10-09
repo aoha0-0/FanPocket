@@ -381,4 +381,12 @@ export default class extends Controller {
       this.endingNotificationCheckboxTarget.checked = false
     }
   }
+
+  clearStartAt() {
+    this.startAtInputTarget._flatpickr?.clear()
+  }
+
+  clearEndAt() {
+    this.endAtInputTarget._flatpickr?.clear()
+  }
 }
