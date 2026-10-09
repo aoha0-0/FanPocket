@@ -141,8 +141,9 @@
       <%= f.label :start_at, class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
         <span class="material-symbols-outlined text-lg">calendar_today</span>開始日時
       <% end %>
-      <%= f.text_field :start_at, data: { controller: "flatpickr", watchlist_form_target: "startAtInput" }, class: "datepicker w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:start_at].any?}", placeholder: "年/月/日 --:--" %>
-      <div class="flex justify-end">
+      <div class="flex items-center gap-2">
+        <%= f.text_field :start_at, data: { controller: "flatpickr", watchlist_form_target: "startAtInput" }, class: "datepicker min-w-0 flex-1 h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:start_at].any?}", placeholder: "年/月/日 --:--" %>
+
         <button type="button"
                 data-action="click->watchlist-form#clearStartAt"
                 class="shrink-0 px-4 h-11 rounded-full bg-[#E3F2FD] text-[#527FA3] text-sm font-medium">
@@ -170,9 +171,9 @@
         <%= f.label :ending_notification_enabled, "終了通知を受け取る", class: "text-sm text-gray-500 font-medium cursor-pointer -translate-y-px" %>
       </div>
 
-      <%= f.text_field :end_at, data: { controller: "flatpickr", watchlist_form_target: "endAtInput" }, class: "datepicker w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:end_at].any?}", placeholder: "年/月/日 --:--" %>
+      <div class="flex items-center gap-2">
+        <%= f.text_field :end_at, data: { controller: "flatpickr", watchlist_form_target: "endAtInput" }, class: "datepicker min-w-0 flex-1 h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-300 #{'ring-2 ring-error/40 bg-error/5' if watchlist.errors[:end_at].any?}", placeholder: "年/月/日 --:--" %>
 
-      <div class="flex justify-end">
         <button type="button"
                 data-action="click->watchlist-form#clearEndAt"
                 class="shrink-0 px-4 h-11 rounded-full bg-[#E3F2FD] text-[#527FA3] text-sm font-medium">
