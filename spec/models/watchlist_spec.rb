@@ -703,5 +703,20 @@ RSpec.describe Watchlist, type: :model do
         expect(targets).not_to include(ending_watchlist)
       end
     end
+
+    context '入力済みの締切日時を削除した場合' do
+      it '開始日の終わりに再補完される' do
+        watchlist = create(
+          :watchlist,
+          start_at: 3.days.from_now,
+          end_at: 4.days.from_now
+        )
+
+        watchlist.update!(end_at: nil)
+
+        expect(watchlist.end_at).to be_within(1.second).of(watchlist.start_at.end_of_day)
+        expect(watchlist.end_at_auto_filled).to be true
+      end
+    end
   end
 end
