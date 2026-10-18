@@ -107,5 +107,20 @@ RSpec.describe DateExtractorService do
         expect(result.count { |item| item[:value] == '2026-05-08T20:00' }).to eq(1)
       end
     end
+
+    context '長い文章に日時が含まれる場合' do
+      it '文章の末尾にある日時を取得する' do
+        text = "#{'お知らせです。' * 1000}受付開始：2026年10月20日 12:00"
+
+        result = described_class.new(text).call
+
+        expect(result).to include(
+          {
+            label: '候補: 2026年10月20日 12:00',
+            value: '2026-10-20T12:00'
+          }
+        )
+      end
+    end
   end
 end
