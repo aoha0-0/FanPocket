@@ -1,4 +1,4 @@
-<%= link_to watchlist_path(watchlist),
+<%= link_to watchlist_path(watchlist, from: ("past" if is_past)),
             class: "block rounded-xl transition-transform duration-200
                     active:scale-[0.98]
                     focus-visible:outline
