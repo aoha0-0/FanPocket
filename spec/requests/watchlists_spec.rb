@@ -338,6 +338,21 @@ RSpec.describe 'Watchlists', type: :request do
         expect(response.body).to include(future_watchlist.title)
         expect(response.body).not_to include(past_watchlist.title)
       end
+
+      it '予定詳細へのリンクに足跡の遷移元情報を付けない' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: 'これからのライブ'
+        )
+
+        get watchlists_path
+
+        html = Nokogiri::HTML(response.body)
+        detail_link = html.at_css("a[href='#{watchlist_path(watchlist)}']")
+
+        expect(detail_link).not_to be_nil
+      end
     end
 
     context 'タグを指定した場合' do
@@ -485,6 +500,22 @@ RSpec.describe 'Watchlists', type: :request do
           expect(response.body).to include(watchlist.title)
         end
       end
+
+      it '予定詳細へのリンクに遷移元の情報を付ける' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: '完了したライブ',
+          is_done: true
+        )
+
+        get past_watchlists_path
+
+        html = Nokogiri::HTML(response.body)
+        detail_link = html.at_css("a[href='#{watchlist_path(watchlist, from: 'past')}']")
+
+        expect(detail_link).not_to be_nil
+      end
     end
   end
 
@@ -501,6 +532,72 @@ RSpec.describe 'Watchlists', type: :request do
 
         expect(response).to have_http_status(:ok)
         expect(response.body).to include('チケット申し込み')
+      end
+
+      it 'これまでの足跡から開いた場合は足跡への戻るリンクを表示する' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: 'チケット申し込み'
+        )
+
+        get watchlist_path(watchlist, from: 'past')
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('これまでの足跡へ')
+        expect(response.body).to include("href=\"#{past_watchlists_path}\"")
+
+        html = Nokogiri::HTML(response.body)
+
+        mobile_back_link = html.at_css('header a[aria-label="前の画面に戻る"]')
+        pc_back_link = html.at_css('div.hidden.md\\:block a')
+
+        expect(mobile_back_link['href']).to eq(past_watchlists_path)
+        expect(pc_back_link['href']).to eq(past_watchlists_path)
+      end
+
+      it '遷移元の指定がない場合はこれからの予定への戻るリンクを表示する' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: 'チケット申し込み'
+        )
+
+        get watchlist_path(watchlist)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('これからの予定へ')
+        expect(response.body).to include("href=\"#{watchlists_path}\"")
+
+        html = Nokogiri::HTML(response.body)
+
+        mobile_back_link = html.at_css('header a[aria-label="前の画面に戻る"]')
+        pc_back_link = html.at_css('div.hidden.md\\:block a')
+
+        expect(mobile_back_link['href']).to eq(watchlists_path)
+        expect(pc_back_link['href']).to eq(watchlists_path)
+      end
+
+      it '想定外の遷移元が指定された場合はこれからの予定への戻るリンクを表示する' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: 'チケット申し込み'
+        )
+
+        get watchlist_path(watchlist, from: 'unknown')
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('これからの予定へ')
+        expect(response.body).to include("href=\"#{watchlists_path}\"")
+
+        html = Nokogiri::HTML(response.body)
+
+        mobile_back_link = html.at_css('header a[aria-label="前の画面に戻る"]')
+        pc_back_link = html.at_css('div.hidden.md\\:block a')
+
+        expect(mobile_back_link['href']).to eq(watchlists_path)
+        expect(pc_back_link['href']).to eq(watchlists_path)
       end
     end
 

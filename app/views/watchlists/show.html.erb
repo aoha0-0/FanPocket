@@ -1,15 +1,21 @@
+<%
+  from_past = params[:from] == "past"
+  back_path = from_past ? past_watchlists_path : watchlists_path
+  back_text = from_past ? "これまでの足跡へ" : "これからの予定へ"
+%>
+
 <%= render "layouts/app_navigation",
-           back_path: watchlists_path %>
+           back_path: back_path %>
 
 <div class="hidden md:block w-full max-w-4xl mx-auto px-6 pt-6">
-  <%= link_to watchlists_path,
+  <%= link_to back_path,
               class: "inline-flex items-center gap-1
                       text-sm font-bold text-primary
                       hover:opacity-70 transition-opacity" do %>
     <span class="material-symbols-outlined text-xl">
       arrow_back
     </span>
-    <span>これからの予定へ</span>
+    <span><%= back_text %></span>
   <% end %>
 </div>
 
