@@ -511,18 +511,44 @@ RSpec.describe Watchlist, type: :model do
       end
     end
 
-    context '複数の過去予定がある場合' do
-      it '締切日時が新しい順に返す' do
+    context '開始日時と終了日時の順番が異なる場合' do
+      it '開始日時を優先して新しい順に返す' do
         older_watchlist = create(:watchlist)
         newer_watchlist = create(:watchlist)
 
         older_watchlist.update!(
-          start_at: 4.days.ago,
-          end_at: 3.days.ago
+          start_at: Time.zone.local(2026, 9, 1),
+          end_at: Time.zone.local(2026, 10, 15)
         )
 
         newer_watchlist.update!(
-          start_at: 2.days.ago,
+          start_at: Time.zone.local(2026, 10, 1),
+          end_at: Time.zone.local(2026, 10, 10)
+        )
+
+        result = Watchlist.past.where(
+          id: [older_watchlist.id, newer_watchlist.id]
+        )
+
+        expect(result.to_a).to eq([
+                                    newer_watchlist,
+                                    older_watchlist
+                                  ])
+      end
+    end
+
+    context '開始日時がない予定が複数ある場合' do
+      it '終了日時を使って新しい順に返す' do
+        older_watchlist = create(:watchlist)
+        newer_watchlist = create(:watchlist)
+
+        older_watchlist.update!(
+          start_at: nil,
+          end_at: 10.days.ago
+        )
+
+        newer_watchlist.update!(
+          start_at: nil,
           end_at: 1.day.ago
         )
 
@@ -534,6 +560,58 @@ RSpec.describe Watchlist, type: :model do
                                     newer_watchlist,
                                     older_watchlist
                                   ])
+      end
+    end
+  end
+
+  describe '.in_year' do
+    context '開始日時と終了日時が異なる年の場合' do
+      it '開始日時の年を優先して絞り込む' do
+        watchlist = create(:watchlist)
+
+        watchlist.update!(
+          start_at: Time.zone.local(2025, 12, 31, 20, 0),
+          end_at: Time.zone.local(2026, 1, 1, 1, 0)
+        )
+
+        expect(Watchlist.in_year(2025)).to include(watchlist)
+        expect(Watchlist.in_year(2026)).not_to include(watchlist)
+      end
+    end
+
+    context '開始日時がない場合' do
+      it '終了日時の年で絞り込む' do
+        watchlist = create(:watchlist)
+
+        watchlist.update!(
+          start_at: nil,
+          end_at: Time.zone.local(2026, 10, 15, 20, 0)
+        )
+
+        expect(Watchlist.in_year(2026)).to include(watchlist)
+        expect(Watchlist.in_year(2025)).not_to include(watchlist)
+      end
+    end
+
+    context '日本時間の年末年始の場合' do
+      it '日本時間を基準に正しい年で絞り込む' do
+        previous_year_watchlist = create(:watchlist)
+        new_year_watchlist = create(:watchlist)
+
+        previous_year_watchlist.update!(
+          start_at: nil,
+          end_at: Time.zone.local(2025, 12, 31, 23, 30)
+        )
+
+        new_year_watchlist.update!(
+          start_at: nil,
+          end_at: Time.zone.local(2026, 1, 1, 0, 30)
+        )
+
+        result = Watchlist.in_year(2026)
+
+        expect(result).to include(new_year_watchlist)
+        expect(result).not_to include(previous_year_watchlist)
       end
     end
   end

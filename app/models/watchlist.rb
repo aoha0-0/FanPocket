@@ -87,7 +87,7 @@ class Watchlist < ApplicationRecord
   scope :past, lambda {
     where(is_done: true)
       .or(where('end_at < ?', Time.current))
-      .order(end_at: :desc)
+      .order(Arel.sql('COALESCE(start_at, end_at) DESC'))
   }
 
   private
