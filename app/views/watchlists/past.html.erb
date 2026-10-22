@@ -53,6 +53,32 @@
               placeholder: "タグで絞り込み" %>
       </div>
 
+      <div class="relative">
+        <span class="material-symbols-outlined
+                    absolute left-5 top-1/2 -translate-y-1/2
+                    text-primary/50 pointer-events-none">
+          calendar_month
+        </span>
+
+        <%= f.select :year,
+              options_for_select(
+                [["すべての年", ""]] + @available_years.map { |year| ["#{year}年", year] },
+                params[:year]
+              ),
+              {},
+              class: "w-full h-14 pl-14 pr-6
+                      appearance-none
+                      bg-white border-none rounded-full shadow-sm
+                      focus:outline-none focus:ring-2 focus:ring-primary
+                      text-gray-700 font-medium
+                      cursor-pointer" %>
+        <span class="material-symbols-outlined
+             absolute right-5 top-1/2 -translate-y-1/2
+             text-primary/50 pointer-events-none">
+          expand_more
+        </span>
+      </div>
+
       <div class="flex justify-end">
         <%= f.submit "検索",
               class: "h-12 px-6
@@ -65,7 +91,7 @@
       </div>
     <% end %>
 
-    <% if params[:title].present? || params[:tag].present? %>
+    <% if params[:title].present? || params[:tag].present? || params[:year].present? %>
       <div class="mt-4 mb-6 flex flex-wrap items-center gap-2 px-2">
         <span class="text-xs font-bold text-primary/50">
           検索条件
@@ -97,7 +123,20 @@
           </span>
         <% end %>
 
-        <%= link_to watchlists_path,
+        <% if params[:year].present? %>
+          <span class="inline-flex items-center gap-1
+                       text-sm font-medium text-primary/80
+                      bg-primary/5
+                      px-2.5 py-1
+                      rounded-lg">
+            <span class="material-symbols-outlined text-base">
+              calendar_month
+            </span>
+            <%= params[:year] %>年
+          </span>
+        <% end %>
+
+        <%= link_to past_watchlists_path,
             class: "inline-flex items-center gap-1
                     text-xs font-bold text-primary
                     bg-[#B6E0F3]/40 px-3 py-1.5
@@ -112,8 +151,8 @@
     <% end %>
   </div>
 
-  <% if (params[:tag].present? || params[:title].present?) &&
-        @past_watchlists.empty? %>
+  <% if (params[:tag].present? || params[:title].present? || params[:year].present?) &&
+      @past_watchlists.empty? %>
 
     <div class="flex flex-col items-center justify-center
                 px-5 py-10 md:py-12

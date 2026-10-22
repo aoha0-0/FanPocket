@@ -519,7 +519,7 @@ RSpec.describe 'Watchlists', type: :request do
 
       it '指定した年の足跡だけを表示する' do
         travel_to Time.zone.local(2025, 1, 1) do
-          watchlist_2025 = create(
+          watchlist2025 = create(
             :watchlist,
             user: user,
             title: '2025年のライブ',
@@ -528,7 +528,7 @@ RSpec.describe 'Watchlists', type: :request do
             is_done: true
           )
 
-          watchlist_2026 = create(
+          watchlist2026 = create(
             :watchlist,
             user: user,
             title: '2026年のライブ',
@@ -542,18 +542,45 @@ RSpec.describe 'Watchlists', type: :request do
           html = Nokogiri::HTML(response.body)
 
           expect(
-            html.at_css("a[href='#{watchlist_path(watchlist_2026, from: 'past')}']")
+            html.at_css("a[href='#{watchlist_path(watchlist2026, from: 'past')}']")
           ).not_to be_nil
 
           expect(
-            html.at_css("a[href='#{watchlist_path(watchlist_2025, from: 'past')}']")
+            html.at_css("a[href='#{watchlist_path(watchlist2025, from: 'past')}']")
           ).to be_nil
+        end
+      end
+
+      it '足跡が存在する年だけを選択肢に表示する' do
+        travel_to Time.zone.local(2025, 1, 1) do
+          create(
+            :watchlist,
+            user: user,
+            start_at: Time.zone.local(2025, 8, 10),
+            end_at: Time.zone.local(2025, 8, 10, 23, 59),
+            is_done: true
+          )
+
+          create(
+            :watchlist,
+            user: user,
+            start_at: Time.zone.local(2026, 8, 10),
+            end_at: Time.zone.local(2026, 8, 10, 23, 59),
+            is_done: true
+          )
+
+          get past_watchlists_path
+
+          html = Nokogiri::HTML(response.body)
+          year_options = html.css('select[name="year"] option').map(&:text)
+
+          expect(year_options).to eq(%w[すべての年 2026年 2025年])
         end
       end
 
       it 'タイトルと年の両方で足跡を絞り込める' do
         travel_to Time.zone.local(2025, 1, 1) do
-          watchlist_2025 = create(
+          watchlist2025 = create(
             :watchlist,
             user: user,
             title: 'グループA ライブ',
@@ -589,7 +616,7 @@ RSpec.describe 'Watchlists', type: :request do
           ).not_to be_nil
 
           expect(
-            html.at_css("a[href='#{watchlist_path(watchlist_2025, from: 'past')}']")
+            html.at_css("a[href='#{watchlist_path(watchlist2025, from: 'past')}']")
           ).to be_nil
 
           expect(
