@@ -19,6 +19,12 @@ class WatchlistsController < ApplicationController
     watchlists = watchlists.in_year(params[:year]) if params[:year].present?
 
     @past_watchlists = watchlists.past
+
+    return unless params[:sort] == 'asc'
+
+    @past_watchlists = @past_watchlists.reorder(
+      Arel.sql('COALESCE(start_at, end_at) ASC')
+    )
   end
 
   def show; end

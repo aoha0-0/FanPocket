@@ -151,6 +151,48 @@
     <% end %>
   </div>
 
+  <div class="flex justify-end mb-4">
+    <%= form_with url: past_watchlists_path, method: :get, local: true,
+                  class: "flex items-center gap-2" do |f| %>
+      <%= f.hidden_field :title, value: params[:title] %>
+      <%= f.hidden_field :tag, value: params[:tag] %>
+      <%= f.hidden_field :year, value: params[:year] %>
+
+      <%= f.label :sort, "並び順",
+            class: "text-sm font-medium text-gray-600" %>
+
+      <div class="relative">
+        <span class="material-symbols-outlined
+                     absolute left-3 top-1/2 -translate-y-1/2
+                     text-[#2d6489] pointer-events-none text-lg">
+          swap_vert
+        </span>
+
+        <%= f.select :sort,
+              options_for_select(
+                [["新しい順", "desc"], ["古い順", "asc"]],
+                params[:sort] || "desc"
+              ),
+              {},
+              class: "appearance-none
+                      h-10 pl-10 pr-9
+                      rounded-full
+                      bg-white border border-[#B6E0F3] text-[#2d6489]
+                      text-sm font-bold shadow-sm
+                      cursor-pointer
+                      focus:outline-none focus:ring-2 focus:ring-primary
+                      hover:brightness-105 transition-all",
+              onchange: "this.form.requestSubmit()" %>
+
+        <span class="material-symbols-outlined
+                     absolute right-3 top-1/2 -translate-y-1/2
+                     text-[#2d6489] pointer-events-none text-lg">
+          expand_more
+        </span>
+      </div>
+    <% end %>
+  </div>
+
   <% if (params[:tag].present? || params[:title].present? || params[:year].present?) &&
       @past_watchlists.empty? %>
 

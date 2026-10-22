@@ -551,6 +551,36 @@ RSpec.describe 'Watchlists', type: :request do
         end
       end
 
+      it '古い順を指定すると開始日時が古い予定から表示される' do
+        travel_to Time.zone.local(2025, 1, 1) do
+          old_watchlist = create(
+            :watchlist,
+            user: user,
+            title: '1月のライブ',
+            start_at: Time.zone.local(2025, 1, 10),
+            end_at: Time.zone.local(2025, 1, 10, 23, 59),
+            is_done: true
+          )
+
+          new_watchlist = create(
+            :watchlist,
+            user: user,
+            title: '6月のライブ',
+            start_at: Time.zone.local(2025, 6, 10),
+            end_at: Time.zone.local(2025, 6, 10, 23, 59),
+            is_done: true
+          )
+
+          get past_watchlists_path, params: { sort: 'asc' }
+
+          html = Nokogiri::HTML(response.body)
+          links = html.css("a[href*='/watchlists/']").map { |link| link['href'] }
+
+          expect(links.index(watchlist_path(old_watchlist, from: 'past')))
+            .to be < links.index(watchlist_path(new_watchlist, from: 'past'))
+        end
+      end
+
       it '足跡が存在する年だけを選択肢に表示する' do
         travel_to Time.zone.local(2025, 1, 1) do
           create(
