@@ -18,6 +18,7 @@ class WatchlistsController < ApplicationController
 
     watchlists = watchlists.tagged_with(params[:tag]) if params[:tag].present?
     watchlists = watchlists.title_containing(params[:title]) if params[:title].present?
+    watchlists = watchlists.in_year(params[:year]) if params[:year].present?
 
     @past_watchlists = watchlists.past
   end
