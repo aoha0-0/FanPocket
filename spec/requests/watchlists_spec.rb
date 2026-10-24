@@ -581,6 +581,46 @@ RSpec.describe 'Watchlists', type: :request do
         end
       end
 
+      it '過去の予定を年月ごとにグループ表示する' do
+        travel_to Time.zone.local(2025, 1, 1) do
+          september_watchlist = create(
+            :watchlist,
+            user: user,
+            title: '9月のライブ',
+            start_at: Time.zone.local(2026, 9, 10),
+            end_at: Time.zone.local(2026, 9, 10, 23, 59),
+            is_done: true
+          )
+
+          october_watchlist = create(
+            :watchlist,
+            user: user,
+            title: '10月のライブ',
+            start_at: Time.zone.local(2026, 10, 10),
+            end_at: Time.zone.local(2026, 10, 10, 23, 59),
+            is_done: true
+          )
+
+          get past_watchlists_path
+
+          html = Nokogiri::HTML(response.body)
+          sections = html.css('section')
+
+          september_section = sections.find { |section| section.at_css('h2')&.text&.include?('2026年 9月') }
+          october_section = sections.find { |section| section.at_css('h2')&.text&.include?('2026年 10月') }
+
+          expect(september_section).not_to be_nil
+          expect(october_section).not_to be_nil
+
+          expect(september_section.to_html).to include(
+            watchlist_path(september_watchlist, from: 'past')
+          )
+          expect(october_section.to_html).to include(
+            watchlist_path(october_watchlist, from: 'past')
+          )
+        end
+      end
+
       it '足跡が存在する年だけを選択肢に表示する' do
         travel_to Time.zone.local(2025, 1, 1) do
           create(

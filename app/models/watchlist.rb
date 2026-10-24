@@ -90,6 +90,10 @@ class Watchlist < ApplicationRecord
       .order(Arel.sql('COALESCE(start_at, end_at) DESC'))
   }
 
+  scope :oldest_first, lambda {
+    reorder(Arel.sql('COALESCE(start_at, end_at) ASC'))
+  }
+
   private
 
   def end_at_time_blank?

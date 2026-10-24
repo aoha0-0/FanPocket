@@ -20,11 +20,9 @@ class WatchlistsController < ApplicationController
 
     @past_watchlists = watchlists.past
 
-    return unless params[:sort] == 'asc'
+    @past_watchlists = @past_watchlists.oldest_first if params[:sort] == 'asc'
 
-    @past_watchlists = @past_watchlists.reorder(
-      Arel.sql('COALESCE(start_at, end_at) ASC')
-    )
+    @grouped_watchlists = group_past_watchlists_by_month(@past_watchlists)
   end
 
   def show; end
@@ -125,5 +123,12 @@ class WatchlistsController < ApplicationController
     watchlists = watchlists.title_containing(params[:title]) if params[:title].present?
 
     watchlists
+  end
+
+  def group_past_watchlists_by_month(watchlists)
+    watchlists.group_by do |watchlist|
+      date = watchlist.start_at || watchlist.end_at
+      [date.year, date.month]
+    end
   end
 end

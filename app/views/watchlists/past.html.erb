@@ -211,9 +211,23 @@
     </div>
 
   <% elsif @past_watchlists.any? %>
-    <div class="space-y-4 md:space-y-5">
-      <% @past_watchlists.each do |watchlist| %>
-        <%= render "watchlist_card", watchlist: watchlist, is_past: true %>
+    <div class="space-y-6 md:space-y-8">
+      <% @grouped_watchlists.each do |(year, month), watchlists| %>
+        <section>
+          <h2 class="flex items-center gap-2 mb-4
+                     text-[#2d6489] font-bold">
+            <span class="material-symbols-outlined">
+              calendar_month
+            </span>
+            <%= "#{year}年 #{month}月" %>
+          </h2>
+
+          <div class="space-y-4 md:space-y-5">
+            <% watchlists.each do |watchlist| %>
+              <%= render "watchlist_card", watchlist: watchlist, is_past: true %>
+            <% end %>
+          </div>
+        </section>
       <% end %>
     </div>
   <% else %>
