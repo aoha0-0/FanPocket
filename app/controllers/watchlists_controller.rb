@@ -5,10 +5,7 @@ class WatchlistsController < ApplicationController
   before_action :set_watchlist, only: %i[show edit update toggle_completion share]
 
   def index
-    watchlists = current_user.watchlists
-
-    watchlists = watchlists.tagged_with(params[:tag]) if params[:tag].present?
-    watchlists = watchlists.title_containing(params[:title]) if params[:title].present?
+    watchlists = filter_watchlists(current_user.watchlists)
 
     @future_watchlists = watchlists.upcoming
   end
@@ -16,10 +13,16 @@ class WatchlistsController < ApplicationController
   def past
     watchlists = current_user.watchlists
 
-    watchlists = watchlists.tagged_with(params[:tag]) if params[:tag].present?
-    watchlists = watchlists.title_containing(params[:title]) if params[:title].present?
+    @available_years = available_past_years(watchlists)
+
+    watchlists = filter_watchlists(watchlists)
+    watchlists = watchlists.in_year(params[:year]) if params[:year].present?
 
     @past_watchlists = watchlists.past
+
+    @past_watchlists = @past_watchlists.oldest_first if params[:sort] == 'asc'
+
+    @grouped_watchlists = group_past_watchlists_by_month(@past_watchlists)
   end
 
   def show; end
@@ -105,5 +108,27 @@ class WatchlistsController < ApplicationController
 
   def watchlist_params
     params.require(:watchlist).permit(*WATCHLIST_PARAMS)
+  end
+
+  def available_past_years(watchlists)
+    watchlists.past
+              .map { |watchlist| (watchlist.start_at || watchlist.end_at).year }
+              .uniq
+              .sort
+              .reverse
+  end
+
+  def filter_watchlists(watchlists)
+    watchlists = watchlists.tagged_with(params[:tag]) if params[:tag].present?
+    watchlists = watchlists.title_containing(params[:title]) if params[:title].present?
+
+    watchlists
+  end
+
+  def group_past_watchlists_by_month(watchlists)
+    watchlists.group_by do |watchlist|
+      date = watchlist.start_at || watchlist.end_at
+      [date.year, date.month]
+    end
   end
 end

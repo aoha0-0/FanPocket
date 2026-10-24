@@ -516,6 +516,184 @@ RSpec.describe 'Watchlists', type: :request do
 
         expect(detail_link).not_to be_nil
       end
+
+      it '指定した年の足跡だけを表示する' do
+        travel_to Time.zone.local(2025, 1, 1) do
+          watchlist2025 = create(
+            :watchlist,
+            user: user,
+            title: '2025年のライブ',
+            start_at: Time.zone.local(2025, 8, 10),
+            end_at: Time.zone.local(2025, 8, 10, 23, 59),
+            is_done: true
+          )
+
+          watchlist2026 = create(
+            :watchlist,
+            user: user,
+            title: '2026年のライブ',
+            start_at: Time.zone.local(2026, 8, 10),
+            end_at: Time.zone.local(2026, 8, 10, 23, 59),
+            is_done: true
+          )
+
+          get past_watchlists_path, params: { year: '2026' }
+
+          html = Nokogiri::HTML(response.body)
+
+          expect(
+            html.at_css("a[href='#{watchlist_path(watchlist2026, from: 'past')}']")
+          ).not_to be_nil
+
+          expect(
+            html.at_css("a[href='#{watchlist_path(watchlist2025, from: 'past')}']")
+          ).to be_nil
+        end
+      end
+
+      it '古い順を指定すると開始日時が古い予定から表示される' do
+        travel_to Time.zone.local(2025, 1, 1) do
+          old_watchlist = create(
+            :watchlist,
+            user: user,
+            title: '1月のライブ',
+            start_at: Time.zone.local(2025, 1, 10),
+            end_at: Time.zone.local(2025, 1, 10, 23, 59),
+            is_done: true
+          )
+
+          new_watchlist = create(
+            :watchlist,
+            user: user,
+            title: '6月のライブ',
+            start_at: Time.zone.local(2025, 6, 10),
+            end_at: Time.zone.local(2025, 6, 10, 23, 59),
+            is_done: true
+          )
+
+          get past_watchlists_path, params: { sort: 'asc' }
+
+          html = Nokogiri::HTML(response.body)
+          links = html.css("a[href*='/watchlists/']").map { |link| link['href'] }
+
+          expect(links.index(watchlist_path(old_watchlist, from: 'past')))
+            .to be < links.index(watchlist_path(new_watchlist, from: 'past'))
+        end
+      end
+
+      it '過去の予定を年月ごとにグループ表示する' do
+        travel_to Time.zone.local(2025, 1, 1) do
+          september_watchlist = create(
+            :watchlist,
+            user: user,
+            title: '9月のライブ',
+            start_at: Time.zone.local(2026, 9, 10),
+            end_at: Time.zone.local(2026, 9, 10, 23, 59),
+            is_done: true
+          )
+
+          october_watchlist = create(
+            :watchlist,
+            user: user,
+            title: '10月のライブ',
+            start_at: Time.zone.local(2026, 10, 10),
+            end_at: Time.zone.local(2026, 10, 10, 23, 59),
+            is_done: true
+          )
+
+          get past_watchlists_path
+
+          html = Nokogiri::HTML(response.body)
+          sections = html.css('section')
+
+          september_section = sections.find { |section| section.at_css('h2')&.text&.include?('2026年 9月') }
+          october_section = sections.find { |section| section.at_css('h2')&.text&.include?('2026年 10月') }
+
+          expect(september_section).not_to be_nil
+          expect(october_section).not_to be_nil
+
+          expect(september_section.to_html).to include(
+            watchlist_path(september_watchlist, from: 'past')
+          )
+          expect(october_section.to_html).to include(
+            watchlist_path(october_watchlist, from: 'past')
+          )
+        end
+      end
+
+      it '足跡が存在する年だけを選択肢に表示する' do
+        travel_to Time.zone.local(2025, 1, 1) do
+          create(
+            :watchlist,
+            user: user,
+            start_at: Time.zone.local(2025, 8, 10),
+            end_at: Time.zone.local(2025, 8, 10, 23, 59),
+            is_done: true
+          )
+
+          create(
+            :watchlist,
+            user: user,
+            start_at: Time.zone.local(2026, 8, 10),
+            end_at: Time.zone.local(2026, 8, 10, 23, 59),
+            is_done: true
+          )
+
+          get past_watchlists_path
+
+          html = Nokogiri::HTML(response.body)
+          year_options = html.css('select[name="year"] option').map(&:text)
+
+          expect(year_options).to eq(%w[すべての年 2026年 2025年])
+        end
+      end
+
+      it 'タイトルと年の両方で足跡を絞り込める' do
+        travel_to Time.zone.local(2025, 1, 1) do
+          watchlist2025 = create(
+            :watchlist,
+            user: user,
+            title: 'グループA ライブ',
+            start_at: Time.zone.local(2025, 8, 10),
+            end_at: Time.zone.local(2025, 8, 10, 23, 59),
+            is_done: true
+          )
+
+          matched_watchlist = create(
+            :watchlist,
+            user: user,
+            title: 'グループA イベント',
+            start_at: Time.zone.local(2026, 8, 10),
+            end_at: Time.zone.local(2026, 8, 10, 23, 59),
+            is_done: true
+          )
+
+          watchlist_group_b = create(
+            :watchlist,
+            user: user,
+            title: 'グループB ライブ',
+            start_at: Time.zone.local(2026, 9, 10),
+            end_at: Time.zone.local(2026, 9, 10, 23, 59),
+            is_done: true
+          )
+
+          get past_watchlists_path, params: { title: 'グループA', year: '2026' }
+
+          html = Nokogiri::HTML(response.body)
+
+          expect(
+            html.at_css("a[href='#{watchlist_path(matched_watchlist, from: 'past')}']")
+          ).not_to be_nil
+
+          expect(
+            html.at_css("a[href='#{watchlist_path(watchlist2025, from: 'past')}']")
+          ).to be_nil
+
+          expect(
+            html.at_css("a[href='#{watchlist_path(watchlist_group_b, from: 'past')}']")
+          ).to be_nil
+        end
+      end
     end
   end
 

@@ -53,6 +53,32 @@
               placeholder: "タグで絞り込み" %>
       </div>
 
+      <div class="relative">
+        <span class="material-symbols-outlined
+                    absolute left-5 top-1/2 -translate-y-1/2
+                    text-primary/50 pointer-events-none">
+          calendar_month
+        </span>
+
+        <%= f.select :year,
+              options_for_select(
+                [["すべての年", ""]] + @available_years.map { |year| ["#{year}年", year] },
+                params[:year]
+              ),
+              {},
+              class: "w-full h-14 pl-14 pr-6
+                      appearance-none
+                      bg-white border-none rounded-full shadow-sm
+                      focus:outline-none focus:ring-2 focus:ring-primary
+                      text-gray-700 font-medium
+                      cursor-pointer" %>
+        <span class="material-symbols-outlined
+             absolute right-5 top-1/2 -translate-y-1/2
+             text-primary/50 pointer-events-none">
+          expand_more
+        </span>
+      </div>
+
       <div class="flex justify-end">
         <%= f.submit "検索",
               class: "h-12 px-6
@@ -65,7 +91,7 @@
       </div>
     <% end %>
 
-    <% if params[:title].present? || params[:tag].present? %>
+    <% if params[:title].present? || params[:tag].present? || params[:year].present? %>
       <div class="mt-4 mb-6 flex flex-wrap items-center gap-2 px-2">
         <span class="text-xs font-bold text-primary/50">
           検索条件
@@ -97,7 +123,20 @@
           </span>
         <% end %>
 
-        <%= link_to watchlists_path,
+        <% if params[:year].present? %>
+          <span class="inline-flex items-center gap-1
+                       text-sm font-medium text-primary/80
+                      bg-primary/5
+                      px-2.5 py-1
+                      rounded-lg">
+            <span class="material-symbols-outlined text-base">
+              calendar_month
+            </span>
+            <%= params[:year] %>年
+          </span>
+        <% end %>
+
+        <%= link_to past_watchlists_path,
             class: "inline-flex items-center gap-1
                     text-xs font-bold text-primary
                     bg-[#B6E0F3]/40 px-3 py-1.5
@@ -112,8 +151,50 @@
     <% end %>
   </div>
 
-  <% if (params[:tag].present? || params[:title].present?) &&
-        @past_watchlists.empty? %>
+  <div class="flex justify-end mb-4">
+    <%= form_with url: past_watchlists_path, method: :get, local: true,
+                  class: "flex items-center gap-2" do |f| %>
+      <%= f.hidden_field :title, value: params[:title] %>
+      <%= f.hidden_field :tag, value: params[:tag] %>
+      <%= f.hidden_field :year, value: params[:year] %>
+
+      <%= f.label :sort, "並び順",
+            class: "text-sm font-medium text-gray-600" %>
+
+      <div class="relative">
+        <span class="material-symbols-outlined
+                     absolute left-3 top-1/2 -translate-y-1/2
+                     text-[#2d6489] pointer-events-none text-lg">
+          swap_vert
+        </span>
+
+        <%= f.select :sort,
+              options_for_select(
+                [["新しい順", "desc"], ["古い順", "asc"]],
+                params[:sort] || "desc"
+              ),
+              {},
+              class: "appearance-none
+                      h-10 pl-10 pr-9
+                      rounded-full
+                      bg-white border border-[#B6E0F3] text-[#2d6489]
+                      text-sm font-bold shadow-sm
+                      cursor-pointer
+                      focus:outline-none focus:ring-2 focus:ring-primary
+                      hover:brightness-105 transition-all",
+              onchange: "this.form.requestSubmit()" %>
+
+        <span class="material-symbols-outlined
+                     absolute right-3 top-1/2 -translate-y-1/2
+                     text-[#2d6489] pointer-events-none text-lg">
+          expand_more
+        </span>
+      </div>
+    <% end %>
+  </div>
+
+  <% if (params[:tag].present? || params[:title].present? || params[:year].present?) &&
+      @past_watchlists.empty? %>
 
     <div class="flex flex-col items-center justify-center
                 px-5 py-10 md:py-12
@@ -130,9 +211,23 @@
     </div>
 
   <% elsif @past_watchlists.any? %>
-    <div class="space-y-4 md:space-y-5">
-      <% @past_watchlists.each do |watchlist| %>
-        <%= render "watchlist_card", watchlist: watchlist, is_past: true %>
+    <div class="space-y-6 md:space-y-8">
+      <% @grouped_watchlists.each do |(year, month), watchlists| %>
+        <section>
+          <h2 class="flex items-center gap-2 mb-4
+                     text-[#2d6489] font-bold">
+            <span class="material-symbols-outlined">
+              calendar_month
+            </span>
+            <%= "#{year}年 #{month}月" %>
+          </h2>
+
+          <div class="space-y-4 md:space-y-5">
+            <% watchlists.each do |watchlist| %>
+              <%= render "watchlist_card", watchlist: watchlist, is_past: true %>
+            <% end %>
+          </div>
+        </section>
       <% end %>
     </div>
   <% else %>

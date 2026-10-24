@@ -20,5 +20,16 @@ module WatchlistSearchable
 
       where('title ILIKE ?', "%#{sanitized_keyword}%")
     }
+
+    scope :in_year, lambda { |year|
+      start_of_year = Time.zone.local(year.to_i, 1, 1)
+      start_of_next_year = start_of_year.next_year
+
+      where(
+        'COALESCE(start_at, end_at) >= ? AND COALESCE(start_at, end_at) < ?',
+        start_of_year,
+        start_of_next_year
+      )
+    }
   end
 end
