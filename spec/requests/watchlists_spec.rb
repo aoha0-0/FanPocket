@@ -298,6 +298,35 @@ RSpec.describe 'Watchlists', type: :request do
 
   describe 'GET /watchlists' do
     context 'ログインしている場合' do
+      it '検索フォームが初期状態で折りたたまれている' do
+        get watchlists_path
+
+        document = Nokogiri::HTML(response.body)
+        details = document.at_css('details')
+
+        expect(details).not_to be_nil
+        expect(details['open']).to be_nil
+        expect(details.at_css('summary').text).to include('予定を検索・絞り込み')
+        expect(details.at_css('form')).not_to be_nil
+      end
+
+      it '検索条件と解除リンクが折りたたみの外側に表示される' do
+        get watchlists_path, params: {
+          title: 'ライブ',
+          tag: 'チケット'
+        }
+
+        document = Nokogiri::HTML(response.body)
+        details = document.at_css('details')
+        clear_link = document.css("a[href='#{watchlists_path}']")
+                             .find { |link| link.text.include?('解除') }
+
+        expect(details.text).not_to include('検索条件')
+        expect(clear_link).not_to be_nil
+        expect(clear_link.text).to include('解除')
+        expect(clear_link.ancestors).not_to include(details)
+      end
+
       it '自分の予定だけを表示する' do
         own_watchlist = create(
           :watchlist,
@@ -467,6 +496,43 @@ RSpec.describe 'Watchlists', type: :request do
 
   describe 'GET /watchlists/past' do
     context 'ログインしている場合' do
+      it '検索フォームが初期状態で折りたたまれている' do
+        get past_watchlists_path
+
+        document = Nokogiri::HTML(response.body)
+        details = document.at_css('details')
+
+        expect(details).not_to be_nil
+        expect(details['open']).to be_nil
+        expect(details.at_css('summary').text).to include('予定を検索・絞り込み')
+
+        search_form = details.at_css('form')
+
+        expect(search_form).not_to be_nil
+        expect(search_form['action']).to eq(past_watchlists_path)
+        expect(search_form.at_css('input[name="title"]')).not_to be_nil
+        expect(search_form.at_css('input[name="tag"]')).not_to be_nil
+        expect(search_form.at_css('select[name="year"]')).not_to be_nil
+      end
+
+      it '検索条件と解除リンクが折りたたみの外側に表示される' do
+        get past_watchlists_path, params: {
+          title: 'ライブ',
+          tag: 'チケット',
+          year: '2026'
+        }
+
+        document = Nokogiri::HTML(response.body)
+        details = document.at_css('details')
+        clear_link = document.css("a[href='#{past_watchlists_path}']")
+                             .find { |link| link.text.include?('解除') }
+
+        expect(details.text).not_to include('検索条件')
+        expect(clear_link).not_to be_nil
+        expect(clear_link.text).to include('解除')
+        expect(clear_link.ancestors).not_to include(details)
+      end
+
       it 'これまでの足跡だけを表示し、これからの予定は表示しない' do
         future_watchlist = create(
           :watchlist,
