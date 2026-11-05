@@ -1,4 +1,7 @@
-<%= link_to watchlist_path(watchlist, from: ("past" if is_past)),
+<% search_params = params.permit(:title, :tag, :year, :sort).to_h %>
+<% search_params = search_params.slice("title", "tag") unless is_past %>
+
+<%= link_to watchlist_path(watchlist, **search_params.symbolize_keys, from: ("past" if is_past)),
             class: "block rounded-xl transition-transform duration-200
                     active:scale-[0.98]
                     focus-visible:outline

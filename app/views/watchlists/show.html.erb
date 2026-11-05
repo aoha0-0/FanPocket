@@ -1,6 +1,15 @@
 <%
   from_past = params[:from] == "past"
-  back_path = from_past ? past_watchlists_path : watchlists_path
+
+  search_params = params.permit(:title, :tag, :year, :sort).to_h
+  search_params = search_params.slice("title", "tag") unless from_past
+
+  back_path = if from_past
+                past_watchlists_path(search_params)
+              else
+                watchlists_path(search_params)
+              end
+
   back_text = from_past ? "これまでの足跡へ" : "これからの予定へ"
 %>
 
