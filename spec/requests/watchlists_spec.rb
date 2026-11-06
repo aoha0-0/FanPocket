@@ -491,6 +491,34 @@ RSpec.describe 'Watchlists', type: :request do
         expect(response.body).not_to include(title_only_watchlist.title)
         expect(response.body).not_to include(tag_only_watchlist.title)
       end
+
+      it '検索条件を予定詳細へのリンクに引き継ぐ' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: '東京ドーム公演'
+        )
+
+        watchlist.tag_names = 'ライブ'
+        watchlist.save_tags
+
+        get watchlists_path, params: {
+          title: '東京ドーム',
+          tag: 'ライブ'
+        }
+
+        html = Nokogiri::HTML(response.body)
+
+        expected_path = watchlist_path(
+          watchlist,
+          title: '東京ドーム',
+          tag: 'ライブ'
+        )
+
+        detail_link = html.at_css("a[href='#{expected_path}']")
+
+        expect(detail_link).not_to be_nil
+      end
     end
   end
 
@@ -583,6 +611,44 @@ RSpec.describe 'Watchlists', type: :request do
         expect(detail_link).not_to be_nil
       end
 
+      it '検索条件と並び順を予定詳細へのリンクに引き継ぐ' do
+        travel_to Time.zone.local(2025, 1, 1) do
+          watchlist = create(
+            :watchlist,
+            user: user,
+            title: '東京ドーム公演',
+            start_at: Time.zone.local(2026, 8, 10),
+            end_at: Time.zone.local(2026, 8, 10, 23, 59),
+            is_done: true
+          )
+
+          watchlist.tag_names = 'ライブ'
+          watchlist.save_tags
+
+          get past_watchlists_path, params: {
+            title: '東京ドーム',
+            tag: 'ライブ',
+            year: '2026',
+            sort: 'asc'
+          }
+
+          html = Nokogiri::HTML(response.body)
+
+          expected_path = watchlist_path(
+            watchlist,
+            title: '東京ドーム',
+            tag: 'ライブ',
+            year: '2026',
+            sort: 'asc',
+            from: 'past'
+          )
+
+          detail_link = html.at_css("a[href='#{expected_path}']")
+
+          expect(detail_link).not_to be_nil
+        end
+      end
+
       it '指定した年の足跡だけを表示する' do
         travel_to Time.zone.local(2025, 1, 1) do
           watchlist2025 = create(
@@ -608,12 +674,12 @@ RSpec.describe 'Watchlists', type: :request do
           html = Nokogiri::HTML(response.body)
 
           expect(
-            html.at_css("a[href='#{watchlist_path(watchlist2026, from: 'past')}']")
+            html.at_css("a[href='#{watchlist_path(watchlist2026, year: '2026', from: 'past')}']")
           ).not_to be_nil
 
           expect(
-            html.at_css("a[href='#{watchlist_path(watchlist2025, from: 'past')}']")
-          ).to be_nil
+            html.css("a[href*='/watchlists/#{watchlist2025.id}?']")
+          ).to be_empty
         end
       end
 
@@ -642,8 +708,8 @@ RSpec.describe 'Watchlists', type: :request do
           html = Nokogiri::HTML(response.body)
           links = html.css("a[href*='/watchlists/']").map { |link| link['href'] }
 
-          expect(links.index(watchlist_path(old_watchlist, from: 'past')))
-            .to be < links.index(watchlist_path(new_watchlist, from: 'past'))
+          expect(links.index(watchlist_path(old_watchlist, sort: 'asc', from: 'past')))
+            .to be < links.index(watchlist_path(new_watchlist, sort: 'asc', from: 'past'))
         end
       end
 
@@ -748,16 +814,16 @@ RSpec.describe 'Watchlists', type: :request do
           html = Nokogiri::HTML(response.body)
 
           expect(
-            html.at_css("a[href='#{watchlist_path(matched_watchlist, from: 'past')}']")
+            html.at_css("a[href='#{watchlist_path(matched_watchlist, title: 'グループA', year: '2026', from: 'past')}']")
           ).not_to be_nil
 
           expect(
-            html.at_css("a[href='#{watchlist_path(watchlist2025, from: 'past')}']")
-          ).to be_nil
+            html.css("a[href*='/watchlists/#{watchlist2025.id}?']")
+          ).to be_empty
 
           expect(
-            html.at_css("a[href='#{watchlist_path(watchlist_group_b, from: 'past')}']")
-          ).to be_nil
+            html.css("a[href*='/watchlists/#{watchlist_group_b.id}?']")
+          ).to be_empty
         end
       end
     end
@@ -800,6 +866,37 @@ RSpec.describe 'Watchlists', type: :request do
         expect(pc_back_link['href']).to eq(past_watchlists_path)
       end
 
+      it '検索条件と並び順を保持してこれまでの足跡へ戻るリンクを表示する' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: '東京ドーム公演'
+        )
+
+        get watchlist_path(watchlist), params: {
+          from: 'past',
+          title: '東京ドーム',
+          tag: 'ライブ',
+          year: '2026',
+          sort: 'asc'
+        }
+
+        html = Nokogiri::HTML(response.body)
+
+        mobile_back_link = html.at_css('header a[aria-label="前の画面に戻る"]')
+        pc_back_link = html.at_css('div.hidden.md\\:block a')
+
+        expected_path = past_watchlists_path(
+          title: '東京ドーム',
+          tag: 'ライブ',
+          year: '2026',
+          sort: 'asc'
+        )
+
+        expect(mobile_back_link['href']).to eq(expected_path)
+        expect(pc_back_link['href']).to eq(expected_path)
+      end
+
       it '遷移元の指定がない場合はこれからの予定への戻るリンクを表示する' do
         watchlist = create(
           :watchlist,
@@ -820,6 +917,32 @@ RSpec.describe 'Watchlists', type: :request do
 
         expect(mobile_back_link['href']).to eq(watchlists_path)
         expect(pc_back_link['href']).to eq(watchlists_path)
+      end
+
+      it '検索条件を保持してこれからの予定へ戻るリンクを表示する' do
+        watchlist = create(
+          :watchlist,
+          user: user,
+          title: '東京ドーム公演'
+        )
+
+        get watchlist_path(watchlist), params: {
+          title: '東京ドーム',
+          tag: 'ライブ'
+        }
+
+        html = Nokogiri::HTML(response.body)
+
+        mobile_back_link = html.at_css('header a[aria-label="前の画面に戻る"]')
+        pc_back_link = html.at_css('div.hidden.md\\:block a')
+
+        expected_path = watchlists_path(
+          title: '東京ドーム',
+          tag: 'ライブ'
+        )
+
+        expect(mobile_back_link['href']).to eq(expected_path)
+        expect(pc_back_link['href']).to eq(expected_path)
       end
 
       it '想定外の遷移元が指定された場合はこれからの予定への戻るリンクを表示する' do
