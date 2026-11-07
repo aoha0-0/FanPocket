@@ -1,4 +1,15 @@
-<main class="px-6 py-12 max-w-3xl mx-auto pb-28 text-base-content leading-relaxed">
+<% if user_signed_in? %>
+  <%= render "layouts/app_navigation",
+             back_path: @back_path %>
+<% else %>
+  <%= render "layouts/header",
+             back_path: @back_path,
+             info_page: true %>
+
+  <div class="hidden md:block h-[86px]" aria-hidden="true"></div>
+<% end %>
+
+<div class="px-6 py-12 max-w-3xl mx-auto pb-28 text-base-content leading-relaxed">
   <div class="mb-10 text-center">
     <h1 class="font-headline font-extrabold text-3xl text-primary mb-2">プライバシーポリシー</h1>
     <p class="text-sm text-gray-500">最終更新日: 2026年7月14日</p>
@@ -54,10 +65,9 @@
       <p>本ポリシーに関するお問い合わせは，本サービス内のお問い合わせフォーム、または運営者の指定する連絡先までお願いいたします。</p>
     </section>
   </div>
-  <%# --- ページの終わりに追加する戻るボタン --- %>
+
   <div class="mt-12 flex justify-center">
-    <button onclick="history.back()" class="text-primary font-bold text-lg gap-2 px-6 hover:opacity-70 transition-opacity">
-      もどる
-    </button>
+    <%= link_to "もどる", @back_path,
+                class: "text-primary font-bold text-lg px-6 hover:opacity-70 transition-opacity" %>
   </div>
 </main>
