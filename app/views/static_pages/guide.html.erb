@@ -1,3 +1,14 @@
+<% if user_signed_in? %>
+  <%= render "layouts/app_navigation",
+             back_path: @back_path %>
+<% else %>
+  <%= render "layouts/header",
+             back_path: @back_path,
+             info_page: true %>
+
+  <div class="hidden md:block h-[86px]" aria-hidden="true"></div>
+<% end %>
+
 <main class="min-h-screen bg-gradient-to-b from-[#f7fbfe] to-white px-4 py-10">
   <div class="max-w-3xl mx-auto">
 
@@ -760,12 +771,14 @@
       </div>
     </section>
 
-    <div class="mt-12 flex justify-center">
-      <button onclick="history.back()" class="text-primary font-bold text-lg gap-2 px-6 hover:opacity-70 transition-opacity">
-        もどる
-      </button>
+    <div class="<%= user_signed_in? ? 'hidden md:flex' : 'flex' %> mt-12 pb-12 justify-center">
+      <%= link_to "もどる", @back_path,
+                  class: "text-primary font-bold text-lg px-6 hover:opacity-70 transition-opacity" %>
     </div>
-
   </div>
-  <!-- /max-w-3xl -->
+
+  <% if user_signed_in? %>
+    <div class="h-28 md:hidden" aria-hidden="true"></div>
+    <%= render "layouts/footer" %>
+  <% end %>
 </main>

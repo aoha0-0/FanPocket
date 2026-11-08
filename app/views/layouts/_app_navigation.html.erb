@@ -1,6 +1,7 @@
 <div data-controller="sidebar">
   <%= render "layouts/header",
-             back_path: local_assigns[:back_path] %>
+              back_path: local_assigns[:back_path],
+              info_page: local_assigns.fetch(:info_page, false) %>
 
   <div class="hidden md:block h-[86px]" aria-hidden="true"></div>
 
