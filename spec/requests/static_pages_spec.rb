@@ -10,6 +10,19 @@ RSpec.describe 'StaticPages', type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include('使い方ガイド')
     end
+
+    it 'PWAのホーム画面追加方法を表示する' do
+      get guide_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(
+        'ホーム画面に追加しよう！',
+        'iPhoneでの追加方法',
+        'Safariを使用',
+        'Androidでの追加方法',
+        'Chromeを使用'
+      )
+    end
   end
 
   describe 'GET /terms' do
