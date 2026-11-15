@@ -1,18 +1,6 @@
-<body class="bg-surface text-on-surface font-body min-h-screen pb-32">
+<div class="bg-surface text-on-surface font-body min-h-screen pb-32">
   <%= render "layouts/app_navigation",
              back_path: settings_path %>
-
-  <div class="hidden md:block w-full max-w-4xl mx-auto px-6 pt-6">
-    <%= link_to settings_path,
-                class: "inline-flex items-center gap-1
-                        text-sm font-bold text-primary
-                        hover:opacity-70 transition-opacity" do %>
-      <span class="material-symbols-outlined text-xl">
-        arrow_back
-      </span>
-      <span>設定へ</span>
-    <% end %>
-  </div>
 
   <div class="text-center mt-10 mb-10 px-6">
     <h2 class="font-headline font-extrabold text-3xl tracking-tight text-primary">
@@ -76,7 +64,7 @@
         </p>
       </div>
 
-      <div class="pt-6 pb-20">
+      <div class="pt-6">
         <%= f.button type: "submit",
                      class: "w-full bg-[#B6E0F3] text-[#2d6489] font-headline font-bold py-4 rounded-full puffy-shadow hover:brightness-105 transition-all active:scale-[0.97] flex items-center justify-center gap-3" do %>
           <span class="material-symbols-outlined font-bold">send</span>
@@ -84,5 +72,10 @@
         <% end %>
       </div>
     <% end %>
+
+    <div class="hidden md:flex justify-center mt-8 mb-12">
+      <%= link_to "もどる", settings_path,
+                  class: "text-primary font-bold text-lg hover:opacity-70 transition-opacity" %>
+    </div>
   </main>
-</body>
+</div>
