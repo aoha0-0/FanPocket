@@ -45,6 +45,14 @@ RSpec.describe 'Contacts', type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include('お問い合わせ')
     end
+
+    it '設定画面に戻るリンクを表示する' do
+      get new_contact_path
+
+      links = response.parsed_body.css('a[href="/settings"]')
+
+      expect(links.any? { |link| link.text.strip == 'もどる' }).to be true
+    end
   end
 
   describe 'POST /contact' do
