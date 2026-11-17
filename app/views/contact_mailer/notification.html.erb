@@ -17,12 +17,13 @@
 
 <hr>
 
-<p>
-  <strong>送信ユーザーID</strong><br>
-  <%= @user.id %>
-</p>
+<% if @user.present? %>
+  <p><strong>送信ユーザーID</strong><br><%= @user.id %></p>
+<% else %>
+  <p><strong>送信ユーザー</strong><br>未ログイン</p>
+<% end %>
 
 <p>
   <strong>メールアドレス</strong><br>
-  <%= @user.email.presence || "未登録（SNSログイン）" %>
+  <%= @user&.email.presence || @contact.email %>
 </p>

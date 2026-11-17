@@ -10,7 +10,9 @@ class ContactMailer < ApplicationMailer
       to: ENV.fetch('CONTACT_EMAIL'),
       subject: "【FanPocket】#{@category_label}のお問い合わせ"
     }
-    mail_headers[:reply_to] = @user.email if @user.email.present?
+
+    reply_email = @user&.email.presence || @contact.email.presence
+    mail_headers[:reply_to] = reply_email if reply_email
 
     mail(**mail_headers)
   end
