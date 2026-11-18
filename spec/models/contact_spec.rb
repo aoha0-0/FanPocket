@@ -69,5 +69,46 @@ RSpec.describe Contact, type: :model do
         expect(contact).not_to be_valid
       end
     end
+
+    context 'メールアドレスが必須の場合' do
+      it 'メールアドレスが未入力だと無効である' do
+        contact = Contact.new(
+          category: 'bug',
+          content: '登録画面でエラーが発生しました',
+          email_required: true,
+          email: ''
+        )
+
+        expect(contact).not_to be_valid
+        expect(contact.errors[:email]).to include('を入力してください')
+      end
+    end
+
+    context 'メールアドレスが必須ではない場合' do
+      it 'メールアドレスが未入力でも有効である' do
+        contact = Contact.new(
+          category: 'bug',
+          content: '登録画面でエラーが発生しました',
+          email_required: false,
+          email: ''
+        )
+
+        expect(contact).to be_valid
+      end
+    end
+
+    context 'メールアドレスの形式が不正な場合' do
+      it '無効である' do
+        contact = Contact.new(
+          category: 'bug',
+          content: '登録画面でエラーが発生しました',
+          email_required: true,
+          email: 'invalid-email'
+        )
+
+        expect(contact).not_to be_valid
+        expect(contact.errors[:email]).to include('は不正な値です')
+      end
+    end
   end
 end

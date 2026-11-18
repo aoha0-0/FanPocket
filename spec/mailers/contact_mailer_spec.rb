@@ -13,7 +13,8 @@ RSpec.describe ContactMailer, type: :mailer do
   let(:contact) do
     Contact.new(
       category: 'bug',
-      content: "お問い合わせフォームの送信確認です。\n2行目の内容です。"
+      content: "お問い合わせフォームの送信確認です。\n2行目の内容です。",
+      email: 'guest@example.com'
     )
   end
 
@@ -71,20 +72,52 @@ RSpec.describe ContactMailer, type: :mailer do
         )
       end
 
-      it '返信先を設定しない' do
-        expect(mail.reply_to).to be_nil
+      it 'フォームで入力したメールアドレスを返信先に設定する' do
+        expect(mail.reply_to).to eq(['guest@example.com'])
       end
 
-      it 'HTML本文にメールアドレス未登録と表示する' do
+      it 'HTML本文にフォームで入力したメールアドレスを表示する' do
         body = mail.html_part.body.decoded
 
-        expect(body).to include('未登録（SNSログイン）')
+        expect(body).to include('guest@example.com')
+        expect(body).to include(user.id.to_s)
       end
 
-      it 'テキスト本文にメールアドレス未登録と表示する' do
+      it 'テキスト本文にフォームで入力したメールアドレスを表示する' do
         body = mail.text_part.body.decoded
 
-        expect(body).to include('未登録（SNSログイン）')
+        expect(body).to include('guest@example.com')
+        expect(body).to include(user.id.to_s)
+      end
+    end
+
+    context 'ログインしていない場合' do
+      let(:user) { nil }
+
+      let(:contact) do
+        Contact.new(
+          category: 'bug',
+          content: '未ログインからのお問い合わせです',
+          email: 'guest@example.com'
+        )
+      end
+
+      it 'フォームで入力したメールアドレスを返信先に設定する' do
+        expect(mail.reply_to).to eq(['guest@example.com'])
+      end
+
+      it 'HTML本文に未ログインとメールアドレスを表示する' do
+        body = mail.html_part.body.decoded
+
+        expect(body).to include('未ログイン')
+        expect(body).to include('guest@example.com')
+      end
+
+      it 'テキスト本文に未ログインとメールアドレスを表示する' do
+        body = mail.text_part.body.decoded
+
+        expect(body).to include('未ログイン')
+        expect(body).to include('guest@example.com')
       end
     end
   end

@@ -1,4 +1,9 @@
 ja:
+  activemodel:
+    attributes:
+      contact:
+        email: "メールアドレス"
+
   activerecord:
     models:
       watchlist: "予定"

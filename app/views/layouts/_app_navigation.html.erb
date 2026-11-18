@@ -5,5 +5,7 @@
 
   <div class="hidden md:block h-[86px]" aria-hidden="true"></div>
 
-  <%= render "layouts/sidebar" %>
+  <% if user_signed_in? %>
+    <%= render "layouts/sidebar" %>
+  <% end %>
 </div>

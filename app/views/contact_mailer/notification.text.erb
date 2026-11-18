@@ -13,5 +13,9 @@ FanPocketにお問い合わせが届きました。
 ------------------------------
 送信ユーザー
 ------------------------------
+<% if @user.present? %>
 ユーザーID：<%= @user.id %>
-メールアドレス：<%= @user.email.presence || "未登録（SNSログイン）" %>
+<% else %>
+未ログイン
+<% end %>
+メールアドレス：<%= @user&.email.presence || @contact.email %>

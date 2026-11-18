@@ -120,6 +120,25 @@ RSpec.describe 'Contacts', type: :request do
           .to include('続けて送信する場合は、少し時間を空けてください')
       end
     end
+
+    context 'ハニーポットに入力がある場合' do
+      it 'お問い合わせメールを送信しない' do
+        params = {
+          contact: {
+            category: 'bug',
+            content: 'お問い合わせフォームの送信確認です',
+            website: 'https://example.com'
+          }
+        }
+
+        post contact_path, params: params
+
+        expect(ContactMailer)
+          .not_to have_received(:notification)
+
+        expect(response).to have_http_status(:ok)
+      end
+    end
   end
 
   describe '認証' do
@@ -129,7 +148,57 @@ RSpec.describe 'Contacts', type: :request do
 
         get new_contact_path
 
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('お問い合わせ')
+      end
+
+      it 'メールアドレス入力欄を表示する' do
+        sign_out user
+
+        get new_contact_path
+
+        email_field = response.parsed_body.at_css('input[name="contact[email]"]')
+
+        expect(email_field).to be_present
+        expect(email_field['required']).to be_present
+      end
+
+      it 'メールアドレスが未入力の場合は送信できない' do
+        sign_out user
+
+        post contact_path, params: valid_params
+
+        expect(response).to have_http_status(:unprocessable_content)
+
+        expect(ContactMailer)
+          .not_to have_received(:notification)
+
+        expect(response.body)
+          .to include('メールアドレスを入力してください')
+      end
+
+      it 'メールアドレスを入力するとお問い合わせを送信できる' do
+        sign_out user
+
+        params = {
+          contact: {
+            category: 'bug',
+            content: '未ログインからのお問い合わせです',
+            email: 'guest@example.com'
+          }
+        }
+
+        post contact_path, params: params
+
+        expect(ContactMailer)
+          .to have_received(:notification)
+          .with(
+            an_instance_of(Contact),
+            nil
+          )
+
         expect(response).to redirect_to(new_user_session_path)
+        expect(flash[:notice]).to eq('お問い合わせを送信しました')
       end
     end
   end

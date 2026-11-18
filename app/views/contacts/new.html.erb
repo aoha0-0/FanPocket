@@ -1,7 +1,9 @@
+<% back_path = user_signed_in? ? settings_path : new_user_session_path %>
+
 <div class="bg-surface text-on-surface font-body min-h-screen pb-32">
   <%= render "layouts/app_navigation",
-             back_path: settings_path %>
-
+              back_path: back_path,
+              info_page: !user_signed_in? %>
   <div class="text-center mt-10 mb-10 px-6">
     <h2 class="font-headline font-extrabold text-3xl tracking-tight text-primary">
       お問い合わせ
@@ -18,6 +20,12 @@
                   class: "space-y-10",
                   html: { novalidate: true },
                   local: true do |f| %>
+      <div hidden aria-hidden="true">
+        <%= f.label :website, "ウェブサイト" %>
+        <%= f.text_field :website,
+                         tabindex: -1,
+                         autocomplete: "off" %>
+      </div>
 
       <div class="space-y-3">
         <%= f.label :category,
@@ -38,6 +46,29 @@
           </p>
         <% end %>
       </div>
+
+      <% if @contact.email_required %>
+        <div class="space-y-3">
+          <%= f.label :email,
+                      class: "font-headline font-bold text-xs uppercase tracking-widest text-primary/60 flex items-center gap-2 px-1" do %>
+            <span class="material-symbols-outlined text-lg">mail</span>
+              メールアドレス
+          <% end %>
+
+          <%= f.email_field :email,
+                            autocomplete: "email",
+                            required: true,
+                            class: "w-full h-14 px-6 bg-[#f0f4f8] border-none rounded-full shadow-inner focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition-all text-gray-700 font-medium placeholder:text-gray-400/60 #{'ring-2 ring-error/40 bg-error/5' if @contact.errors[:email].any?}",
+                            placeholder: "example@example.com" %>
+
+          <% if @contact.errors[:email].any? %>
+            <p class="text-error text-xs font-semibold pl-4 flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">info</span>
+                <%= @contact.errors.full_messages_for(:email).first %>
+            </p>
+          <% end %>
+        </div>
+      <% end %>
 
       <div class="space-y-3">
         <%= f.label :content,
@@ -74,7 +105,7 @@
     <% end %>
 
     <div class="hidden md:flex justify-center mt-8 mb-12">
-      <%= link_to "もどる", settings_path,
+      <%= link_to "もどる", back_path,
                   class: "text-primary font-bold text-lg hover:opacity-70 transition-opacity" %>
     </div>
   </main>

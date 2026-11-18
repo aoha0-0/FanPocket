@@ -9,7 +9,7 @@ class Contact
     'other' => 'その他'
   }.freeze
 
-  attr_accessor :category, :content
+  attr_accessor :category, :content, :email, :email_required, :website
 
   validates :category,
             presence: true,
@@ -18,4 +18,9 @@ class Contact
   validates :content,
             presence: true,
             length: { maximum: 2000 }
+
+  validates :email, presence: true, if: :email_required
+  validates :email,
+            format: { with: URI::MailTo::EMAIL_REGEXP },
+            allow_blank: true
 end
